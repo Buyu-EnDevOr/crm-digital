@@ -1,0 +1,123 @@
+/* ===== RESET E BASE ===== */
+body { 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+/* ===== TEMAS DE FUNDO ===== */
+.tema-claro {
+    background-color: #eef2f5;
+    color: #333;
+}
+
+.tema-escuro {
+    background-color: #0f172a;
+    color: #fff;
+}
+
+/* ===== ESTILOS DO PAINEL CRM (index.html) ===== */
+.painel { 
+    background: #ffffff; 
+    padding: 30px 40px; 
+    border-radius: 10px; 
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1); 
+    width: 100%;
+    max-width: 400px; 
+}
+.painel h2 { 
+    color: #1a365d; 
+    margin-top: 0; 
+    text-align: center;
+    margin-bottom: 25px;
+}
+.painel label { 
+    display: block; 
+    margin-top: 15px; 
+    color: #4a5568; 
+    font-size: 14px;
+    font-weight: bold; 
+}
+.painel input, .painel select { 
+    width: 100%; 
+    padding: 10px; 
+    margin-top: 5px; 
+    border: 1px solid #cbd5e0; 
+    border-radius: 6px; 
+    box-sizing: border-box; 
+    font-size: 15px;
+}
+.painel button { 
+    width: 100%; 
+    padding: 12px; 
+    background-color: #2b6cb0; 
+    color: white; 
+    border: none; 
+    border-radius: 6px; 
+    margin-top: 25px; 
+    font-size: 16px;
+    font-weight: bold; 
+    cursor: pointer; 
+    transition: background 0.3s;
+}
+.painel button:hover { 
+    background-color: #2c5282; 
+}
+
+/* ===== ESTILOS DE LOGIN E CADASTRO ===== */
+.login-box { 
+    background: #1e293b; 
+    padding: 40px 40px; 
+    border-radius: 12px; 
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5); 
+    width: 100%;
+    max-width: 350px; 
+    text-align: center;
+}
+.login-box h2 { 
+    margin-top: 0; 
+    color: #38bdf8; /* Azul para o Login */
+}
+.login-box h2.cor-cadastro { 
+    color: #4ade80; /* Verde para o Cadastro */
+}
+.login-box p { 
+    color: #94a3b8; 
+    font-size: 14px; 
+    margin-bottom: 30px; 
+}
+.btn-google { 
+    width: 100%; 
+    padding: 12px; 
+    background-color: #ffffff; 
+    color: #0f172a; 
+    border: none; 
+    border-radius: 6px; 
+    font-size: 16px;
+    font-weight: bold; 
+    cursor: pointer; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: background 0.3s;
+}
+.btn-google:hover { 
+    background-color: #e2e8f0; 
+}
+.link-rodape { 
+    margin-top: 20px; 
+    font-size: 13px; 
+    color: #94a3b8; 
+}
+.link-rodape a { 
+    color: #38bdf8; 
+    text-decoration: none; 
+    font-weight: bold; 
+}
+.link-rodape a:hover { 
+    text-decoration: underline; 
+}
