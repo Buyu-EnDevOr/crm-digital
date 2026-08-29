@@ -67,7 +67,6 @@
 <div class="painel">
     <h2>Cadastro de Novo Lead</h2>
     
-    <!-- Este formulário ainda não faz nada, é apenas a interface -->
     <form id="crm-form">
         <label for="nome">Nome do Cliente:</label>
         <input type="text" id="nome" name="nome" placeholder="Ex: João Silva" required>
@@ -89,9 +88,87 @@
             <option value="fechado">Venda Fechada</option>
         </select>
 
-        <button type="button" onclick="alert('O Python ainda vai assumir este botão!')">Salvar Cliente</button>
+        <button type="button" id="btn-salvar">Salvar Cliente</button>
     </form>
 </div>
+
+<!-- Importando o Firebase (Módulo) -->
+<script type="module">
+    // 1. Puxando as ferramentas do Firebase direto da nuvem
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+// --- ADICIONE ISTO: O SEGURANÇA DA PORTA ---
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+    const auth = getAuth(app);
+
+    // Fica vigiando para ver se a pessoa tem a "pulseira VIP" do Google
+    onAuthStateChanged(auth, (user) => {
+        if (!user) {
+            // Se não tem usuário logado, expulsa de volta pro login
+            window.location.href = "login.html";
+        } else {
+            // Se estiver logado, exibe um log no console (opcional)
+            console.log("Usuário logado:", user.displayName);
+        }
+    });
+    // -------------------------------------------
+    // 2. As suas chaves de acesso
+    const firebaseConfig = {
+        apiKey: "AIzaSyA6fZuQf0-GshZ_wtxJW3CRFtlvFPxfaGg",
+        authDomain: "crm-digital-6b415.firebaseapp.com",
+        projectId: "crm-digital-6b415",
+        storageBucket: "crm-digital-6b415.firebasestorage.app",
+        messagingSenderId: "686804789801",
+        appId: "1:686804789801:web:26ddd8979fc38ab4864a38"
+    };
+
+    // 3. Inicializando o sistema
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // 4. Lógica de clique no botão
+    document.getElementById('btn-salvar').addEventListener('click', async () => {
+        // Pegando os valores que você digitou na tela
+        const nomeValor = document.getElementById('nome').value;
+        const telefoneValor = document.getElementById('telefone').value;
+        const poloValor = document.getElementById('polo').value;
+        const statusValor = document.getElementById('status').value;
+        const botao = document.getElementById('btn-salvar');
+
+        // Validação simples para não salvar vazio
+        if(nomeValor === "" || telefoneValor === "") {
+            alert("Por favor, preencha o Nome e o Telefone!");
+            return;
+        }
+
+        botao.innerText = "Salvando...";
+        botao.style.backgroundColor = "#718096";
+
+        try {
+            // Mandando os dados para uma "pasta" chamada 'leads' no banco de dados
+            await addDoc(collection(db, "leads"), {
+                nome: nomeValor,
+                telefone: telefoneValor,
+                polo: poloValor,
+                status: statusValor,
+                dataCadastro: new Date().toISOString()
+            });
+
+            alert("Cliente salvo com sucesso no banco de dados!");
+            
+            // Limpa o formulário e volta o botão ao normal
+            document.getElementById('crm-form').reset();
+            botao.innerText = "Salvar Cliente";
+            botao.style.backgroundColor = "#2b6cb0";
+
+        } catch (erro) {
+            console.error("Erro ao salvar: ", erro);
+            alert("Erro ao conectar com o banco de dados.");
+            botao.innerText = "Salvar Cliente";
+            botao.style.backgroundColor = "#2b6cb0";
+        }
+    });
+</script>
 
 </body>
 </html>
