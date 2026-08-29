@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Administrativo - CRM</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="tema-claro">
+
+<div class="admin-container">
+    <div class="cabecalho-admin">
+        <h2>Gestão de Clientes (Leads)</h2>
+        <a href="index.html" class="btn-voltar">Novo Cadastro</a>
+    </div>
+
+    <table class="tabela-clientes">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Telefone</th>
+                <th>Polo</th>
+                <th>Status</th>
+                <th>Ações</th> <!-- Nova Coluna do Botão -->
+            </tr>
+        </thead>
+        <tbody id="lista-corpo">
+            <!-- O script.js vai colocar os clientes aqui dentro -->
+            <tr><td colspan="5" style="text-align: center;">Carregando dados do servidor Python...</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Conectando o arquivo JavaScript externo -->
+<script src="script.js"></script>
+
+</body>
+</html>

@@ -121,3 +121,77 @@ body {
 .link-rodape a:hover { 
     text-decoration: underline; 
 }
+/* ===== ESTILOS DO PAINEL ADMIN (painel-admin.html) ===== */
+.admin-container {
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 900px;
+    margin: 40px;
+}
+.cabecalho-admin {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.cabecalho-admin h2 {
+    color: #1a365d;
+    margin: 0;
+}
+.btn-voltar {
+    background-color: #cbd5e0;
+    color: #2d3748;
+    padding: 8px 16px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 14px;
+    transition: 0.3s;
+}
+.btn-voltar:hover {
+    background-color: #a0aec0;
+}
+.tabela-clientes {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+.tabela-clientes th, .tabela-clientes td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #e2e8f0;
+}
+.tabela-clientes th {
+    background-color: #f7fafc;
+    color: #4a5568;
+    font-weight: bold;
+}
+.badge {
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: bold;
+    color: white;
+}
+.badge.polo { background-color: #4a5568; }
+.badge.prospeccao { background-color: #ecc94b; color: #744210; }
+.badge.negociacao { background-color: #4299e1; }
+.badge.fechado { background-color: #48bb78; }
+/* ===== BOTÃO DE EXCLUIR ===== */
+.btn-excluir {
+    background-color: #f56565;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+.btn-excluir:hover {
+    background-color: #c53030;
+}
