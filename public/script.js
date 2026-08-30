@@ -56,6 +56,43 @@ async function deletarCliente(id) {
     }
 }
 
+// === NOVA FUNÇÃO (CREATE) ADICIONADA AQUI ===
+// Função para enviar um novo cliente para o Python
+async function novoCadastro() {
+    // Usando prompt para testar rápido. Depois podemos trocar por um modal/formulário!
+    const nomeInput = prompt("Digite o nome do novo cliente:");
+    if (!nomeInput) return; // Se o usuário cancelar, a função para aqui
+
+    const telefoneInput = prompt("Digite o WhatsApp do cliente:");
+
+    const dadosCliente = {
+        nome: nomeInput,
+        telefone: telefoneInput,
+        polo: "ONLINE",          // Colocando um padrão temporário
+        status: "PROSPECCAO"     // Colocando um padrão temporário
+    };
+
+    try {
+        const resposta = await fetch('http://127.0.0.1:8080/api/clientes', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json' // Avisa o Python que estamos mandando um JSON
+            },
+            body: JSON.stringify(dadosCliente)
+        });
+
+        if (resposta.ok) {
+            alert("Cliente cadastrado com sucesso!");
+            carregarClientes(); // Atualiza a tabela na hora para o novo cliente aparecer
+        } else {
+            alert("Erro ao cadastrar cliente.");
+        }
+    } catch (erro) {
+        console.error("Erro ao cadastrar:", erro);
+        alert("Erro de conexão com o servidor.");
+    }
+}
+
 // Função simples para formatar os textos (ex: "lagoa_dourada" vira "LAGOA DOURADA")
 function formatarTexto(texto) {
     if (!texto) return '-';
