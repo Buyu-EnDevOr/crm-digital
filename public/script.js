@@ -1,10 +1,9 @@
-// Variável para sabermos se estamos criando um novo ou editando um existente
 let clienteEditandoId = null;
 
-// Função que busca o JSON no Python e monta a tabela
 async function carregarClientes() {
     try {
-        const resposta = await fetch('api/clientes');
+        // CORREÇÃO 1: Adicionado a barra inicial (/api/...)
+        const resposta = await fetch('/api/clientes');
         const clientes = await resposta.json();
 
         const tabela = document.getElementById('lista-corpo');
@@ -17,7 +16,6 @@ async function carregarClientes() {
 
         clientes.forEach(cliente => {
             const linha = document.createElement('tr');
-            // Adicionei o botão de Editar passando os dados atuais do cliente
             linha.innerHTML = `
                 <td><strong>${cliente.nome || 'Sem Nome'}</strong></td>
                 <td>${cliente.telefone || '-'}</td>
@@ -37,11 +35,11 @@ async function carregarClientes() {
     }
 }
 
-// Deletar Cliente
 async function deletarCliente(id) {
     if(confirm("Tem certeza que deseja excluir este cliente?")) {
         try {
-            const resposta = await fetch(`api/clientes/${id}`, { method: 'DELETE' });
+            // CORREÇÃO 2: Adicionado a barra inicial (/api/...)
+            const resposta = await fetch(`/api/clientes/${id}`, { method: 'DELETE' });
             if(resposta.ok) {
                 carregarClientes(); 
             } else {
@@ -53,14 +51,10 @@ async function deletarCliente(id) {
     }
 }
 
-// === FUNÇÕES DO FORMULÁRIO (CREATE & UPDATE) ===
-
-// Botão "Novo Cadastro" chama essa
 function mostrarFormulario() {
-    clienteEditandoId = null; // Garante que é um novo cadastro
+    clienteEditandoId = null; 
     document.querySelector('#form-cadastro h2').innerText = "Cadastrar Novo Lead";
     
-    // Limpa os campos
     document.getElementById('input-nome').value = '';
     document.getElementById('input-telefone').value = '';
     document.getElementById('select-polo').value = 'lagoa_dourada';
@@ -69,12 +63,10 @@ function mostrarFormulario() {
     document.getElementById('form-cadastro').style.display = 'block';
 }
 
-// Botão "Editar" chama essa
 function prepararEdicao(id, nome, telefone, polo, status) {
-    clienteEditandoId = id; // Grava o ID de quem estamos editando
+    clienteEditandoId = id; 
     document.querySelector('#form-cadastro h2').innerText = "Editar Lead";
     
-    // Preenche os campos com os dados que vieram da tabela
     document.getElementById('input-nome').value = nome !== 'undefined' ? nome : '';
     document.getElementById('input-telefone').value = telefone !== 'undefined' ? telefone : '';
     document.getElementById('select-polo').value = polo;
@@ -106,8 +98,8 @@ async function salvarCadastro() {
         status: statusInput
     };
 
-    // O "Pulo do Gato": Se tiver ID, a URL é de UPDATE (PUT). Se não tiver, é de CREATE (POST).
-    const url = clienteEditandoId ? `api/clientes/${clienteEditandoId}` : 'api/clientes';
+    // CORREÇÃO 3: Trocado aspas simples (') por crase (`) e adicionado a barra inicial
+    const url = clienteEditandoId ? `/api/clientes/${clienteEditandoId}` : '/api/clientes';
     const metodo = clienteEditandoId ? 'PUT' : 'POST';
 
     try {
@@ -130,11 +122,9 @@ async function salvarCadastro() {
     }
 }
 
-// Função simples para formatar os textos
 function formatarTexto(texto) {
     if (!texto || texto === 'undefined') return '-';
     return texto.replace('_', ' ').toUpperCase();
 }
 
-// Inicia a tabela
 carregarClientes();
