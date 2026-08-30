@@ -4,16 +4,24 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
 import os
+import json # <-- NOVO: Precisamos disso para ler a chave da Vercel
 
 app = Flask(__name__)
 CORS(app)
 
-# Configuração de Segurança: Puxa a chave mestra
-diretorio_api = os.path.dirname(os.path.abspath(__file__))
-diretorio_raiz = os.path.dirname(diretorio_api)
-caminho_chave = os.path.join(diretorio_raiz, 'chave-firebase.json')
+# Tenta pegar a chave do "cofre" da Vercel
+firebase_creds_json = os.environ.get('FIREBASE_CREDENTIALS')
 
-cred = credentials.Certificate(caminho_chave)
+if firebase_creds_json:
+    # SE ESTIVER NA VERCEL: Usa a variável de ambiente
+    cred_dict = json.loads(firebase_creds_json)
+    cred = credentials.Certificate(cred_dict)
+else:
+    # SE ESTIVER NO SEU PC: Usa o arquivo físico .json
+    diretorio_api = os.path.dirname(os.path.abspath(__file__))
+    diretorio_raiz = os.path.dirname(diretorio_api)
+    caminho_chave = os.path.join(diretorio_raiz, 'chave-firebase.json')
+    cred = credentials.Certificate(caminho_chave)
 
 # Evita inicializar o Firebase duas vezes
 if not firebase_admin._apps:

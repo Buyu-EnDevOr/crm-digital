@@ -4,7 +4,7 @@ let clienteEditandoId = null;
 // Função que busca o JSON no Python e monta a tabela
 async function carregarClientes() {
     try {
-        const resposta = await fetch('http://127.0.0.1:8080/api/clientes');
+        const resposta = await fetch('api/clientes');
         const clientes = await resposta.json();
 
         const tabela = document.getElementById('lista-corpo');
@@ -41,7 +41,7 @@ async function carregarClientes() {
 async function deletarCliente(id) {
     if(confirm("Tem certeza que deseja excluir este cliente?")) {
         try {
-            const resposta = await fetch(`http://127.0.0.1:8080/api/clientes/${id}`, { method: 'DELETE' });
+            const resposta = await fetch(`api/clientes/${id}`, { method: 'DELETE' });
             if(resposta.ok) {
                 carregarClientes(); 
             } else {
@@ -107,7 +107,7 @@ async function salvarCadastro() {
     };
 
     // O "Pulo do Gato": Se tiver ID, a URL é de UPDATE (PUT). Se não tiver, é de CREATE (POST).
-    const url = clienteEditandoId ? `http://127.0.0.1:8080/api/clientes/${clienteEditandoId}` : 'http://127.0.0.1:8080/api/clientes';
+    const url = clienteEditandoId ? `api/clientes/${clienteEditandoId}` : 'api/clientes';
     const metodo = clienteEditandoId ? 'PUT' : 'POST';
 
     try {
