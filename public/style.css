@@ -195,3 +195,50 @@ body {
 .btn-excluir:hover {
     background-color: #c53030;
 }
+/* ===== ESTILOS DO FORMULÁRIO DE CADASTRO (Novo) ===== */
+.form-cadastro-container {
+    display: none; /* Inicia invisível até clicar no botão */
+    max-width: 100%; /* Sobrescreve o limite de largura do .painel padrão */
+    margin-bottom: 30px;
+    box-sizing: border-box;
+}
+
+.form-grupo-linha {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap; /* Permite quebrar a linha no celular */
+}
+
+.form-campo {
+    flex: 1; /* Faz todas as caixas crescerem por igual */
+    min-width: 200px; /* Impede que fiquem muito espremidas */
+}
+
+.form-acoes {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+/* Ajuste específico para os botões dentro deste formulário não ocuparem 100% da tela */
+.form-acoes button {
+    width: auto;
+    margin-top: 0;
+    padding: 10px 20px;
+}
+
+.btn-salvar {
+    background-color: #2b6cb0;
+}
+
+.btn-salvar:hover {
+    background-color: #2c5282;
+}
+
+.btn-cancelar {
+    background-color: #f56565 !important; /* Força a cor vermelha sobre a azul do .painel */
+}
+
+.btn-cancelar:hover {
+    background-color: #c53030 !important;
+}

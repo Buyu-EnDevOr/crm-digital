@@ -1,7 +1,6 @@
 // Função que vai lá no Python buscar o JSON e montar a tabela
 async function carregarClientes() {
     try {
-        // Batendo na porta do seu servidor Python
         const resposta = await fetch('http://127.0.0.1:8080/api/clientes');
         const clientes = await resposta.json();
 
@@ -13,7 +12,6 @@ async function carregarClientes() {
             return;
         }
 
-        // Para cada cliente no JSON, cria uma linha na tabela com o botão de excluir
         clientes.forEach(cliente => {
             const linha = document.createElement('tr');
             linha.innerHTML = `
@@ -34,18 +32,17 @@ async function carregarClientes() {
     }
 }
 
-// Nova Função: Mandar o Python deletar o cliente no Firebase
+// Mandar o Python deletar o cliente no Firebase
 async function deletarCliente(id) {
-    // Confirmação de segurança
     if(confirm("Tem certeza que deseja excluir este cliente? Essa ação não pode ser desfeita.")) {
         try {
             const resposta = await fetch(`http://127.0.0.1:8080/api/clientes/${id}`, {
-                method: 'DELETE' // Avisa o Python que a intenção é apagar
+                method: 'DELETE' 
             });
             
             if(resposta.ok) {
                 alert("Cliente excluído com sucesso!");
-                carregarClientes(); // Recarrega a tabela na mesma hora para o nome sumir
+                carregarClientes(); 
             } else {
                 alert("Erro ao excluir o cliente.");
             }
@@ -56,34 +53,53 @@ async function deletarCliente(id) {
     }
 }
 
-// === NOVA FUNÇÃO (CREATE) ADICIONADA AQUI ===
-// Função para enviar um novo cliente para o Python
-async function novoCadastro() {
-    // Usando prompt para testar rápido. Depois podemos trocar por um modal/formulário!
-    const nomeInput = prompt("Digite o nome do novo cliente:");
-    if (!nomeInput) return; // Se o usuário cancelar, a função para aqui
+// === FUNÇÕES DO FORMULÁRIO DE CADASTRO ===
 
-    const telefoneInput = prompt("Digite o WhatsApp do cliente:");
+function mostrarFormulario() {
+    document.getElementById('form-cadastro').style.display = 'block';
+}
+
+function fecharFormulario() {
+    document.getElementById('form-cadastro').style.display = 'none';
+}
+
+async function salvarCadastro() {
+    // Puxa os valores dos inputs reais do HTML
+    const nomeInput = document.getElementById('input-nome').value;
+    const telefoneInput = document.getElementById('input-telefone').value;
+    const poloInput = document.getElementById('select-polo').value;
+    const statusInput = document.getElementById('select-status').value;
+
+    if (!nomeInput) {
+        alert("Por favor, preencha o nome do cliente.");
+        return;
+    }
 
     const dadosCliente = {
         nome: nomeInput,
         telefone: telefoneInput,
-        polo: "ONLINE",          // Colocando um padrão temporário
-        status: "PROSPECCAO"     // Colocando um padrão temporário
+        polo: poloInput,
+        status: statusInput
     };
 
     try {
         const resposta = await fetch('http://127.0.0.1:8080/api/clientes', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json' // Avisa o Python que estamos mandando um JSON
+                'Content-Type': 'application/json' 
             },
             body: JSON.stringify(dadosCliente)
         });
 
         if (resposta.ok) {
             alert("Cliente cadastrado com sucesso!");
-            carregarClientes(); // Atualiza a tabela na hora para o novo cliente aparecer
+            fecharFormulario(); // Esconde o painel
+            carregarClientes(); // Atualiza a tabela na hora
+            
+            // Limpa os campos para o próximo
+            document.getElementById('input-nome').value = '';
+            document.getElementById('input-telefone').value = '';
+            // Os selects voltam para o padrão naturalmente
         } else {
             alert("Erro ao cadastrar cliente.");
         }
@@ -93,11 +109,11 @@ async function novoCadastro() {
     }
 }
 
-// Função simples para formatar os textos (ex: "lagoa_dourada" vira "LAGOA DOURADA")
+// Função simples para formatar os textos
 function formatarTexto(texto) {
     if (!texto) return '-';
     return texto.replace('_', ' ').toUpperCase();
 }
 
-// Chama a função assim que o site abrir
+// Inicia a tabela
 carregarClientes();

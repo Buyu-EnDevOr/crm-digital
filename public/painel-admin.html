@@ -11,7 +11,48 @@
 <div class="admin-container">
     <div class="cabecalho-admin">
         <h2>Gestão de Clientes (Leads)</h2>
-       <button onclick="novoCadastro()" class="btn-voltar" style="border: none; cursor: pointer;">Novo Cadastro</button>
+        <!-- O botão agora chama a função para mostrar o formulário -->
+        <button onclick="mostrarFormulario()" class="btn-voltar">Novo Cadastro</button>
+    </div>
+
+    <!-- Formulário de Cadastro (Criamos classes para o CSS cuidar do visual) -->
+    <div class="painel form-cadastro-container" id="form-cadastro">
+        <h2>Cadastrar Novo Lead</h2>
+        
+        <div class="form-grupo-linha">
+            <div class="form-campo">
+                <label>Nome do Cliente:</label>
+                <input type="text" id="input-nome" placeholder="Ex: João da Silva">
+            </div>
+            
+            <div class="form-campo">
+                <label>Telefone (WhatsApp):</label>
+                <input type="text" id="input-telefone" placeholder="(32) 99999-9999">
+            </div>
+            
+            <div class="form-campo">
+                <label>Polo de Atendimento:</label>
+                <select id="select-polo">
+                    <option value="lagoa_dourada">Lagoa Dourada</option>
+                    <option value="juiz_de_fora">Juiz de Fora</option>
+                    <option value="atendimento_digital">Atendimento Digital</option>
+                </select>
+            </div>
+
+            <div class="form-campo">
+                <label>Status da Negociação:</label>
+                <select id="select-status">
+                    <option value="prospeccao">Em Prospecção</option>
+                    <option value="negociacao">Em Negociação</option>
+                    <option value="fechado">Venda Fechada</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="form-acoes">
+            <button onclick="salvarCadastro()" class="btn-salvar">Salvar Cliente</button>
+            <button onclick="fecharFormulario()" class="btn-cancelar">Cancelar</button>
+        </div>
     </div>
 
     <table class="tabela-clientes">
@@ -21,17 +62,15 @@
                 <th>Telefone</th>
                 <th>Polo</th>
                 <th>Status</th>
-                <th>Ações</th> <!-- Nova Coluna do Botão -->
+                <th>Ações</th>
             </tr>
         </thead>
         <tbody id="lista-corpo">
-            <!-- O script.js vai colocar os clientes aqui dentro -->
             <tr><td colspan="5" style="text-align: center;">Carregando dados do servidor Python...</td></tr>
         </tbody>
     </table>
 </div>
 
-<!-- Conectando o arquivo JavaScript externo -->
 <script src="script.js"></script>
 
 </body>
