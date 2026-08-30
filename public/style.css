@@ -242,3 +242,19 @@ body {
 .btn-cancelar:hover {
     background-color: #c53030 !important;
 }
+/* ===== BOTÃO DE EDITAR ===== */
+.btn-editar {
+    background-color: #ecc94b;
+    color: #744210;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: bold;
+    transition: 0.3s;
+    margin-right: 5px; /* Dá um espacinho entre ele e o botão excluir */
+}
+.btn-editar:hover {
+    background-color: #d69e2e;
+}
