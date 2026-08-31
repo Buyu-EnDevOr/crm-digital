@@ -15,6 +15,11 @@ firebase_creds_json = os.environ.get('FIREBASE_CREDENTIALS')
 if firebase_creds_json:
     # SE ESTIVER NA VERCEL: Usa a variável de ambiente
     cred_dict = json.loads(firebase_creds_json)
+    
+    # IMPORTANTE: Limpeza das quebras de linha que a Vercel costuma bagunçar
+    if '\\n' in cred_dict.get('private_key', ''):
+        cred_dict['private_key'] = cred_dict['private_key'].replace('\\n', '\n')
+        
     cred = credentials.Certificate(cred_dict)
 else:
     # SE ESTIVER NO SEU PC: Usa o arquivo físico .json
@@ -69,7 +74,7 @@ def deletar_cliente(id_cliente):
     except Exception as e:
         return jsonify({"erro": str(e)}), 500
 
-# UPDATE: Atualizar os dados de um cliente existente (O PASSO 1 ENTROU AQUI)
+# UPDATE: Atualizar os dados de um cliente existente
 @app.route('/api/clientes/<id_cliente>', methods=['PUT'])
 def atualizar_cliente(id_cliente):
     try:
@@ -79,7 +84,6 @@ def atualizar_cliente(id_cliente):
         return jsonify({"mensagem": "Cliente atualizado com sucesso!"}), 200
     except Exception as e:
         return jsonify({"erro": str(e)}), 500
-
 
 if __name__ == '__main__':
     app.run(debug=True, port=8080)
