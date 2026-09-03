@@ -6,11 +6,13 @@
     <title>Vitrine Digital</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="tema-claro" style="margin: 0; overflow-x: hidden;"> <!-- Bloqueia scroll horizontal -->
+<body class="tema-claro vitrine-fundo" style="margin: 0; overflow-x: hidden;"> 
 
     <!-- Upbar (Navegação Superior) -->
     <header class="upbar">
-        <div style="font-weight: bold; font-size: 1.2rem;" id="nav-logo">CRM-DIGITAL</div>
+        <!-- Logo em formato circular (Bolinha) -->
+        <img src="logo-crm.png" alt="Logo" class="logo-bolinha" id="nav-logo">
+        
         <div>
             <a href="login.html" class="btn-upbar">Login</a>
             <a href="cadastro.html" class="btn-upbar">Cadastro</a>
@@ -18,48 +20,49 @@
         </div>
     </header>
 
-    <!-- Layout Principal com Sidebar e Conteúdo -->
+    <!-- Layout Principal -->
     <div class="layout-vitrine">
-        <!-- Sidebar (Menu Lateral) -->
-        <aside class="sidebar">
+        <!-- Sidebar -->
+        <aside class="sidebar" style="background-color: rgba(226, 232, 240, 0.95);">
             <ul style="list-style: none; padding: 0;">
-                <li style="margin-bottom: 15px;"><a href="#" style="text-decoration: none; color: #4a5568;">Início</a></li>
-                <li style="margin-bottom: 15px;"><a href="#" style="text-decoration: none; color: #4a5568;">Serviços</a></li>
-                <li style="margin-bottom: 15px;"><a href="#" style="text-decoration: none; color: #4a5568;">Sobre nós</a></li>
+                <li style="margin-bottom: 15px;"><a href="#" style="text-decoration: none; color: #4a5568; font-weight: bold;">Início</a></li>
+                <li style="margin-bottom: 15px;"><a href="#" style="text-decoration: none; color: #4a5568; font-weight: bold;">Serviços</a></li>
+                <li style="margin-bottom: 15px;"><a href="#" style="text-decoration: none; color: #4a5568; font-weight: bold;">Sobre nós</a></li>
             </ul>
         </aside>
 
-        <!-- Conteúdo Central da Vitrine -->
+        <!-- Conteúdo Central -->
         <main class="conteudo-principal">
             <div style="max-width: 800px; width: 100%;">
                 
-                <h1 id="texto-titulo" style="color: #1a365d; font-size: 2.5rem; margin-bottom: 5px;">Carregando...</h1>
-                <h3 id="texto-subtitulo" style="color: #4a5568; margin-top: 0; margin-bottom: 30px;">...</h3>
+                <!-- Card flutuante translúcido para o texto não sumir no fundo -->
+                <div class="vitrine-card">
+                    <h1 id="texto-titulo" style="color: #1a365d; font-size: 2.5rem; margin-top: 0; margin-bottom: 5px;">Carregando...</h1>
+                    <h3 id="texto-subtitulo" style="color: #4a5568; margin-top: 0; margin-bottom: 30px;">...</h3>
 
-                <!-- Modal de Imagem (Quadrado Central) -->
-                <div class="vitrine-imagem-container">
-                    <img id="imagem-destaque" src="" alt="Destaque da Vitrine" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
-                </div>
+                    <div class="vitrine-imagem-container" style="width: 100%; height: auto; aspect-ratio: 16/9;">
+                        <img id="imagem-destaque" src="" alt="Destaque da Vitrine" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
+                    </div>
 
-                <!-- Descrição e Contato (Margem à esquerda) -->
-                <div style="margin-top: 30px; border-left: 4px solid #2b6cb0; padding-left: 15px;">
-                    <p id="texto-descricao" style="font-size: 1.1rem; line-height: 1.6; color: #2d3748; white-space: pre-line;"></p>
-                    <p style="font-weight: bold; margin-top: 20px; color: #2b6cb0;">Contato: <span id="texto-contato"></span></p>
+                    <div style="margin-top: 30px; border-left: 4px solid #2b6cb0; padding-left: 15px;">
+                        <p id="texto-descricao" style="font-size: 1.1rem; line-height: 1.6; color: #2d3748; white-space: pre-line; margin-top: 0;"></p>
+                        <p style="font-weight: bold; margin-top: 20px; color: #2b6cb0;">Contato: <span id="texto-contato"></span></p>
+                    </div>
                 </div>
 
             </div>
         </main>
     </div>
 
-    <!-- Engrenagem Invisível (Área de Hover no Canto Inferior Direito) -->
+    <!-- Engrenagem Invisível -->
     <div class="area-admin-gear">
         <div class="gear-icon" onclick="abrirConfigAdmin()">⚙️</div>
     </div>
 
-    <!-- Fundo Escuro do Modal Admin -->
+    <!-- Fundo Escuro do Modal -->
     <div id="overlay-admin" class="admin-overlay" onclick="fecharConfigAdmin()"></div>
 
-    <!-- Modal Admin (Central de Edição) -->
+    <!-- Modal Admin -->
     <div id="modal-admin" class="admin-modal painel">
         <h2 style="margin-bottom: 20px;">Central de Edição (Vitrine)</h2>
         
@@ -72,7 +75,7 @@
         <label>Link da Imagem (Cloudinary/URL):</label>
         <input type="text" id="edit-imagem">
 
-        <label>Descrição (Pode usar quebra de linha):</label>
+        <label>Descrição:</label>
         <textarea id="edit-descricao" rows="4" style="width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box; font-family: inherit; resize: vertical;"></textarea>
 
         <label>Contato / WhatsApp:</label>
@@ -84,25 +87,18 @@
         </div>
     </div>
 
-    <!-- Script de Integração com o Python -->
     <script>
-        // Ao abrir o site, busca os dados no Python
         async function carregarVitrine() {
             try {
                 const resposta = await fetch('/api/config');
                 const dados = await resposta.json();
 
-                // Preenche a vitrine para os clientes verem
                 document.getElementById('texto-titulo').innerText = dados.titulo;
                 document.getElementById('texto-subtitulo').innerText = dados.subtitulo;
                 document.getElementById('imagem-destaque').src = dados.imagem_url;
                 document.getElementById('texto-descricao').innerText = dados.descricao;
                 document.getElementById('texto-contato').innerText = dados.contato;
                 
-                // Atualiza o logotipo da Upbar com o título
-                document.getElementById('nav-logo').innerText = dados.titulo;
-
-                // Preenche os campos do formulário Admin escondido para quando você for editar
                 document.getElementById('edit-titulo').value = dados.titulo;
                 document.getElementById('edit-subtitulo').value = dados.subtitulo;
                 document.getElementById('edit-imagem').value = dados.imagem_url;
@@ -142,7 +138,7 @@
                 if (resposta.ok) {
                     alert("Vitrine atualizada com sucesso!");
                     fecharConfigAdmin();
-                    carregarVitrine(); // Recarrega os textos na tela instantaneamente
+                    carregarVitrine(); 
                 } else {
                     alert("Erro ao salvar configurações.");
                 }
@@ -152,7 +148,6 @@
             }
         }
 
-        // Inicia o carregamento assim que o HTML é lido
         carregarVitrine();
     </script>
 </body>

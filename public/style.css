@@ -369,3 +369,29 @@ body:not(.tema-escuro) { display: block; height: auto; }
     max-width: 500px;
     width: 90%;
 }
+/* ===== NOVO VISUAL VITRINE (SHOPEE STYLE) ===== */
+.vitrine-fundo {
+    background-image: url('plano-fundo.png');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed; /* Mantém a imagem estática enquanto o site rola */
+    background-repeat: no-repeat;
+}
+
+.logo-bolinha {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%; /* Transforma o quadrado em uma bola perfeita */
+    object-fit: cover; /* Evita que a imagem fique esticada */
+    border: 2px solid #e2e8f0; /* Borda sutil para destacar a logo na barra escura */
+    background-color: white; /* Fundo branco caso a logo seja transparente */
+}
+
+.vitrine-card {
+    background-color: rgba(255, 255, 255, 0.92); /* Fundo branco levemente transparente (vidro) */
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    width: 100%;
+    box-sizing: border-box;
+}
