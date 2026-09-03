@@ -3,105 +3,157 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel CRM - Gestão de Clientes</title>
-    <!-- Puxando o arquivo CSS externo -->
+    <title>Vitrine Digital</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="tema-claro">
-<!-- Menu de Navegação Temporário para Testes -->
-<div style="text-align: center; padding: 20px; background: #1e293b; margin-bottom: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-    <a href="login.html" class="btn-voltar" style="margin-right: 15px; text-decoration: none;">Fazer Login</a>
-    <a href="cadastro.html" class="btn-voltar" style="margin-right: 15px; text-decoration: none;">Criar Conta</a>
-    <a href="painel-admin.html" class="btn-voltar" style="text-decoration: none; background-color: #4ade80; color: #0f172a;">Ir para Gestão de Clientes</a>
-</div>
-<div class="painel">
-    <h2>Cadastro de Novo Lead</h2>
-    
-    <form id="crm-form">
-        <label for="nome">Nome do Cliente:</label>
-        <input type="text" id="nome" name="nome" placeholder="Ex: João Silva" required>
+<body class="tema-claro" style="margin: 0; overflow-x: hidden;"> <!-- Bloqueia scroll horizontal -->
 
-        <label for="telefone">Telefone / WhatsApp:</label>
-        <input type="tel" id="telefone" name="telefone" placeholder="(00) 00000-0000" required>
+    <!-- Upbar (Navegação Superior) -->
+    <header class="upbar">
+        <div style="font-weight: bold; font-size: 1.2rem;" id="nav-logo">CRM-DIGITAL</div>
+        <div>
+            <a href="login.html" class="btn-upbar">Login</a>
+            <a href="cadastro.html" class="btn-upbar">Cadastro</a>
+            <a href="painel-admin.html" class="btn-upbar btn-destaque">Painel Admin</a>
+        </div>
+    </header>
 
-        <label for="polo">Polo de Atendimento:</label>
-        <select id="polo" name="polo">
-            <option value="lagoa_dourada">Lagoa Dourada</option>
-            <option value="juiz_de_fora">Juiz de Fora</option>
-            <option value="digital">Atendimento Digital</option>
-        </select>
+    <!-- Layout Principal com Sidebar e Conteúdo -->
+    <div class="layout-vitrine">
+        <!-- Sidebar (Menu Lateral) -->
+        <aside class="sidebar">
+            <ul style="list-style: none; padding: 0;">
+                <li style="margin-bottom: 15px;"><a href="#" style="text-decoration: none; color: #4a5568;">Início</a></li>
+                <li style="margin-bottom: 15px;"><a href="#" style="text-decoration: none; color: #4a5568;">Serviços</a></li>
+                <li style="margin-bottom: 15px;"><a href="#" style="text-decoration: none; color: #4a5568;">Sobre nós</a></li>
+            </ul>
+        </aside>
 
-        <label for="status">Status da Negociação:</label>
-        <select id="status" name="status">
-            <option value="prospeccao">Em Prospecção</option>
-            <option value="negociacao">Em Negociação</option>
-            <option value="fechado">Venda Fechada</option>
-        </select>
+        <!-- Conteúdo Central da Vitrine -->
+        <main class="conteudo-principal">
+            <div style="max-width: 800px; width: 100%;">
+                
+                <h1 id="texto-titulo" style="color: #1a365d; font-size: 2.5rem; margin-bottom: 5px;">Carregando...</h1>
+                <h3 id="texto-subtitulo" style="color: #4a5568; margin-top: 0; margin-bottom: 30px;">...</h3>
 
-        <button type="button" id="btn-salvar">Salvar Cliente</button>
-    </form>
-</div>
+                <!-- Modal de Imagem (Quadrado Central) -->
+                <div class="vitrine-imagem-container">
+                    <img id="imagem-destaque" src="" alt="Destaque da Vitrine" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
+                </div>
 
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
-    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+                <!-- Descrição e Contato (Margem à esquerda) -->
+                <div style="margin-top: 30px; border-left: 4px solid #2b6cb0; padding-left: 15px;">
+                    <p id="texto-descricao" style="font-size: 1.1rem; line-height: 1.6; color: #2d3748; white-space: pre-line;"></p>
+                    <p style="font-weight: bold; margin-top: 20px; color: #2b6cb0;">Contato: <span id="texto-contato"></span></p>
+                </div>
 
-    const firebaseConfig = {
-        apiKey: "AIzaSyA6fZuQf0-GshZ_wtxJW3CRFtlvFPxfaGg",
-        authDomain: "crm-digital-6b415.firebaseapp.com",
-        projectId: "crm-digital-6b415",
-        storageBucket: "crm-digital-6b415.firebasestorage.app",
-        messagingSenderId: "686804789801",
-        appId: "1:686804789801:web:26ddd8979fc38ab4864a38"
-    };
+            </div>
+        </main>
+    </div>
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-    const auth = getAuth(app);
+    <!-- Engrenagem Invisível (Área de Hover no Canto Inferior Direito) -->
+    <div class="area-admin-gear">
+        <div class="gear-icon" onclick="abrirConfigAdmin()">⚙️</div>
+    </div>
 
-    onAuthStateChanged(auth, (user) => {
-        if (!user) {
-            window.location.href = "painel-admin.html";
+    <!-- Fundo Escuro do Modal Admin -->
+    <div id="overlay-admin" class="admin-overlay" onclick="fecharConfigAdmin()"></div>
+
+    <!-- Modal Admin (Central de Edição) -->
+    <div id="modal-admin" class="admin-modal painel">
+        <h2 style="margin-bottom: 20px;">Central de Edição (Vitrine)</h2>
+        
+        <label>Título:</label>
+        <input type="text" id="edit-titulo">
+
+        <label>Subtítulo:</label>
+        <input type="text" id="edit-subtitulo">
+
+        <label>Link da Imagem (Cloudinary/URL):</label>
+        <input type="text" id="edit-imagem">
+
+        <label>Descrição (Pode usar quebra de linha):</label>
+        <textarea id="edit-descricao" rows="4" style="width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box; font-family: inherit; resize: vertical;"></textarea>
+
+        <label>Contato / WhatsApp:</label>
+        <input type="text" id="edit-contato">
+
+        <div style="display: flex; gap: 10px; margin-top: 20px;">
+            <button onclick="salvarConfigAdmin()" style="margin-top: 0; flex: 1;">Salvar Alterações</button>
+            <button onclick="fecharConfigAdmin()" style="margin-top: 0; flex: 1; background-color: #f56565;">Cancelar</button>
+        </div>
+    </div>
+
+    <!-- Script de Integração com o Python -->
+    <script>
+        // Ao abrir o site, busca os dados no Python
+        async function carregarVitrine() {
+            try {
+                const resposta = await fetch('/api/config');
+                const dados = await resposta.json();
+
+                // Preenche a vitrine para os clientes verem
+                document.getElementById('texto-titulo').innerText = dados.titulo;
+                document.getElementById('texto-subtitulo').innerText = dados.subtitulo;
+                document.getElementById('imagem-destaque').src = dados.imagem_url;
+                document.getElementById('texto-descricao').innerText = dados.descricao;
+                document.getElementById('texto-contato').innerText = dados.contato;
+                
+                // Atualiza o logotipo da Upbar com o título
+                document.getElementById('nav-logo').innerText = dados.titulo;
+
+                // Preenche os campos do formulário Admin escondido para quando você for editar
+                document.getElementById('edit-titulo').value = dados.titulo;
+                document.getElementById('edit-subtitulo').value = dados.subtitulo;
+                document.getElementById('edit-imagem').value = dados.imagem_url;
+                document.getElementById('edit-descricao').value = dados.descricao;
+                document.getElementById('edit-contato').value = dados.contato;
+            } catch (erro) {
+                console.error("Erro ao carregar a vitrine:", erro);
+            }
         }
-    });
 
-    document.getElementById('btn-salvar').addEventListener('click', async () => {
-        const nomeValor = document.getElementById('nome').value;
-        const telefoneValor = document.getElementById('telefone').value;
-        const poloValor = document.getElementById('polo').value;
-        const statusValor = document.getElementById('status').value;
-        const botao = document.getElementById('btn-salvar');
-
-        if(nomeValor === "" || telefoneValor === "") {
-            alert("Por favor, preencha o Nome e o Telefone!");
-            return;
+        function abrirConfigAdmin() {
+            document.getElementById('overlay-admin').style.display = 'block';
+            document.getElementById('modal-admin').style.display = 'block';
         }
 
-        botao.innerText = "Salvando...";
-        botao.style.backgroundColor = "#718096";
-
-        try {
-            await addDoc(collection(db, "leads"), {
-                nome: nomeValor,
-                telefone: telefoneValor,
-                polo: poloValor,
-                status: statusValor,
-                dataCadastro: new Date().toISOString()
-            });
-
-            alert("Cliente salvo com sucesso no banco de dados!");
-            document.getElementById('crm-form').reset();
-            
-        } catch (erro) {
-            console.error("Erro ao salvar: ", erro);
-            alert("Erro ao conectar com o banco de dados.");
-        } finally {
-            botao.innerText = "Salvar Cliente";
-            botao.style.backgroundColor = "#2b6cb0";
+        function fecharConfigAdmin() {
+            document.getElementById('overlay-admin').style.display = 'none';
+            document.getElementById('modal-admin').style.display = 'none';
         }
-    });
-</script>
 
+        async function salvarConfigAdmin() {
+            const novosDados = {
+                titulo: document.getElementById('edit-titulo').value,
+                subtitulo: document.getElementById('edit-subtitulo').value,
+                imagem_url: document.getElementById('edit-imagem').value,
+                descricao: document.getElementById('edit-descricao').value,
+                contato: document.getElementById('edit-contato').value
+            };
+
+            try {
+                const resposta = await fetch('/api/config', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(novosDados)
+                });
+
+                if (resposta.ok) {
+                    alert("Vitrine atualizada com sucesso!");
+                    fecharConfigAdmin();
+                    carregarVitrine(); // Recarrega os textos na tela instantaneamente
+                } else {
+                    alert("Erro ao salvar configurações.");
+                }
+            } catch (erro) {
+                console.error("Erro ao salvar:", erro);
+                alert("Erro de conexão com o servidor.");
+            }
+        }
+
+        // Inicia o carregamento assim que o HTML é lido
+        carregarVitrine();
+    </script>
 </body>
 </html>

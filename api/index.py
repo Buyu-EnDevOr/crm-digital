@@ -84,6 +84,38 @@ def atualizar_cliente(id_cliente):
         return jsonify({"mensagem": "Cliente atualizado com sucesso!"}), 200
     except Exception as e:
         return jsonify({"erro": str(e)}), 500
+# ==========================================
+# ROTAS DA VITRINE (CONFIGURAÇÕES DO SITE)
+# ==========================================
 
+@app.route('/api/config', methods=['GET'])
+def obter_configuracoes():
+    try:
+        # Busca o documento 'vitrine' dentro da coleção 'settings'
+        doc = db.collection("settings").document("vitrine").get()
+        if doc.exists:
+            return jsonify(doc.to_dict()), 200
+        else:
+            # Se for a primeira vez e o banco estiver vazio, envia um padrão visual
+            padrao = {
+                "titulo": "CRM-DIGITAL",
+                "subtitulo": "modelo teste",
+                "imagem_url": "https://res.cloudinary.com/demo/image/upload/v1312461204/sample.jpg",
+                "descricao": "Serviços digitais de escrita criativa e redação estratégica.\nTransformamos ideias em textos que convertem.",
+                "contato": "(00) 00000-0000"
+            }
+            return jsonify(padrao), 200
+    except Exception as e:
+        return jsonify({"erro": str(e)}), 500
+
+@app.route('/api/config', methods=['PUT'])
+def atualizar_configuracoes():
+    try:
+        novos_dados = request.json
+        # O merge=True garante que ele crie o documento caso não exista no Firebase
+        db.collection("settings").document("vitrine").set(novos_dados, merge=True)
+        return jsonify({"mensagem": "Vitrine atualizada com sucesso!"}), 200
+    except Exception as e:
+        return jsonify({"erro": str(e)}), 500
 if __name__ == '__main__':
     app.run(debug=True, port=8080)
