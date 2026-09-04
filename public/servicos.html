@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Serviços - CRM Digital</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* CSS exclusivo da página de serviços para organizar os cards lado a lado */
+        .grid-servicos {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+        .card-produto {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .card-produto:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        }
+        .btn-comprar {
+            width: 100%;
+            padding: 12px;
+            font-size: 1.1rem;
+            background-color: #4ade80;
+            color: #0f172a;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: 0.3s;
+        }
+        .btn-comprar:hover {
+            background-color: #22c55e;
+        }
+    </style>
+</head>
+<body class="tema-claro vitrine-fundo" style="margin: 0; overflow-x: hidden;">
+
+    <!-- Upbar -->
+    <header class="upbar">
+        <img src="logo-crm.png" alt="Logo" class="logo-bolinha" id="nav-logo" onerror="this.style.display='none'">
+        <div>
+            <a href="index.html" class="btn-upbar">Voltar para Home</a>
+        </div>
+    </header>
+
+    <div class="layout-vitrine" style="justify-content: center; padding: 40px 20px;">
+        
+        <div class="vitrine-card" style="max-width: 1000px;">
+            <h1 style="color: #1a365d; margin-top: 0; text-align: center;">Nossos Serviços</h1>
+            <p style="color: #4a5568; text-align: center; font-size: 1.1rem; margin-bottom: 40px;">Soluções completas de escrita e redação para impulsionar seu projeto.</p>
+            
+            <div class="grid-servicos">
+                <!-- Pacote 1 -->
+                <div class="card-produto">
+                    <div>
+                        <h2 style="color: #2b6cb0; margin-top: 0; font-size: 1.4rem;">Copywriting Estratégico</h2>
+                        <p style="color: #4a5568; font-size: 0.95rem;">Textos persuasivos focados em conversão para páginas de vendas, anúncios e e-mail marketing.</p>
+                        <h1 style="color: #1a365d; margin: 15px 0;">R$ 150,00</h1>
+                    </div>
+                    <button class="btn-comprar" onclick="alert('Integração com Mercado Pago em breve!')">Adicionar pacote</button>
+                </div>
+
+                <!-- Pacote 2 -->
+                <div class="card-produto">
+                    <div>
+                        <h2 style="color: #2b6cb0; margin-top: 0; font-size: 1.4rem;">Redação de Artigos</h2>
+                        <p style="color: #4a5568; font-size: 0.95rem;">Produção de artigos otimizados (SEO) para blogs e portais, engajando sua audiência com conteúdo de valor.</p>
+                        <h1 style="color: #1a365d; margin: 15px 0;">R$ 80,00</h1>
+                    </div>
+                    <button class="btn-comprar" onclick="alert('Integração com Mercado Pago em breve!')">Adicionar pacote</button>
+                </div>
+
+                <!-- Pacote 3 -->
+                <div class="card-produto">
+                    <div>
+                        <h2 style="color: #2b6cb0; margin-top: 0; font-size: 1.4rem;">Consultoria Criativa</h2>
+                        <p style="color: #4a5568; font-size: 0.95rem;">Reunião de 1 hora para estruturação de ideias, revisão de roteiros ou direcionamento criativo da sua marca.</p>
+                        <h1 style="color: #1a365d; margin: 15px 0;">R$ 100,00</h1>
+                    </div>
+                    <!-- Deixamos a ID no botão principal para testar o checkout mais tarde -->
+                    <button id="btn-teste-checkout" class="btn-comprar">Comprar Consultoria</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Script reservado para o futuro teste do Mercado Pago -->
+    <script>
+        document.getElementById('btn-teste-checkout').addEventListener('click', async () => {
+            const botao = document.getElementById('btn-teste-checkout');
+            const textoOriginal = botao.innerText;
+            botao.innerText = "Conectando banco...";
+            botao.disabled = true;
+
+            try {
+                const resposta = await fetch('http://127.0.0.1:8080/api/pagamento', { method: 'POST' });
+                const dados = await resposta.json();
+
+                if (resposta.ok) {
+                    window.location.href = dados.link_checkout;
+                } else {
+                    alert("Chave de pagamento ainda não configurada.");
+                    botao.innerText = textoOriginal;
+                    botao.disabled = false;
+                }
+            } catch (erro) {
+                console.error(erro);
+                alert("Configure a chave do Mercado Pago no Python primeiro.");
+                botao.innerText = textoOriginal;
+                botao.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>

@@ -5,7 +5,7 @@ from firebase_admin import credentials
 from firebase_admin import firestore
 import os
 import json # <-- NOVO: Precisamos disso para ler a chave da Vercel
-
+import mercadopago
 app = Flask(__name__)
 CORS(app)
 
@@ -115,6 +115,45 @@ def atualizar_configuracoes():
         # O merge=True garante que ele crie o documento caso não exista no Firebase
         db.collection("settings").document("vitrine").set(novos_dados, merge=True)
         return jsonify({"mensagem": "Vitrine atualizada com sucesso!"}), 200
+    except Exception as e:
+        return jsonify({"erro": str(e)}), 500
+    # ==========================================
+# ROTA DE PAGAMENTO (MERCADO PAGO)
+# ==========================================
+@app.route('/api/pagamento', methods=['POST'])
+def gerar_pagamento():
+    try:
+        # 1. Conectando com a sua conta do Mercado Pago
+        # Você vai trocar isso pela sua chave Access Token de Teste
+        sdk = mercadopago.SDK("SEU_ACCESS_TOKEN_DE_TESTE_AQUI")
+
+        # 2. Criando o carrinho de compras (Preferência)
+        preference_data = {
+            "items": [
+                {
+                    "title": "Consultoria de Escrita Criativa",
+                    "description": "Sessão de 1 hora de consultoria.",
+                    "quantity": 1,
+                    "currency_id": "BRL",
+                    "unit_price": 10.00
+                }
+            ],
+            # Para onde o cliente volta depois de pagar
+            "back_urls": {
+                "success": "http://127.0.0.1:5500/public/sucesso.html",
+                "failure": "http://127.0.0.1:5500/public/erro.html",
+                "pending": "http://127.0.0.1:5500/public/pendente.html"
+            },
+            "auto_return": "approved"
+        }
+
+        # 3. Enviando para o Mercado Pago e pegando o link gerado
+        preference_response = sdk.preference().create(preference_data)
+        preference = preference_response["response"]
+
+        # 4. Devolvendo o link de checkout (init_point) para o JavaScript
+        return jsonify({"link_checkout": preference["init_point"]}), 200
+
     except Exception as e:
         return jsonify({"erro": str(e)}), 500
 if __name__ == '__main__':
