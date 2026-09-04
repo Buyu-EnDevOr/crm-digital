@@ -16,7 +16,7 @@
         <div>
             <a href="login.html" class="btn-upbar">Login</a>
             <a href="cadastro.html" class="btn-upbar">Cadastro</a>
-            <a href="painel-admin.html" class="btn-upbar btn-destaque">Painel Admin</a>
+            <a href="painel-admin.html" class="btn-upbar btn-destaque" id="btn-admin">Painel Admin</a>
         </div>
     </header>
 
@@ -58,5 +58,33 @@
         </main>
     </div>
 
+    <!-- Script de Integração com Firebase e Autenticação -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+
+        // Suas chaves de conexão do Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyA6fZuQf0-GshZ_wtxJW3CRFtlvFPxfaGg",
+            authDomain: "crm-digital-6b415.firebaseapp.com",
+            projectId: "crm-digital-6b415",
+            storageBucket: "crm-digital-6b415.firebasestorage.app",
+            messagingSenderId: "686804789801",
+            appId: "1:686804789801:web:26ddd8979fc38ab4864a38"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // Verifica o usuário logado para sumir com o botão Admin
+        const btnAdmin = document.getElementById('btn-admin');
+        onAuthStateChanged(auth, (user) => {
+            if (user && user.email === "pedroeliasm08@gmail.com") {
+                if (btnAdmin) btnAdmin.style.display = 'inline-block';
+            } else {
+                if (btnAdmin) btnAdmin.remove(); // Deleta do código para clientes normais
+            }
+        });
+    </script>
 </body>
 </html>

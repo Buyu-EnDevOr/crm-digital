@@ -6,7 +6,6 @@
     <title>Serviços - CRM Digital</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* CSS exclusivo da página de serviços para organizar os cards lado a lado */
         .grid-servicos {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -48,58 +47,97 @@
 </head>
 <body class="tema-claro vitrine-fundo" style="margin: 0; overflow-x: hidden;">
 
-    <!-- Upbar -->
+    <!-- Upbar (Navegação Superior) -->
     <header class="upbar">
         <img src="logo-crm.png" alt="Logo" class="logo-bolinha" id="nav-logo" onerror="this.style.display='none'">
         <div>
-            <a href="index.html" class="btn-upbar">Voltar para Home</a>
+            <a href="login.html" class="btn-upbar">Login</a>
+            <a href="cadastro.html" class="btn-upbar">Cadastro</a>
+            <a href="painel-admin.html" class="btn-upbar btn-destaque" id="btn-admin">Painel Admin</a>
         </div>
     </header>
 
-    <div class="layout-vitrine" style="justify-content: center; padding: 40px 20px;">
-        
-        <div class="vitrine-card" style="max-width: 1000px;">
-            <h1 style="color: #1a365d; margin-top: 0; text-align: center;">Nossos Serviços</h1>
-            <p style="color: #4a5568; text-align: center; font-size: 1.1rem; margin-bottom: 40px;">Soluções completas de escrita e redação para impulsionar seu projeto.</p>
-            
-            <div class="grid-servicos">
-                <!-- Pacote 1 -->
-                <div class="card-produto">
-                    <div>
-                        <h2 style="color: #2b6cb0; margin-top: 0; font-size: 1.4rem;">Copywriting Estratégico</h2>
-                        <p style="color: #4a5568; font-size: 0.95rem;">Textos persuasivos focados em conversão para páginas de vendas, anúncios e e-mail marketing.</p>
-                        <h1 style="color: #1a365d; margin: 15px 0;">R$ 150,00</h1>
-                    </div>
-                    <button class="btn-comprar" onclick="alert('Integração com Mercado Pago em breve!')">Adicionar pacote</button>
-                </div>
+    <!-- Layout Principal com Sidebar e Conteúdo -->
+    <div class="layout-vitrine">
+        <!-- Sidebar -->
+        <aside class="sidebar" style="background-color: rgba(226, 232, 240, 0.95);">
+            <ul style="list-style: none; padding: 0;">
+                <li style="margin-bottom: 15px;"><a href="index.html" style="text-decoration: none; color: #4a5568; font-weight: bold;">Início</a></li>
+                <li style="margin-bottom: 15px;"><a href="servicos.html" style="text-decoration: none; color: #4a5568; font-weight: bold;">Serviços</a></li>
+                <li style="margin-bottom: 15px;"><a href="sobre-nos.html" style="text-decoration: none; color: #4a5568; font-weight: bold;">Sobre nós</a></li>
+            </ul>
+        </aside>
 
-                <!-- Pacote 2 -->
-                <div class="card-produto">
-                    <div>
-                        <h2 style="color: #2b6cb0; margin-top: 0; font-size: 1.4rem;">Redação de Artigos</h2>
-                        <p style="color: #4a5568; font-size: 0.95rem;">Produção de artigos otimizados (SEO) para blogs e portais, engajando sua audiência com conteúdo de valor.</p>
-                        <h1 style="color: #1a365d; margin: 15px 0;">R$ 80,00</h1>
+        <!-- Conteúdo Central -->
+        <main class="conteudo-principal">
+            <div class="vitrine-card" style="max-width: 1000px; width: 100%;">
+                <h1 style="color: #1a365d; margin-top: 0; text-align: center;">Nossos Serviços</h1>
+                <p style="color: #4a5568; text-align: center; font-size: 1.1rem; margin-bottom: 40px;">Soluções completas de escrita e redação para impulsionar seu projeto.</p>
+                
+                <div class="grid-servicos">
+                    <!-- Pacote 1 -->
+                    <div class="card-produto">
+                        <div>
+                            <h2 style="color: #2b6cb0; margin-top: 0; font-size: 1.4rem;">Copywriting Estratégico</h2>
+                            <p style="color: #4a5568; font-size: 0.95rem;">Textos persuasivos focados em conversão para páginas de vendas, anúncios e e-mail marketing.</p>
+                            <h1 style="color: #1a365d; margin: 15px 0;">R$ 150,00</h1>
+                        </div>
+                        <button class="btn-comprar" onclick="alert('Integração com Mercado Pago em breve!')">Adicionar pacote</button>
                     </div>
-                    <button class="btn-comprar" onclick="alert('Integração com Mercado Pago em breve!')">Adicionar pacote</button>
-                </div>
 
-                <!-- Pacote 3 -->
-                <div class="card-produto">
-                    <div>
-                        <h2 style="color: #2b6cb0; margin-top: 0; font-size: 1.4rem;">Consultoria Criativa</h2>
-                        <p style="color: #4a5568; font-size: 0.95rem;">Reunião de 1 hora para estruturação de ideias, revisão de roteiros ou direcionamento criativo da sua marca.</p>
-                        <h1 style="color: #1a365d; margin: 15px 0;">R$ 100,00</h1>
+                    <!-- Pacote 2 -->
+                    <div class="card-produto">
+                        <div>
+                            <h2 style="color: #2b6cb0; margin-top: 0; font-size: 1.4rem;">Redação de Artigos</h2>
+                            <p style="color: #4a5568; font-size: 0.95rem;">Produção de artigos otimizados (SEO) para blogs e portais, engajando sua audiência com conteúdo de valor.</p>
+                            <h1 style="color: #1a365d; margin: 15px 0;">R$ 80,00</h1>
+                        </div>
+                        <button class="btn-comprar" onclick="alert('Integração com Mercado Pago em breve!')">Adicionar pacote</button>
                     </div>
-                    <!-- Deixamos a ID no botão principal para testar o checkout mais tarde -->
-                    <button id="btn-teste-checkout" class="btn-comprar">Comprar Consultoria</button>
+
+                    <!-- Pacote 3 (O do Mercado Pago) -->
+                    <div class="card-produto">
+                        <div>
+                            <h2 style="color: #2b6cb0; margin-top: 0; font-size: 1.4rem;">Consultoria Criativa</h2>
+                            <p style="color: #4a5568; font-size: 0.95rem;">Reunião de 1 hora para estruturação de ideias, revisão de roteiros ou direcionamento criativo da sua marca.</p>
+                            <h1 style="color: #1a365d; margin: 15px 0;">R$ 10,00</h1>
+                        </div>
+                        <button id="btn-teste-checkout" class="btn-comprar">Comprar Consultoria</button>
+                    </div>
                 </div>
             </div>
-        </div>
-
+        </main>
     </div>
 
-    <!-- Script reservado para o futuro teste do Mercado Pago -->
-    <script>
+    <!-- Script de Integração com Firebase e Mercado Pago -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+
+        // Suas chaves de conexão do Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyA6fZuQf0-GshZ_wtxJW3CRFtlvFPxfaGg",
+            authDomain: "crm-digital-6b415.firebaseapp.com",
+            projectId: "crm-digital-6b415",
+            storageBucket: "crm-digital-6b415.firebasestorage.app",
+            messagingSenderId: "686804789801",
+            appId: "1:686804789801:web:26ddd8979fc38ab4864a38"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // Verifica o usuário logado para sumir com o botão Admin
+        const btnAdmin = document.getElementById('btn-admin');
+        onAuthStateChanged(auth, (user) => {
+            if (user && user.email === "pedroeliasm08@gmail.com") {
+                if (btnAdmin) btnAdmin.style.display = 'inline-block';
+            } else {
+                if (btnAdmin) btnAdmin.remove(); // Deleta do código para clientes normais
+            }
+        });
+
+        // Botão do Mercado Pago
         document.getElementById('btn-teste-checkout').addEventListener('click', async () => {
             const botao = document.getElementById('btn-teste-checkout');
             const textoOriginal = botao.innerText;
@@ -107,19 +145,20 @@
             botao.disabled = true;
 
             try {
-                const resposta = await fetch('http://127.0.0.1:8080/api/pagamento', { method: 'POST' });
+                // Modifique esta URL para usar apenas '/api/pagamento' quando estiver rodando pela Vercel online
+                const resposta = await fetch('/api/pagamento', { method: 'POST' });
                 const dados = await resposta.json();
 
                 if (resposta.ok) {
                     window.location.href = dados.link_checkout;
                 } else {
-                    alert("Chave de pagamento ainda não configurada.");
+                    alert("Chave de pagamento ainda não configurada no Python.");
                     botao.innerText = textoOriginal;
                     botao.disabled = false;
                 }
             } catch (erro) {
                 console.error(erro);
-                alert("Configure a chave do Mercado Pago no Python primeiro.");
+                alert("Erro de conexão. O servidor está rodando?");
                 botao.innerText = textoOriginal;
                 botao.disabled = false;
             }

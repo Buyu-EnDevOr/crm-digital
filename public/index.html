@@ -87,8 +87,43 @@
         </div>
     </div>
 
-    <script>
-        async function carregarVitrine() {
+    <!-- Script de Integração com Python e Autenticação Firebase -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+
+        // Suas chaves de conexão
+        const firebaseConfig = {
+            apiKey: "AIzaSyA6fZuQf0-GshZ_wtxJW3CRFtlvFPxfaGg",
+            authDomain: "crm-digital-6b415.firebaseapp.com",
+            projectId: "crm-digital-6b415",
+            storageBucket: "crm-digital-6b415.firebasestorage.app",
+            messagingSenderId: "686804789801",
+            appId: "1:686804789801:web:26ddd8979fc38ab4864a38"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // Pega os elementos secretos
+        const engrenagem = document.querySelector('.area-admin-gear');
+        const btnAdmin = document.querySelector('.btn-destaque');
+
+        // Escolta do Firebase: Verifica quem está logado
+        onAuthStateChanged(auth, (user) => {
+            if (user && user.email === "pedroeliasm08@gmail.com") {
+                // Se for o dono, tudo fica visível e funcionando
+                engrenagem.style.display = 'flex';
+                btnAdmin.style.display = 'inline-block';
+            } else {
+                // Se for cliente comum ou estiver deslogado, DELETA do HTML (Soma até do F12)
+                if(engrenagem) engrenagem.remove();
+                if(btnAdmin) btnAdmin.remove();
+            }
+        });
+
+        // Funções da Vitrine (Adicionadas ao window porque estamos usando type="module")
+        window.carregarVitrine = async function() {
             try {
                 const resposta = await fetch('/api/config');
                 const dados = await resposta.json();
@@ -107,19 +142,19 @@
             } catch (erro) {
                 console.error("Erro ao carregar a vitrine:", erro);
             }
-        }
+        };
 
-        function abrirConfigAdmin() {
+        window.abrirConfigAdmin = function() {
             document.getElementById('overlay-admin').style.display = 'block';
             document.getElementById('modal-admin').style.display = 'block';
-        }
+        };
 
-        function fecharConfigAdmin() {
+        window.fecharConfigAdmin = function() {
             document.getElementById('overlay-admin').style.display = 'none';
             document.getElementById('modal-admin').style.display = 'none';
-        }
+        };
 
-        async function salvarConfigAdmin() {
+        window.salvarConfigAdmin = async function() {
             const novosDados = {
                 titulo: document.getElementById('edit-titulo').value,
                 subtitulo: document.getElementById('edit-subtitulo').value,
@@ -146,7 +181,7 @@
                 console.error("Erro ao salvar:", erro);
                 alert("Erro de conexão com o servidor.");
             }
-        }
+        };
 
         carregarVitrine();
     </script>
