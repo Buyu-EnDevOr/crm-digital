@@ -10,24 +10,27 @@
 
     <!-- Upbar (Navegação Superior) -->
     <header class="upbar">
-        <!-- Logo em formato circular (Bolinha) -->
-        <img src="logo-crm.png" alt="Logo" class="logo-bolinha" id="nav-logo" onerror="this.style.display='none'">
+        <div style="display: flex; align-items: center;">
+            <!-- Botão Hambúrguer -->
+            <button id="btn-toggle" class="btn-toggle">☰</button>
+            <img src="logo-crm.png" alt="Logo" class="logo-bolinha" id="nav-logo" onerror="this.style.display='none'">
+        </div>
         
         <div>
             <a href="login.html" class="btn-upbar">Login</a>
             <a href="cadastro.html" class="btn-upbar">Cadastro</a>
-            <a href="painel-admin.html" class="btn-upbar btn-destaque">Painel Admin</a>
+            <a href="painel-admin.html" class="btn-upbar btn-destaque" id="btn-admin">Painel Admin</a>
         </div>
     </header>
 
     <!-- Layout Principal -->
     <div class="layout-vitrine">
-        <!-- Sidebar -->
-        <aside class="sidebar" style="background-color: rgba(226, 232, 240, 0.95);">
-            <ul style="list-style: none; padding: 0;">
-                <li style="margin-bottom: 15px;"><a href="index.html" style="text-decoration: none; color: #4a5568; font-weight: bold;">Início</a></li>
-                <li style="margin-bottom: 15px;"><a href="servicos.html" style="text-decoration: none; color: #4a5568; font-weight: bold;">Serviços</a></li>
-                <li style="margin-bottom: 15px;"><a href="sobre-nos.html" style="text-decoration: none; color: #4a5568; font-weight: bold;">Sobre nós</a></li>
+        <!-- Sidebar Escura e Retrátil -->
+        <aside class="sidebar" id="menu-lateral">
+            <ul style="list-style: none; padding: 0; margin: 0;">
+                <li style="margin-bottom: 15px;"><a href="index.html">Início</a></li>
+                <li style="margin-bottom: 15px;"><a href="servicos.html">Serviços</a></li>
+                <li style="margin-bottom: 15px;"><a href="sobre-nos.html">Sobre nós</a></li>
             </ul>
         </aside>
 
@@ -92,7 +95,6 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 
-        // Suas chaves de conexão
         const firebaseConfig = {
             apiKey: "AIzaSyA6fZuQf0-GshZ_wtxJW3CRFtlvFPxfaGg",
             authDomain: "crm-digital-6b415.firebaseapp.com",
@@ -105,24 +107,26 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
 
-        // Pega os elementos secretos
         const engrenagem = document.querySelector('.area-admin-gear');
-        const btnAdmin = document.querySelector('.btn-destaque');
+        const btnAdmin = document.getElementById('btn-admin');
 
-        // Escolta do Firebase: Verifica quem está logado
+        // Autenticação
         onAuthStateChanged(auth, (user) => {
             if (user && user.email === "pedroeliasm08@gmail.com") {
-                // Se for o dono, tudo fica visível e funcionando
-                engrenagem.style.display = 'flex';
-                btnAdmin.style.display = 'inline-block';
+                if(engrenagem) engrenagem.style.display = 'flex';
+                if(btnAdmin) btnAdmin.style.display = 'inline-block';
             } else {
-                // Se for cliente comum ou estiver deslogado, DELETA do HTML (Soma até do F12)
                 if(engrenagem) engrenagem.remove();
                 if(btnAdmin) btnAdmin.remove();
             }
         });
 
-        // Funções da Vitrine (Adicionadas ao window porque estamos usando type="module")
+        // Lógica de Abrir/Fechar a Sidebar
+        document.getElementById('btn-toggle').addEventListener('click', () => {
+            document.getElementById('menu-lateral').classList.toggle('oculta');
+        });
+
+        // Funções da Vitrine
         window.carregarVitrine = async function() {
             try {
                 const resposta = await fetch('/api/config');

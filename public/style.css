@@ -395,3 +395,52 @@ body:not(.tema-escuro) { display: block; height: auto; }
     width: 100%;
     box-sizing: border-box;
 }
+/* ===== NOVA SIDEBAR ESCURA E RETRÁTIL ===== */
+.sidebar {
+    width: 250px;
+    background-color: rgba(15, 23, 42, 0.95); /* Tema escuro */
+    padding: 30px 20px;
+    border-right: 1px solid #1e293b;
+    transition: width 0.3s ease, padding 0.3s ease; /* Animação suave de abrir/fechar */
+    overflow: hidden; /* Esconde os textos quando a barra encolhe */
+    white-space: nowrap; /* Evita que os textos quebrem de linha durante a animação */
+}
+
+/* Classe que o JavaScript vai ativar para esconder a barra */
+.sidebar.oculta {
+    width: 0;
+    padding-left: 0;
+    padding-right: 0;
+    border: none;
+}
+
+/* Cores dos Links na Sidebar Escura */
+.sidebar a {
+    text-decoration: none;
+    color: #e2e8f0;
+    font-weight: bold;
+    font-size: 1.1rem;
+    transition: 0.3s;
+}
+
+.sidebar a:hover {
+    color: #4ade80; /* Destaque verde ao passar o mouse */
+}
+
+/* Botão de Sanduíche (Toggle) */
+.btn-toggle {
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    margin-right: 15px;
+    display: flex;
+    align-items: center;
+    transition: transform 0.2s;
+}
+
+.btn-toggle:hover {
+    transform: scale(1.1);
+    color: #4ade80;
+}
