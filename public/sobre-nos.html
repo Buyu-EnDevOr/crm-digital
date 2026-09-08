@@ -11,21 +11,29 @@
     <!-- Upbar (Navegação Superior) -->
     <header class="upbar">
         <div style="display: flex; align-items: center;">
-            <!-- Botão Hambúrguer adicionado -->
             <button id="btn-toggle" class="btn-toggle">☰</button>
             <img src="logo-crm.png" alt="Logo" class="logo-bolinha" id="nav-logo" onerror="this.style.display='none'">
         </div>
         
-        <div>
+        <!-- Área DESLOGADA: Só aparece se ninguém fez login -->
+        <div id="area-deslogada">
             <a href="login.html" class="btn-upbar">Login</a>
             <a href="cadastro.html" class="btn-upbar">Cadastro</a>
-            <a href="painel-admin.html" class="btn-upbar btn-destaque" id="btn-admin">Painel Admin</a>
+        </div>
+
+        <!-- Área LOGADA: Só aparece se tiver alguém logado -->
+        <div id="area-logada" style="display: none; align-items: center; gap: 15px;">
+            <span id="user-email" style="color: #4a5568; font-weight: bold; font-size: 0.9rem;"></span>
+            
+            <a href="painel-admin.html" class="btn-upbar btn-destaque" id="btn-admin" style="display: none;">Painel Admin</a>
+            
+            <button id="btn-logout" class="btn-upbar" style="background-color: #f56565; color: white; border: none; cursor: pointer;">Sair</button>
         </div>
     </header>
 
     <!-- Layout Principal -->
     <div class="layout-vitrine">
-        <!-- Sidebar: Adicionado ID e removida a cor clara inline -->
+        <!-- Sidebar -->
         <aside class="sidebar" id="menu-lateral">
             <ul style="list-style: none; padding: 0; margin: 0;">
                 <li style="margin-bottom: 15px;"><a href="index.html" style="text-decoration: none; color: #4a5568; font-weight: bold;">Início</a></li>
@@ -79,15 +87,49 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
 
-        // Verifica o usuário logado para sumir com o botão Admin
+        // Elementos da interface
+        const engrenagem = document.querySelector('.area-admin-gear'); 
         const btnAdmin = document.getElementById('btn-admin');
+        const areaDeslogada = document.getElementById('area-deslogada');
+        const areaLogada = document.getElementById('area-logada');
+        const userEmailSpan = document.getElementById('user-email');
+        const btnLogout = document.getElementById('btn-logout');
+
+        // Autenticação e Perfil
         onAuthStateChanged(auth, (user) => {
-            if (user && user.email === "pedroeliasm08@gmail.com") {
-                if (btnAdmin) btnAdmin.style.display = 'inline-block';
+            if (user) {
+                // Se ALGUÉM logou: Esconde login, mostra perfil
+                if(areaDeslogada) areaDeslogada.style.display = 'none';
+                if(areaLogada) areaLogada.style.display = 'flex';
+                if(userEmailSpan) userEmailSpan.innerText = "👤 " + user.email;
+
+                // Se QUEM LOGOU for o dono: Mostra ferramentas secretas
+                if (user.email === "pedroeliasm08@gmail.com") {
+                    if(engrenagem) engrenagem.style.display = 'flex';
+                    if(btnAdmin) btnAdmin.style.display = 'inline-block';
+                } else {
+                    if(engrenagem) engrenagem.remove();
+                    if(btnAdmin) btnAdmin.remove();
+                }
             } else {
-                if (btnAdmin) btnAdmin.remove(); // Deleta do código para clientes normais
+                // Se NINGUÉM logou: Mostra login, esconde perfil
+                if(areaDeslogada) areaDeslogada.style.display = 'block';
+                if(areaLogada) areaLogada.style.display = 'none';
+                if(engrenagem) engrenagem.remove();
+                if(btnAdmin) btnAdmin.remove();
             }
         });
+
+        // Ação do Botão Sair (Logout)
+        if(btnLogout) {
+            btnLogout.addEventListener('click', () => {
+                import("https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js").then((module) => {
+                    module.signOut(auth).then(() => {
+                        window.location.href = "index.html"; // Joga pra home ao sair
+                    });
+                });
+            });
+        }
 
         // Lógica de Abrir/Fechar a Sidebar
         document.getElementById('btn-toggle').addEventListener('click', () => {
