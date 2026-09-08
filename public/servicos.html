@@ -60,13 +60,17 @@
             <a href="cadastro.html" class="btn-upbar">Cadastro</a>
         </div>
 
-        <!-- Área LOGADA: Só aparece se tiver alguém logado -->
-        <div id="area-logada" style="display: none; align-items: center; gap: 15px;">
-            <span id="user-email" style="color: #4a5568; font-weight: bold; font-size: 0.9rem;"></span>
+       <!-- Área LOGADA: Só aparece se tiver alguém logado -->
+        <div id="area-logada" style="display: none; align-items: center; gap: 20px;">
+            <!-- E-mail mais claro para dar contraste no fundo escuro -->
+            <span id="user-email" style="color: #e2e8f0; font-weight: 500; font-size: 0.95rem; letter-spacing: 0.5px;"></span>
             
             <a href="painel-admin.html" class="btn-upbar btn-destaque" id="btn-admin" style="display: none;">Painel Admin</a>
             
-            <button id="btn-logout" class="btn-upbar" style="background-color: #f56565; color: white; border: none; cursor: pointer;">Sair</button>
+            <!-- Botão de Sair Premium -->
+            <button id="btn-logout" onmouseover="this.style.backgroundColor='#ef4444'; this.style.color='white'" onmouseout="this.style.backgroundColor='transparent'; this.style.color='#ef4444'" style="background-color: transparent; color: #ef4444; border: 1px solid #ef4444; border-radius: 6px; padding: 6px 18px; font-weight: bold; cursor: pointer; font-size: 0.9rem; transition: all 0.3s ease;">
+                Sair
+            </button>
         </div>
     </header>
 
