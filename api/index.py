@@ -140,8 +140,9 @@ def gerar_pagamento():
                 'quantity': 1,
             }],
             mode='payment',
-            success_url='https://seusite.com/sucesso.html', 
-            cancel_url='https://seusite.com/servicos.html',
+            # LINKS ATUALIZADOS PARA A SUA VERCEL AQUI 👇
+            success_url='https://crm-digital-lac.vercel.app/sucesso.html', 
+            cancel_url='https://crm-digital-lac.vercel.app/servicos.html',
         )
 
         # 3. Devolvendo o link de checkout gerado para o JavaScript
