@@ -4,8 +4,9 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
 import os
-import json # <-- NOVO: Precisamos disso para ler a chave da Vercel
-import mercadopago
+import json # <-- Necessário para ler a chave da Vercel
+import stripe
+
 app = Flask(__name__)
 CORS(app)
 
@@ -79,11 +80,11 @@ def deletar_cliente(id_cliente):
 def atualizar_cliente(id_cliente):
     try:
         dados_atualizados = request.json
-        # O 'update' do Firebase altera apenas os campos enviados, sem apagar o resto
         db.collection("leads").document(id_cliente).update(dados_atualizados)
         return jsonify({"mensagem": "Cliente atualizado com sucesso!"}), 200
     except Exception as e:
         return jsonify({"erro": str(e)}), 500
+
 # ==========================================
 # ROTAS DA VITRINE (CONFIGURAÇÕES DO SITE)
 # ==========================================
@@ -91,12 +92,10 @@ def atualizar_cliente(id_cliente):
 @app.route('/api/config', methods=['GET'])
 def obter_configuracoes():
     try:
-        # Busca o documento 'vitrine' dentro da coleção 'settings'
         doc = db.collection("settings").document("vitrine").get()
         if doc.exists:
             return jsonify(doc.to_dict()), 200
         else:
-            # Se for a primeira vez e o banco estiver vazio, envia um padrão visual
             padrao = {
                 "titulo": "CRM-DIGITAL",
                 "subtitulo": "modelo teste",
@@ -112,49 +111,44 @@ def obter_configuracoes():
 def atualizar_configuracoes():
     try:
         novos_dados = request.json
-        # O merge=True garante que ele crie o documento caso não exista no Firebase
         db.collection("settings").document("vitrine").set(novos_dados, merge=True)
         return jsonify({"mensagem": "Vitrine atualizada com sucesso!"}), 200
     except Exception as e:
         return jsonify({"erro": str(e)}), 500
-    # ==========================================
-# ROTA DE PAGAMENTO (MERCADO PAGO)
+
+# ==========================================
+# ROTA DE PAGAMENTO (STRIPE)
 # ==========================================
 @app.route('/api/pagamento', methods=['POST'])
 def gerar_pagamento():
     try:
-        # 1. Conectando com a sua conta do Mercado Pago
-        # Você vai trocar isso pela sua chave Access Token de Teste
-        sdk = mercadopago.SDK("SEU_ACCESS_TOKEN_DE_TESTE_AQUI")
+        # 1. Busca a chave escondida nas Variáveis de Ambiente
+        stripe.api_key = os.environ.get("STRIPE_KEY")
 
-        # 2. Criando o carrinho de compras (Preferência)
-        preference_data = {
-            "items": [
-                {
-                    "title": "Consultoria de Escrita Criativa",
-                    "description": "Sessão de 1 hora de consultoria.",
-                    "quantity": 1,
-                    "currency_id": "BRL",
-                    "unit_price": 10.00
-                }
-            ],
-            # Para onde o cliente volta depois de pagar
-            "back_urls": {
-                "success": "http://127.0.0.1:5500/public/sucesso.html",
-                "failure": "http://127.0.0.1:5500/public/erro.html",
-                "pending": "http://127.0.0.1:5500/public/pendente.html"
-            },
-            "auto_return": "approved"
-        }
+        # 2. Criando a sessão de checkout
+        session = stripe.checkout.Session.create(
+            payment_method_types=['card'],
+            line_items=[{
+                'price_data': {
+                    'currency': 'brl',
+                    'product_data': {
+                        'name': 'Consultoria Criativa',
+                        'description': 'Reunião de 1 hora para estruturação de ideias e roteiros.',
+                    },
+                    'unit_amount': 1000, 
+                },
+                'quantity': 1,
+            }],
+            mode='payment',
+            success_url='https://seusite.com/sucesso.html', 
+            cancel_url='https://seusite.com/servicos.html',
+        )
 
-        # 3. Enviando para o Mercado Pago e pegando o link gerado
-        preference_response = sdk.preference().create(preference_data)
-        preference = preference_response["response"]
-
-        # 4. Devolvendo o link de checkout (init_point) para o JavaScript
-        return jsonify({"link_checkout": preference["init_point"]}), 200
+        # 3. Devolvendo o link de checkout gerado para o JavaScript
+        return jsonify({"link_checkout": session.url}), 200
 
     except Exception as e:
         return jsonify({"erro": str(e)}), 500
+
 if __name__ == '__main__':
     app.run(debug=True, port=8080)
