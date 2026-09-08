@@ -22,9 +22,16 @@
         </div>
 
        <!-- Área LOGADA: Só aparece se tiver alguém logado -->
-        <div id="area-logada" style="display: none; align-items: center; gap: 20px;">
-            <!-- E-mail mais claro para dar contraste no fundo escuro -->
-            <span id="user-email" style="color: #e2e8f0; font-weight: 500; font-size: 0.95rem; letter-spacing: 0.5px;"></span>
+        <div id="area-logada" style="display: none; align-items: center; gap: 15px;">
+            
+            <!-- Perfil: Foto + E-mail + ID -->
+            <div style="display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.05); padding: 4px 15px 4px 4px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.1);">
+                <img id="user-foto" src="" alt="Perfil" style="width: 34px; height: 34px; border-radius: 50%; object-fit: cover; border: 2px solid #2b6cb0; display: none;">
+                <div style="display: flex; flex-direction: column; line-height: 1.2;">
+                    <span id="user-email" style="color: #e2e8f0; font-weight: 500; font-size: 0.85rem;"></span>
+                    <span id="user-uid" style="color: #a0aec0; font-size: 0.7rem; font-family: monospace;" title="Seu ID Único no Sistema"></span>
+                </div>
+            </div>
             
             <a href="painel-admin.html" class="btn-upbar btn-destaque" id="btn-admin" style="display: none;">Painel Admin</a>
             
