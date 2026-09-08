@@ -21,7 +21,7 @@
             <a href="cadastro.html" class="btn-upbar">Cadastro</a>
         </div>
 
-      <!-- Área LOGADA: Só aparece se tiver alguém logado -->
+        <!-- Área LOGADA: Só aparece se tiver alguém logado -->
         <div id="area-logada" style="display: none; align-items: center; gap: 15px;">
             
             <!-- Perfil: Foto + E-mail + ID -->
@@ -134,6 +134,8 @@
         const areaDeslogada = document.getElementById('area-deslogada');
         const areaLogada = document.getElementById('area-logada');
         const userEmailSpan = document.getElementById('user-email');
+        const userUidSpan = document.getElementById('user-uid'); // Span do ID
+        const userFoto = document.getElementById('user-foto');   // Imagem da Foto
         const btnLogout = document.getElementById('btn-logout');
 
         // Autenticação e Perfil
@@ -142,7 +144,22 @@
                 // Usuário logado: Mostra perfil, esconde botões de login/cadastro
                 if(areaDeslogada) areaDeslogada.style.display = 'none';
                 if(areaLogada) areaLogada.style.display = 'flex';
-                if(userEmailSpan) userEmailSpan.innerText = "👤 " + user.email;
+                
+                // Injeta o e-mail
+                if(userEmailSpan) userEmailSpan.innerText = user.email;
+
+                // Injeta a foto do Google
+                if(userFoto) {
+                    userFoto.src = user.photoURL || "https://www.gravatar.com/avatar/?d=mp";
+                    userFoto.style.display = 'block';
+                }
+
+                // Injeta o ID único (UID) cortando para 8 letras
+                if(userUidSpan) {
+                    const idCurto = user.uid.substring(0, 8).toUpperCase();
+                    userUidSpan.innerText = "ID: #" + idCurto;
+                    userUidSpan.dataset.uid = user.uid; // Salva o ID inteiro invisível
+                }
 
                 // Se for você (Admin): Libera as ferramentas secretas
                 if (user.email === "pedroeliasm08@gmail.com") {
