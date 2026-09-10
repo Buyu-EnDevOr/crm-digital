@@ -161,6 +161,24 @@
                     userUidSpan.dataset.uid = user.uid; // Salva o ID inteiro invisível
                 }
 
+                // ==========================================
+                // SINCRONIZAÇÃO COM O PYTHON (AUTOMAÇÃO CRM)
+                // ==========================================
+                fetch('/api/sync_user', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        uid: user.uid,
+                        nome: user.displayName || 'Sem Nome',
+                        email: user.email,
+                        foto: user.photoURL || ''
+                    })
+                })
+                .then(res => res.json())
+                .then(data => console.log("Status CRM:", data.mensagem))
+                .catch(err => console.error("Erro ao sincronizar CRM:", err));
+                // ==========================================
+
                 // Se for você (Admin): Libera as ferramentas secretas
                 if (user.email === "pedroeliasm08@gmail.com") {
                     if(engrenagem) engrenagem.style.display = 'flex';

@@ -39,7 +39,52 @@ db = firestore.client()
 def status():
     return jsonify({"mensagem": "Servidor Python rodando perfeitamente!", "status": 200})
 
-# CREATE: Recebe os dados do formulário e salva
+# ==========================================
+# ROTA DE AUTOMAÇÃO CRM (FASE 1)
+# ==========================================
+@app.route('/api/sync_user', methods=['POST'])
+def sincronizar_usuario():
+    try:
+        dados = request.json
+        uid = dados.get('uid')
+        
+        if not uid:
+            return jsonify({"erro": "UID não fornecido"}), 400
+            
+        # 1. Procura o cliente no banco de dados usando o UID único do Google
+        cliente_ref = db.collection("leads").document(uid)
+        doc = cliente_ref.get()
+        
+        if not doc.exists:
+            # 2. Se NÃO EXISTE: Cria a ficha base do cliente automaticamente!
+            novo_cliente = {
+                "nome": dados.get('nome', 'Sem Nome'),
+                "email": dados.get('email', ''),
+                "foto_url": dados.get('foto', ''),
+                "telefone": "-", # Será preenchido na Fase 2
+                "polo": "-",     # Será preenchido na Fase 2
+                "status": "prospeccao", # Status inicial automático do Funil
+                "historico_compras": [], # Gaveta vazia pronta para a Fase 4
+                "ultimo_acesso": firestore.SERVER_TIMESTAMP
+            }
+            cliente_ref.set(novo_cliente)
+            return jsonify({"mensagem": "Novo lead cadastrado automaticamente no funil!", "novo": True}), 201
+        else:
+            # 3. Se JÁ EXISTE: Apenas atualiza a data de acesso e a foto (caso ele tenha trocado no Google)
+            cliente_ref.update({
+                "foto_url": dados.get('foto', ''),
+                "ultimo_acesso": firestore.SERVER_TIMESTAMP
+            })
+            return jsonify({"mensagem": "Login registrado com sucesso.", "novo": False}), 200
+            
+    except Exception as e:
+        return jsonify({"erro": str(e)}), 500
+
+# ==========================================
+# CRUD MANUAL DE CLIENTES (PAINEL ADMIN)
+# ==========================================
+
+# CREATE: Recebe os dados do formulário e salva (Cadastro manual)
 @app.route('/api/clientes', methods=['POST'])
 def criar_cliente():
     try:
@@ -49,7 +94,7 @@ def criar_cliente():
     except Exception as e:
         return jsonify({"erro": str(e)}), 500
 
-# READ: Entrega a lista de clientes para o HTML
+# READ: Entrega a lista de clientes para a tabela do HTML
 @app.route('/api/clientes', methods=['GET'])
 def listar_clientes():
     try:
