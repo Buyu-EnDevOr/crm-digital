@@ -8,7 +8,7 @@
 </head>
 <body class="tema-claro vitrine-fundo" style="margin: 0; overflow-x: hidden;">
 
-    <!-- Upbar (Navegação Superior) -->
+   <!-- Upbar (Navegação Superior) -->
     <header class="upbar">
         <div style="display: flex; align-items: center;">
             <button id="btn-toggle" class="btn-toggle">☰</button>
@@ -21,7 +21,7 @@
             <a href="cadastro.html" class="btn-upbar">Cadastro</a>
         </div>
 
-       <!-- Área LOGADA: Só aparece se tiver alguém logado -->
+        <!-- Área LOGADA: Só aparece se tiver alguém logado -->
         <div id="area-logada" style="display: none; align-items: center; gap: 15px;">
             
             <!-- Perfil: Foto + E-mail + ID -->
@@ -98,23 +98,41 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
 
-        // Elementos da interface
+        // ==========================================
+        // NOVA LÓGICA DE PERFIL E AUTENTICAÇÃO
+        // ==========================================
         const engrenagem = document.querySelector('.area-admin-gear'); 
         const btnAdmin = document.getElementById('btn-admin');
         const areaDeslogada = document.getElementById('area-deslogada');
         const areaLogada = document.getElementById('area-logada');
         const userEmailSpan = document.getElementById('user-email');
+        const userUidSpan = document.getElementById('user-uid'); // Span do ID
+        const userFoto = document.getElementById('user-foto');   // Imagem da Foto
         const btnLogout = document.getElementById('btn-logout');
 
-        // Autenticação e Perfil
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                // Se ALGUÉM logou: Esconde login, mostra perfil
+                // Usuário logado: Mostra perfil, esconde botões de login/cadastro
                 if(areaDeslogada) areaDeslogada.style.display = 'none';
                 if(areaLogada) areaLogada.style.display = 'flex';
-                if(userEmailSpan) userEmailSpan.innerText = "👤 " + user.email;
+                
+                // Injeta o e-mail
+                if(userEmailSpan) userEmailSpan.innerText = user.email;
 
-                // Se QUEM LOGOU for o dono: Mostra ferramentas secretas
+                // Injeta a foto do Google
+                if(userFoto) {
+                    userFoto.src = user.photoURL || "https://www.gravatar.com/avatar/?d=mp";
+                    userFoto.style.display = 'block';
+                }
+
+                // Injeta o ID único (UID) cortando para 8 letras
+                if(userUidSpan) {
+                    const idCurto = user.uid.substring(0, 8).toUpperCase();
+                    userUidSpan.innerText = "ID: #" + idCurto;
+                    userUidSpan.dataset.uid = user.uid; // Salva o ID inteiro invisível
+                }
+
+                // Se for você (Admin): Libera as ferramentas secretas
                 if (user.email === "pedroeliasm08@gmail.com") {
                     if(engrenagem) engrenagem.style.display = 'flex';
                     if(btnAdmin) btnAdmin.style.display = 'inline-block';
@@ -123,7 +141,7 @@
                     if(btnAdmin) btnAdmin.remove();
                 }
             } else {
-                // Se NINGUÉM logou: Mostra login, esconde perfil
+                // Ninguém logado: Mostra botões de login/cadastro, esconde perfil
                 if(areaDeslogada) areaDeslogada.style.display = 'block';
                 if(areaLogada) areaLogada.style.display = 'none';
                 if(engrenagem) engrenagem.remove();
@@ -141,6 +159,7 @@
                 });
             });
         }
+        // ==========================================
 
         // Lógica de Abrir/Fechar a Sidebar
         document.getElementById('btn-toggle').addEventListener('click', () => {

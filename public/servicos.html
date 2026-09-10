@@ -60,18 +60,7 @@
             <a href="cadastro.html" class="btn-upbar">Cadastro</a>
         </div>
 
-      
-    </header>
-
-    <!-- Layout Principal com Sidebar e Conteúdo -->
-    <div class="layout-vitrine">
-        <!-- Sidebar: Adicionado ID e removida a cor clara inline -->
-        <aside class="sidebar" id="menu-lateral">
-            <ul style="list-style: none; padding: 0; margin: 0;">
-                <li style="margin-bottom: 15px;"><a href="index.html" style="text-decoration: none; color: #4a5568; font-weight: bold;">Início</a></li>
-                <li style="margin-bottom: 15px;"><a href="servicos.html" style="text-decoration: none; color: #4a5568; font-weight: bold;">Serviços</a></li>
-                <li style="margin-bottom: 15px;"><a href="sobre-nos.html" style="text-decoration: none; color: #4a5568; font-weight: bold;">Sobre nós</a></li>
-            </ul><!-- Área LOGADA: Só aparece se tiver alguém logado -->
+        <!-- Área LOGADA: Só aparece se tiver alguém logado -->
         <div id="area-logada" style="display: none; align-items: center; gap: 15px;">
             
             <!-- Perfil: Foto + E-mail + ID -->
@@ -90,6 +79,17 @@
                 Sair
             </button>
         </div>
+    </header>
+
+    <!-- Layout Principal com Sidebar e Conteúdo -->
+    <div class="layout-vitrine">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="menu-lateral">
+            <ul style="list-style: none; padding: 0; margin: 0;">
+                <li style="margin-bottom: 15px;"><a href="index.html" style="text-decoration: none; color: #4a5568; font-weight: bold;">Início</a></li>
+                <li style="margin-bottom: 15px;"><a href="servicos.html" style="text-decoration: none; color: #4a5568; font-weight: bold;">Serviços</a></li>
+                <li style="margin-bottom: 15px;"><a href="sobre-nos.html" style="text-decoration: none; color: #4a5568; font-weight: bold;">Sobre nós</a></li>
+            </ul>
         </aside>
 
         <!-- Conteúdo Central -->
@@ -159,6 +159,8 @@
         const areaDeslogada = document.getElementById('area-deslogada');
         const areaLogada = document.getElementById('area-logada');
         const userEmailSpan = document.getElementById('user-email');
+        const userUidSpan = document.getElementById('user-uid'); // Span do ID
+        const userFoto = document.getElementById('user-foto');   // Imagem da Foto
         const btnLogout = document.getElementById('btn-logout');
 
         onAuthStateChanged(auth, (user) => {
@@ -166,7 +168,22 @@
                 // Usuário logado: Mostra perfil, esconde botões de login/cadastro
                 if(areaDeslogada) areaDeslogada.style.display = 'none';
                 if(areaLogada) areaLogada.style.display = 'flex';
-                if(userEmailSpan) userEmailSpan.innerText = "👤 " + user.email;
+                
+                // Injeta o e-mail
+                if(userEmailSpan) userEmailSpan.innerText = user.email;
+
+                // Injeta a foto do Google
+                if(userFoto) {
+                    userFoto.src = user.photoURL || "https://www.gravatar.com/avatar/?d=mp";
+                    userFoto.style.display = 'block';
+                }
+
+                // Injeta o ID único (UID) cortando para 8 letras
+                if(userUidSpan) {
+                    const idCurto = user.uid.substring(0, 8).toUpperCase();
+                    userUidSpan.innerText = "ID: #" + idCurto;
+                    userUidSpan.dataset.uid = user.uid; // Salva o ID inteiro invisível
+                }
 
                 // Se for você (Admin): Libera as ferramentas secretas
                 if (user.email === "pedroeliasm08@gmail.com") {
@@ -229,3 +246,5 @@
             }
         });
     </script>
+</body>
+</html>
