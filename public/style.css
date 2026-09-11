@@ -258,6 +258,7 @@ body {
 .btn-editar:hover {
     background-color: #d69e2e;
 }
+
 /* ===== ESTRUTURA DA VITRINE (INDEX) ===== */
 /* Remove o flex do body apenas para a vitrine não centralizar tudo no meio da tela */
 body:not(.tema-escuro) { display: block; height: auto; }
@@ -288,96 +289,8 @@ body:not(.tema-escuro) { display: block; height: auto; }
 .layout-vitrine {
     display: flex;
     min-height: calc(100vh - 60px);
-}
-
-.sidebar {
-    width: 250px;
-    background: #e2e8f0;
-    padding: 30px 20px;
-    border-right: 1px solid #cbd5e0;
-}
-
-.conteudo-principal {
-    flex: 1;
-    padding: 50px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    overflow-y: auto; /* Garante que apenas essa área sofra scroll vertical */
-}
-
-.vitrine-imagem-container {
-    width: 400px;
-    height: 400px;
-    background: #e2e8f0;
-    border-radius: 8px;
-    box-shadow: 0 10px 15px rgba(0,0,0,0.1);
-    margin-top: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-/* ===== ENGRENAGEM DE ADMIN E MODAL ===== */
-.area-admin-gear {
-    position: fixed;
-    bottom: 0;
-    right: 0;
-    width: 100px;
-    height: 100px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-}
-
-.gear-icon {
-    font-size: 35px;
-    cursor: pointer;
-    opacity: 0; /* Invisível por padrão */
-    transition: opacity 0.3s ease-in-out, transform 0.3s;
-    background: white;
-    padding: 10px;
-    border-radius: 50%;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-}
-
-/* Revela a engrenagem quando o mouse passa na área invisível do canto */
-.area-admin-gear:hover .gear-icon {
-    opacity: 1;
-    transform: rotate(90deg);
-}
-
-.admin-overlay {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
     width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.6);
-    z-index: 9999;
-}
-
-.admin-modal {
-    display: none;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 10000;
-    max-width: 500px;
-    width: 90%;
-}
-/* ===== ESTRUTURA DA VITRINE (INDEX) ===== */
-/* Remove o flex do body apenas para a vitrine não centralizar tudo no meio da tela */
-body:not(.tema-escuro) { display: block; height: auto; }
-
-.layout-vitrine {
-    display: flex;
-    min-height: calc(100vh - 60px); /* 60px é a altura aproximada da upbar */
-    width: 100vw; /* Garante que o layout ocupe 100% da largura da tela */
-    overflow-x: hidden; /* Esconde qualquer coisa que tente vazar para os lados */
+    overflow-x: hidden;
 }
 
 .sidebar {
@@ -393,24 +306,13 @@ body:not(.tema-escuro) { display: block; height: auto; }
 }
 
 .conteudo-principal {
-    flex: 1; /* Ocupa todo o espaço restante ao lado da sidebar */
-    width: 100%; /* Força a ocupar o espaço disponível */
-    max-width: calc(100vw - 250px); /* Impede que o conteúdo vaze além da tela (largura total menos a sidebar) */
-    padding: 50px 20px; /* Padding ajustado para não quebrar em telas menores */
+    flex: 1;
+    min-width: 0;
+    padding: 50px 20px 0 20px;
     display: flex;
     flex-direction: column;
-    align-items: center; /* Centraliza os itens (como o card da vitrine) horizontalmente */
-    box-sizing: border-box; /* Garante que o padding não aumente o tamanho total da div */
-}
-/* ===== NOVA SIDEBAR ESCURA E RETRÁTIL ===== */
-.sidebar {
-    width: 250px;
-    background-color: rgba(15, 23, 42, 0.95); /* Tema escuro */
-    padding: 30px 20px;
-    border-right: 1px solid #1e293b;
-    transition: width 0.3s ease, padding 0.3s ease; /* Animação suave de abrir/fechar */
-    overflow: hidden; /* Esconde os textos quando a barra encolhe */
-    white-space: nowrap; /* Evita que os textos quebrem de linha durante a animação */
+    align-items: center;
+    box-sizing: border-box;
 }
 
 /* Classe que o JavaScript vai ativar para esconder a barra */
@@ -472,6 +374,7 @@ body:not(.tema-escuro) { display: block; height: auto; }
 .container-vitrine {
     max-width: 800px;
     width: 100%;
+    margin-bottom: 80px;
 }
 
 /* --- Upbar / Área Logada --- */
@@ -828,15 +731,95 @@ body:not(.tema-escuro) { display: block; height: auto; }
 .btn-salvar-perfil:hover {
     background-color: #2c5282;
 }
+
+/* ===== ENGRENAGEM DE ADMIN E MODAL ===== */
+.area-admin-gear {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    width: 100px;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.gear-icon {
+    font-size: 35px;
+    cursor: pointer;
+    opacity: 0; /* Invisível por padrão */
+    transition: opacity 0.3s ease-in-out, transform 0.3s;
+    background: white;
+    padding: 10px;
+    border-radius: 50%;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+}
+
+.area-admin-gear:hover .gear-icon {
+    opacity: 1;
+    transform: rotate(90deg);
+}
+
+.admin-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.6);
+    z-index: 9999;
+}
+
+.admin-modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10000;
+    max-width: 500px;
+    width: 90%;
+}
+
+/* ===== NOVO VISUAL VITRINE (SHOPEE STYLE) ===== */
+.vitrine-fundo {
+    background-image: url('plano-fundo.png');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+}
+
+.logo-bolinha {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #e2e8f0;
+    background-color: white;
+}
+
+.vitrine-card {
+    background-color: rgba(255, 255, 255, 0.92);
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    width: 100%;
+    box-sizing: border-box;
+}
+
 /* ===== RODAPÉ (FOOTER) ===== */
 .rodape-site {
-    background-color: #0f172a; 
+    background-color: #0f172a;
     color: #e2e8f0;
-    margin-top: auto; /* Empurra o rodapé para o final do espaço disponível */
+    margin-top: auto;
+    margin-left: -20px;
+    margin-right: -20px;
     padding-top: 50px;
-    font-family: inherit;
-    width: 100%; /* Ocupa 100% da largura do .conteudo-principal */
-    box-sizing: border-box; /* Impede que o padding quebre o layout */
+    width: calc(100% + 40px);
+    box-sizing: border-box;
 }
 
 .rodape-container {
@@ -870,6 +853,7 @@ body:not(.tema-escuro) { display: block; height: auto; }
     margin-bottom: 15px;
     border: 2px solid #38bdf8;
     background-color: white;
+    object-fit: cover;
 }
 
 .rodape-coluna ul {
