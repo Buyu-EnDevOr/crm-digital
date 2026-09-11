@@ -823,11 +823,12 @@ body:not(.tema-escuro) { display: block; height: auto; }
 }
 /* ===== RODAPÉ (FOOTER) ===== */
 .rodape-site {
-    background-color: #0f172a; /* Azul bem escuro, combinando com a barra do topo */
+    background-color: #0f172a; 
     color: #e2e8f0;
-    margin: 80px -50px -50px -50px; /* Estica o rodapé ignorando as bordas do main */
+    margin: auto -50px -50px -50px; /* O "auto" empurra o rodapé lá pro final da página */
     padding-top: 50px;
     font-family: inherit;
+    width: calc(100% + 100px); /* Força o rodapé a ignorar as bordas e esticar */
 }
 
 .rodape-container {
