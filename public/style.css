@@ -308,7 +308,7 @@ body:not(.tema-escuro) { display: block; height: auto; }
 .conteudo-principal {
     flex: 1;
     min-width: 0;
-    padding: 50px 20px 0 20px;
+    padding: 50px 20px 80px 20px; /* Voltei o respiro na parte de baixo */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -810,16 +810,15 @@ body:not(.tema-escuro) { display: block; height: auto; }
     box-sizing: border-box;
 }
 
-/* ===== RODAPÉ (FOOTER) ===== */
+/* ===== RODAPÉ (FOOTER) CORRIGIDO ===== */
 .rodape-site {
-    background-color: #0f172a;
+    background-color: #0f172a; 
     color: #e2e8f0;
-    margin-top: auto;
-    margin-left: -20px;
-    margin-right: -20px;
+    width: 100%; 
     padding-top: 50px;
-    width: calc(100% + 40px);
     box-sizing: border-box;
+    z-index: 20;
+    position: relative;
 }
 
 .rodape-container {

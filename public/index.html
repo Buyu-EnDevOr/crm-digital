@@ -8,22 +8,18 @@
 </head>
 <body class="tema-claro vitrine-fundo body-sem-margem"> 
 
-    <!-- Upbar (Navegação Superior) -->
     <header class="upbar">
         <div class="flex-center">
             <button id="btn-toggle" class="btn-toggle">☰</button>
             <img src="logo-crm.png" alt="Logo" class="logo-bolinha" id="nav-logo" onerror="this.style.display='none'">
         </div>
         
-        <!-- Área DESLOGADA: Só aparece se ninguém fez login -->
         <div id="area-deslogada">
             <a href="login.html" class="btn-upbar">Login</a>
             <a href="cadastro.html" class="btn-upbar">Cadastro</a>
         </div>
 
-        <!-- Área LOGADA: Só aparece se tiver alguém logado -->
-        <div id="area-logada" class="area-logada-container">
-            <!-- Perfil: Foto + E-mail + ID -->
+        <div id="area-logada" class="area-logada-container oculto">
             <div class="perfil-card">
                 <img id="user-foto" src="" alt="Perfil" class="perfil-foto">
                 <div class="perfil-info">
@@ -34,62 +30,24 @@
             
             <a href="painel-admin.html" class="btn-upbar btn-destaque oculto" id="btn-admin">Painel Admin</a>
             
-            <!-- Botão de Sair Premium -->
             <button id="btn-logout" class="btn-upbar btn-sair-premium">
                 Sair
             </button>
         </div>
     </header>
 
-    <!-- Layout Principal -->
     <div class="layout-vitrine">
-        <!-- Sidebar Escura e Retrátil -->
         <aside class="sidebar" id="menu-lateral">
             <ul class="menu-lista">
-                <li class="menu-item"><a href="index.html">Início</a></li>
-                <li class="menu-item"><a href="servicos.html">Serviços</a></li>
-                <li class="menu-item"><a href="sobre-nos.html">Sobre nós</a></li>
+                <li class="menu-item"><a href="index.html" class="menu-link-ativo">Início</a></li>
+                <li class="menu-item"><a href="servicos.html" class="menu-link">Serviços</a></li>
+                <li class="menu-item"><a href="sobre-nos.html" class="menu-link">Sobre nós</a></li>
+                <li class="menu-item"><a href="perfil.html" class="menu-link">Meu Perfil</a></li>
             </ul>
         </aside>
-<!-- ===== RODAPÉ DO SITE ===== -->
-        <footer class="rodape-site">
-            <div class="rodape-container">
-                <!-- Coluna 1: Logo e Sobre -->
-                <div class="rodape-coluna">
-                    <img src="logo-crm.png" alt="Logo CRM Digital" class="rodape-logo" onerror="this.style.display='none'">
-                    <p>Transformando ideias em palavras que conectam. Soluções completas de escrita criativa e redação estratégica.</p>
-                </div>
-                
-                <!-- Coluna 2: Navegação Rápida -->
-                <div class="rodape-coluna">
-                    <h4>Navegação</h4>
-                    <ul>
-                        <li><a href="index.html">Início</a></li>
-                        <li><a href="servicos.html">Nossos Serviços</a></li>
-                        <li><a href="sobre-nos.html">Sobre o Projeto</a></li>
-                        <li><a href="perfil.html">Meu Perfil</a></li>
-                    </ul>
-                </div>
-                
-                <!-- Coluna 3: Contato -->
-                <div class="rodape-coluna">
-                    <h4>Fale Conosco</h4>
-                    <p>📞 (00) 00000-0000</p>
-                    <p>✉️ pedroeliasm08@gmail.com</p>
-                    <p>📍 Região de Atendimento: Digital</p>
-                </div>
-            </div>
-            
-            <!-- Barra Inferior de Direitos -->
-            <div class="rodape-base">
-                <p>&copy; 2026 CRM Digital - Todos os direitos reservados.</p>
-                <a href="#">Política de Privacidade</a>
-            </div>
-        </footer>
-        <!-- Conteúdo Central -->
+
         <main class="conteudo-principal">
             <div class="container-vitrine">
-                <!-- Card flutuante translúcido -->
                 <div class="vitrine-card">
                     <h1 id="texto-titulo" class="vitrine-titulo">Carregando...</h1>
                     <h3 id="texto-subtitulo" class="vitrine-subtitulo">...</h3>
@@ -107,15 +65,43 @@
         </main>
     </div>
 
-    <!-- Engrenagem Invisível -->
-    <div class="area-admin-gear">
+    <footer class="rodape-site">
+        <div class="rodape-container">
+            <div class="rodape-coluna">
+                <img src="logo-crm.png" alt="Logo CRM Digital" class="rodape-logo" onerror="this.style.display='none'">
+                <p>Transformando ideias em palavras que conectam. Soluções completas de escrita criativa e redação estratégica.</p>
+            </div>
+            
+            <div class="rodape-coluna">
+                <h4>Navegação</h4>
+                <ul>
+                    <li><a href="index.html">Início</a></li>
+                    <li><a href="servicos.html">Nossos Serviços</a></li>
+                    <li><a href="sobre-nos.html">Sobre o Projeto</a></li>
+                    <li><a href="perfil.html">Meu Perfil</a></li>
+                </ul>
+            </div>
+            
+            <div class="rodape-coluna">
+                <h4>Fale Conosco</h4>
+                <p>📞 (00) 00000-0000</p>
+                <p>✉️ pedroeliasm08@gmail.com</p>
+                <p>📍 Região de Atendimento: Digital</p>
+            </div>
+        </div>
+        
+        <div class="rodape-base">
+            <p>&copy; 2026 CRM Digital - Todos os direitos reservados.</p>
+            <a href="#">Política de Privacidade</a>
+        </div>
+    </footer>
+
+    <div class="area-admin-gear oculto" id="btn-engrenagem">
         <div class="gear-icon" onclick="abrirConfigAdmin()">⚙️</div>
     </div>
 
-    <!-- Fundo Escuro do Modal -->
     <div id="overlay-admin" class="admin-overlay" onclick="fecharConfigAdmin()"></div>
 
-    <!-- Modal Admin -->
     <div id="modal-admin" class="admin-modal painel">
         <h2 class="modal-titulo">Central de Edição (Vitrine)</h2>
         
@@ -140,7 +126,6 @@
         </div>
     </div>
 
-    <!-- Script de Integração e Autenticação Firebase -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
@@ -157,7 +142,7 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
 
-        const engrenagem = document.querySelector('.area-admin-gear');
+        const engrenagem = document.getElementById('btn-engrenagem');
         const btnAdmin = document.getElementById('btn-admin');
         const areaDeslogada = document.getElementById('area-deslogada');
         const areaLogada = document.getElementById('area-logada');
@@ -168,8 +153,8 @@
 
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                if(areaDeslogada) areaDeslogada.style.display = 'none';
-                if(areaLogada) areaLogada.style.display = 'flex';
+                if(areaDeslogada) areaDeslogada.classList.add('oculto');
+                if(areaLogada) areaLogada.classList.remove('oculto');
                 
                 if(userEmailSpan) userEmailSpan.innerText = user.email;
 
@@ -200,17 +185,17 @@
                 .catch(err => console.error("Erro ao sincronizar CRM:", err));
 
                 if (user.email === "pedroeliasm08@gmail.com") {
-                    if(engrenagem) engrenagem.style.display = 'flex';
-                    if(btnAdmin) btnAdmin.style.display = 'inline-block';
+                    if(engrenagem) engrenagem.classList.remove('oculto');
+                    if(btnAdmin) btnAdmin.classList.remove('oculto');
                 } else {
-                    if(engrenagem) engrenagem.remove();
-                    if(btnAdmin) btnAdmin.remove();
+                    if(engrenagem) engrenagem.classList.add('oculto');
+                    if(btnAdmin) btnAdmin.classList.add('oculto');
                 }
             } else {
-                if(areaDeslogada) areaDeslogada.style.display = 'block';
-                if(areaLogada) areaLogada.style.display = 'none';
-                if(engrenagem) engrenagem.remove();
-                if(btnAdmin) btnAdmin.remove();
+                if(areaDeslogada) areaDeslogada.classList.remove('oculto');
+                if(areaLogada) areaLogada.classList.add('oculto');
+                if(engrenagem) engrenagem.classList.add('oculto');
+                if(btnAdmin) btnAdmin.classList.add('oculto');
             }
         });
 

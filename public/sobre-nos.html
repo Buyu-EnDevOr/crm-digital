@@ -49,44 +49,11 @@
             <ul class="menu-lista">
                 <li class="menu-item"><a href="index.html" class="menu-link">Início</a></li>
                 <li class="menu-item"><a href="servicos.html" class="menu-link">Serviços</a></li>
-                <li class="menu-item"><a href="sobre-nos.html" class="menu-link">Sobre nós</a></li>
+                <li class="menu-item"><a href="sobre-nos.html" class="menu-link-ativo">Sobre nós</a></li>
+                <li class="menu-item"><a href="perfil.html" class="menu-link">Meu Perfil</a></li>
             </ul>
         </aside>
-<!-- ===== RODAPÉ DO SITE ===== -->
-        <footer class="rodape-site">
-            <div class="rodape-container">
-                <!-- Coluna 1: Logo e Sobre -->
-                <div class="rodape-coluna">
-                    <img src="logo-crm.png" alt="Logo CRM Digital" class="rodape-logo" onerror="this.style.display='none'">
-                    <p>Transformando ideias em palavras que conectam. Soluções completas de escrita criativa e redação estratégica.</p>
-                </div>
-                
-                <!-- Coluna 2: Navegação Rápida -->
-                <div class="rodape-coluna">
-                    <h4>Navegação</h4>
-                    <ul>
-                        <li><a href="index.html">Início</a></li>
-                        <li><a href="servicos.html">Nossos Serviços</a></li>
-                        <li><a href="sobre-nos.html">Sobre o Projeto</a></li>
-                        <li><a href="perfil.html">Meu Perfil</a></li>
-                    </ul>
-                </div>
-                
-                <!-- Coluna 3: Contato -->
-                <div class="rodape-coluna">
-                    <h4>Fale Conosco</h4>
-                    <p>📞 (00) 00000-0000</p>
-                    <p>✉️ pedroeliasm08@gmail.com</p>
-                    <p>📍 Região de Atendimento: Digital</p>
-                </div>
-            </div>
-            
-            <!-- Barra Inferior de Direitos -->
-            <div class="rodape-base">
-                <p>&copy; 2026 CRM Digital - Todos os direitos reservados.</p>
-                <a href="#">Política de Privacidade</a>
-            </div>
-        </footer>
+
         <!-- Conteúdo Central -->
         <main class="conteudo-principal">
             <div class="container-vitrine">
@@ -112,7 +79,43 @@
 
             </div>
         </main>
-    </div>
+    </div> <!-- Fim Layout Vitrine -->
+
+    <!-- ===== RODAPÉ DO SITE ===== -->
+    <footer class="rodape-site">
+        <div class="rodape-container">
+            <!-- Coluna 1: Logo e Sobre -->
+            <div class="rodape-coluna">
+                <img src="logo-crm.png" alt="Logo CRM Digital" class="rodape-logo" onerror="this.style.display='none'">
+                <p>Transformando ideias em palavras que conectam. Soluções completas de escrita criativa e redação estratégica.</p>
+            </div>
+            
+            <!-- Coluna 2: Navegação Rápida -->
+            <div class="rodape-coluna">
+                <h4>Navegação</h4>
+                <ul>
+                    <li><a href="index.html">Início</a></li>
+                    <li><a href="servicos.html">Nossos Serviços</a></li>
+                    <li><a href="sobre-nos.html">Sobre o Projeto</a></li>
+                    <li><a href="perfil.html">Meu Perfil</a></li>
+                </ul>
+            </div>
+            
+            <!-- Coluna 3: Contato -->
+            <div class="rodape-coluna">
+                <h4>Fale Conosco</h4>
+                <p>📞 (00) 00000-0000</p>
+                <p>✉️ pedroeliasm08@gmail.com</p>
+                <p>📍 Região de Atendimento: Digital</p>
+            </div>
+        </div>
+        
+        <!-- Barra Inferior de Direitos -->
+        <div class="rodape-base">
+            <p>&copy; 2026 CRM Digital - Todos os direitos reservados.</p>
+            <a href="#">Política de Privacidade</a>
+        </div>
+    </footer>
 
     <!-- Script de Integração com Firebase e Autenticação -->
     <script type="module">
@@ -147,11 +150,8 @@
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 // Usuário logado: Mostra perfil, esconde botões de login/cadastro
-                if(areaDeslogada) areaDeslogada.style.display = 'none';
-                if(areaLogada) {
-                    areaLogada.style.display = 'flex';
-                    areaLogada.classList.remove('oculto');
-                }
+                if(areaDeslogada) areaDeslogada.classList.add('oculto');
+                if(areaLogada) areaLogada.classList.remove('oculto');
                 
                 // Injeta o e-mail
                 if(userEmailSpan) userEmailSpan.innerText = user.email;
@@ -168,6 +168,7 @@
                     userUidSpan.innerText = "ID: #" + idCurto;
                     userUidSpan.dataset.uid = user.uid; // Salva o ID inteiro invisível
                 }
+
                 // ==========================================
                 // SINCRONIZAÇÃO COM O PYTHON (AUTOMAÇÃO CRM)
                 // ==========================================
@@ -185,26 +186,21 @@
                 .then(data => console.log("Status CRM:", data.mensagem))
                 .catch(err => console.error("Erro ao sincronizar CRM:", err));
                 // ==========================================
+
                 // Se for você (Admin): Libera as ferramentas secretas
                 if (user.email === "pedroeliasm08@gmail.com") {
-                    if(engrenagem) engrenagem.style.display = 'flex';
-                    if(btnAdmin) {
-                        btnAdmin.style.display = 'inline-block';
-                        btnAdmin.classList.remove('oculto');
-                    }
+                    if(engrenagem) engrenagem.classList.remove('oculto');
+                    if(btnAdmin) btnAdmin.classList.remove('oculto');
                 } else {
-                    if(engrenagem) engrenagem.remove();
-                    if(btnAdmin) btnAdmin.remove();
+                    if(engrenagem) engrenagem.classList.add('oculto');
+                    if(btnAdmin) btnAdmin.classList.add('oculto');
                 }
             } else {
                 // Ninguém logado: Mostra botões de login/cadastro, esconde perfil
-                if(areaDeslogada) areaDeslogada.style.display = 'block';
-                if(areaLogada) {
-                    areaLogada.style.display = 'none';
-                    areaLogada.classList.add('oculto');
-                }
-                if(engrenagem) engrenagem.remove();
-                if(btnAdmin) btnAdmin.remove();
+                if(areaDeslogada) areaDeslogada.classList.remove('oculto');
+                if(areaLogada) areaLogada.classList.add('oculto');
+                if(engrenagem) engrenagem.classList.add('oculto');
+                if(btnAdmin) btnAdmin.classList.add('oculto');
             }
         });
 
