@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Perfil - CRM Digital</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .perfil-container {
+            max-width: 600px;
+            margin: 40px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+        .perfil-container h2 {
+            color: #1a365d;
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+        .form-grupo {
+            margin-bottom: 20px;
+        }
+        .form-grupo label {
+            display: block;
+            font-weight: bold;
+            color: #4a5568;
+            margin-bottom: 8px;
+        }
+        .form-grupo input, .form-grupo select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e0;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-family: inherit;
+            font-size: 1rem;
+        }
+        .btn-salvar-perfil {
+            background-color: #2b6cb0;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            transition: 0.3s;
+        }
+        .btn-salvar-perfil:hover {
+            background-color: #2c5282;
+        }
+    </style>
+</head>
+<body class="tema-claro vitrine-fundo" style="margin: 0; overflow-x: hidden;">
+
+    <!-- Upbar (Navegação Superior) -->
+    <header class="upbar">
+        <div style="display: flex; align-items: center;">
+            <button id="btn-toggle" class="btn-toggle">☰</button>
+            <img src="logo-crm.png" alt="Logo" class="logo-bolinha" id="nav-logo" onerror="this.style.display='none'">
+        </div>
+        
+        <div id="area-logada" style="display: flex; align-items: center; gap: 15px;">
+            <div style="display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.05); padding: 4px 15px 4px 4px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.1);">
+                <img id="user-foto" src="" alt="Perfil" style="width: 34px; height: 34px; border-radius: 50%; object-fit: cover; border: 2px solid #2b6cb0; display: none;">
+                <div style="display: flex; flex-direction: column; line-height: 1.2;">
+                    <span id="user-email" style="color: #e2e8f0; font-weight: 500; font-size: 0.85rem;"></span>
+                    <span id="user-uid" style="color: #a0aec0; font-size: 0.7rem; font-family: monospace;"></span>
+                </div>
+            </div>
+            <a href="index.html" class="btn-upbar" style="background-color: #4a5568; color: white; text-decoration: none;">Voltar ao Início</a>
+        </div>
+    </header>
+
+    <!-- Layout Principal -->
+    <div class="layout-vitrine">
+        <aside class="sidebar" id="menu-lateral">
+            <ul style="list-style: none; padding: 0; margin: 0;">
+                <li style="margin-bottom: 15px;"><a href="index.html" style="text-decoration: none; color: #4a5568; font-weight: bold;">Início</a></li>
+                <li style="margin-bottom: 15px;"><a href="servicos.html" style="text-decoration: none; color: #4a5568; font-weight: bold;">Serviços</a></li>
+                <li style="margin-bottom: 15px;"><a href="perfil.html" style="text-decoration: none; color: #2b6cb0; font-weight: bold;">Meu Perfil</a></li>
+                <li style="margin-bottom: 15px;"><a href="sobre-nos.html" style="text-decoration: none; color: #4a5568; font-weight: bold;">Sobre nós</a></li>
+            </ul>
+        </aside>
+
+        <main class="conteudo-principal">
+            <div class="perfil-container">
+                <h2>Configurações da Conta</h2>
+                <p style="color: #4a5568; margin-bottom: 25px;">Atualize suas informações de contato e localização para agilizar nossos atendimentos.</p>
+                
+                <div class="form-grupo">
+                    <label>Seu E-mail (Google):</label>
+                    <input type="text" id="input-email" disabled style="background-color: #edf2f7; color: #718096;">
+                </div>
+
+                <div class="form-grupo">
+                    <label>Telefone / WhatsApp:</label>
+                    <input type="text" id="input-telefone" placeholder="(00) 00000-0000">
+                </div>
+
+                <div class="form-grupo">
+                    <label>Região / Polo (Cidade ou Bairro):</label>
+                    <select id="select-polo">
+                        <option value="lagoa_dourada">Lagoa Dourada</option>
+                        <option value="sao_joao_del_rei">São João del-Rei</option>
+                        <option value="barbacena">Barbacena</option>
+                        <option value="outro">Outra Região</option>
+                    </select>
+                </div>
+
+                <button class="btn-salvar-perfil" onclick="salvarPerfil()">Salvar Alterações</button>
+            </div>
+        </main>
+    </div>
+
+    <!-- Script de Integração -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyA6fZuQf0-GshZ_wtxJW3CRFtlvFPxfaGg",
+            authDomain: "crm-digital-6b415.firebaseapp.com",
+            projectId: "crm-digital-6b415",
+            storageBucket: "crm-digital-6b415.firebasestorage.app",
+            messagingSenderId: "686804789801",
+            appId: "1:686804789801:web:26ddd8979fc38ab4864a38"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        let usuarioAtualUid = null;
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                usuarioAtualUid = user.uid;
+                document.getElementById('user-email').innerText = user.email;
+                document.getElementById('input-email').value = user.email;
+                
+                const userFoto = document.getElementById('user-foto');
+                if(userFoto) {
+                    userFoto.src = user.photoURL || "";
+                    userFoto.style.display = 'block';
+                }
+
+                document.getElementById('user-uid').innerText = "ID: #" + user.uid.substring(0, 8).toUpperCase();
+
+                // Busca os dados atuais do cliente no Python/Firebase para preencher os inputs
+                try {
+                    const resposta = await fetch('/api/clientes');
+                    const clientes = await resposta.json();
+                    const meuPerfil = clientes.find(c => c.id === user.uid);
+                    
+                    if (meuPerfil) {
+                        if (meuPerfil.telefone && meuPerfil.telefone !== '-') {
+                            document.getElementById('input-telefone').value = meuPerfil.telefone;
+                        }
+                        if (meuPerfil.polo) {
+                            document.getElementById('select-polo').value = meuPerfil.polo;
+                        }
+                    }
+                } catch (e) {
+                    console.error("Erro ao carregar dados do perfil:", e);
+                }
+
+            } else {
+                // Se não estiver logado, manda pro login
+                window.location.href = "login.html";
+            }
+        });
+
+        // Função para salvar as alterações enviando para o Python
+        window.salvarPerfil = async function() {
+            if (!usuarioAtualUid) return;
+
+            const telefone = document.getElementById('input-telefone').value.trim();
+            const polo = document.getElementById('select-polo').value;
+
+            const dadosAtualizados = {
+                telefone: telefone || '-',
+                polo: polo
+            };
+
+            try {
+                const resposta = await fetch(`/api/clientes/${usuarioAtualUid}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(dadosAtualizados)
+                });
+
+                if (resposta.ok) {
+                    alert("Perfil atualizado com sucesso!");
+                } else {
+                    alert("Erro ao atualizar o perfil.");
+                }
+            } catch (erro) {
+                console.error("Erro:", erro);
+                alert("Erro de conexão com o servidor.");
+            }
+        };
+
+        document.getElementById('btn-toggle').addEventListener('click', () => {
+            document.getElementById('menu-lateral').classList.toggle('oculta');
+        });
+    </script>
+</body>
+</html>
