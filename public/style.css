@@ -378,8 +378,20 @@ body:not(.tema-escuro) { display: block; height: auto; }
 }
 
 /* --- Upbar / Área Logada --- */
-.area-logada-container {
+
+/* 1. Esconde os botões de Login/Cadastro no 1º milissegundo para não piscar */
+#area-deslogada {
     display: none; 
+}
+
+/* 2. Só revela o botão se o Firebase confirmar que o usuário não está logado */
+#area-deslogada:not(.oculto) {
+    display: block; 
+}
+
+/* 3. Container do Perfil agora inicia como flex em vez de none */
+.area-logada-container {
+    display: flex; 
     align-items: center; 
     gap: 15px;
 }
