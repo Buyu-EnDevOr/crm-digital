@@ -6,11 +6,11 @@
     <title>Sobre Nós - CRM Digital</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="tema-claro vitrine-fundo" style="margin: 0; overflow-x: hidden;">
+<body class="tema-claro vitrine-fundo body-sem-margem">
 
    <!-- Upbar (Navegação Superior) -->
     <header class="upbar">
-        <div style="display: flex; align-items: center;">
+        <div class="flex-center">
             <button id="btn-toggle" class="btn-toggle">☰</button>
             <img src="logo-crm.png" alt="Logo" class="logo-bolinha" id="nav-logo" onerror="this.style.display='none'">
         </div>
@@ -22,21 +22,21 @@
         </div>
 
         <!-- Área LOGADA: Só aparece se tiver alguém logado -->
-        <div id="area-logada" style="display: none; align-items: center; gap: 15px;">
+        <div id="area-logada" class="area-logada-container oculto">
             
             <!-- Perfil: Foto + E-mail + ID -->
-            <div style="display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.05); padding: 4px 15px 4px 4px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.1);">
-                <img id="user-foto" src="" alt="Perfil" style="width: 34px; height: 34px; border-radius: 50%; object-fit: cover; border: 2px solid #2b6cb0; display: none;">
-                <div style="display: flex; flex-direction: column; line-height: 1.2;">
-                    <span id="user-email" style="color: #e2e8f0; font-weight: 500; font-size: 0.85rem;"></span>
-                    <span id="user-uid" style="color: #a0aec0; font-size: 0.7rem; font-family: monospace;" title="Seu ID Único no Sistema"></span>
+            <div class="perfil-card">
+                <img id="user-foto" src="" alt="Perfil" class="perfil-foto">
+                <div class="perfil-info">
+                    <span id="user-email" class="perfil-email"></span>
+                    <span id="user-uid" class="perfil-uid" title="Seu ID Único no Sistema"></span>
                 </div>
             </div>
             
-            <a href="painel-admin.html" class="btn-upbar btn-destaque" id="btn-admin" style="display: none;">Painel Admin</a>
+            <a href="painel-admin.html" class="btn-upbar btn-destaque oculto" id="btn-admin">Painel Admin</a>
             
             <!-- Botão de Sair Premium -->
-            <button id="btn-logout" onmouseover="this.style.backgroundColor='#ef4444'; this.style.color='white'" onmouseout="this.style.backgroundColor='transparent'; this.style.color='#ef4444'" style="background-color: transparent; color: #ef4444; border: 1px solid #ef4444; border-radius: 6px; padding: 6px 18px; font-weight: bold; cursor: pointer; font-size: 0.9rem; transition: all 0.3s ease;">
+            <button id="btn-logout" class="btn-upbar btn-sair-premium">
                 Sair
             </button>
         </div>
@@ -46,23 +46,23 @@
     <div class="layout-vitrine">
         <!-- Sidebar -->
         <aside class="sidebar" id="menu-lateral">
-            <ul style="list-style: none; padding: 0; margin: 0;">
-                <li style="margin-bottom: 15px;"><a href="index.html" style="text-decoration: none; color: #4a5568; font-weight: bold;">Início</a></li>
-                <li style="margin-bottom: 15px;"><a href="servicos.html" style="text-decoration: none; color: #4a5568; font-weight: bold;">Serviços</a></li>
-                <li style="margin-bottom: 15px;"><a href="sobre-nos.html" style="text-decoration: none; color: #4a5568; font-weight: bold;">Sobre nós</a></li>
+            <ul class="menu-lista">
+                <li class="menu-item"><a href="index.html" class="menu-link">Início</a></li>
+                <li class="menu-item"><a href="servicos.html" class="menu-link">Serviços</a></li>
+                <li class="menu-item"><a href="sobre-nos.html" class="menu-link">Sobre nós</a></li>
             </ul>
         </aside>
 
         <!-- Conteúdo Central -->
         <main class="conteudo-principal">
-            <div style="max-width: 800px; width: 100%;">
+            <div class="container-vitrine">
                 
                 <!-- Card flutuante translúcido -->
                 <div class="vitrine-card">
-                    <h1 style="color: #1a365d; font-size: 2.5rem; margin-top: 0; margin-bottom: 5px;">Sobre o CRM-Digital</h1>
-                    <h3 style="color: #4a5568; margin-top: 0; margin-bottom: 30px;">Transformando ideias em palavras que conectam.</h3>
+                    <h1 class="vitrine-titulo">Sobre o CRM-Digital</h1>
+                    <h3 class="vitrine-subtitulo">Transformando ideias em palavras que conectam.</h3>
 
-                    <div style="margin-top: 20px; line-height: 1.8; color: #2d3748; font-size: 1.1rem;">
+                    <div class="sobre-texto-container">
                         <p>Nascemos com um propósito claro: eliminar os intermediários entre a boa escrita e os clientes que precisam dela. Ao invés de depender das altas taxas e burocracias das plataformas de marketplace tradicionais, decidimos criar nosso próprio espaço.</p>
                         
                         <p>Somos focados em <strong>Escrita Criativa, Redação Estratégica (SEO) e Copywriting</strong>. Nosso objetivo não é apenas entregar um texto, mas arquitetar mensagens que engajam o seu público-alvo e convertem acessos em resultados reais.</p>
@@ -70,9 +70,9 @@
                         <p>Toda a estrutura que você vê aqui foi construída do zero, combinando tecnologia de ponta no back-end com um atendimento direto e humanizado na linha de frente. Quando você contrata um pacote, está investindo diretamente na qualidade do serviço.</p>
                     </div>
 
-                    <div style="margin-top: 40px; padding: 20px; background-color: #e2e8f0; border-radius: 8px; border-left: 4px solid #2b6cb0;">
-                        <h4 style="margin: 0 0 10px 0; color: #1a365d;">Nossa Missão</h4>
-                        <p style="margin: 0; color: #4a5568; font-size: 0.95rem;">Fornecer conteúdo textual autêntico, criativo e de alta performance, valorizando a comunicação direta com nossos clientes.</p>
+                    <div class="sobre-missao-box">
+                        <h4 class="sobre-missao-titulo">Nossa Missão</h4>
+                        <p class="sobre-missao-texto">Fornecer conteúdo textual autêntico, criativo e de alta performance, valorizando a comunicação direta com nossos clientes.</p>
                     </div>
                 </div>
 
@@ -114,7 +114,10 @@
             if (user) {
                 // Usuário logado: Mostra perfil, esconde botões de login/cadastro
                 if(areaDeslogada) areaDeslogada.style.display = 'none';
-                if(areaLogada) areaLogada.style.display = 'flex';
+                if(areaLogada) {
+                    areaLogada.style.display = 'flex';
+                    areaLogada.classList.remove('oculto');
+                }
                 
                 // Injeta o e-mail
                 if(userEmailSpan) userEmailSpan.innerText = user.email;
@@ -131,7 +134,7 @@
                     userUidSpan.innerText = "ID: #" + idCurto;
                     userUidSpan.dataset.uid = user.uid; // Salva o ID inteiro invisível
                 }
-// ==========================================
+                // ==========================================
                 // SINCRONIZAÇÃO COM O PYTHON (AUTOMAÇÃO CRM)
                 // ==========================================
                 fetch('/api/sync_user', {
@@ -151,7 +154,10 @@
                 // Se for você (Admin): Libera as ferramentas secretas
                 if (user.email === "pedroeliasm08@gmail.com") {
                     if(engrenagem) engrenagem.style.display = 'flex';
-                    if(btnAdmin) btnAdmin.style.display = 'inline-block';
+                    if(btnAdmin) {
+                        btnAdmin.style.display = 'inline-block';
+                        btnAdmin.classList.remove('oculto');
+                    }
                 } else {
                     if(engrenagem) engrenagem.remove();
                     if(btnAdmin) btnAdmin.remove();
@@ -159,7 +165,10 @@
             } else {
                 // Ninguém logado: Mostra botões de login/cadastro, esconde perfil
                 if(areaDeslogada) areaDeslogada.style.display = 'block';
-                if(areaLogada) areaLogada.style.display = 'none';
+                if(areaLogada) {
+                    areaLogada.style.display = 'none';
+                    areaLogada.classList.add('oculto');
+                }
                 if(engrenagem) engrenagem.remove();
                 if(btnAdmin) btnAdmin.remove();
             }
