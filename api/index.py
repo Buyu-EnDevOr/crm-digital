@@ -51,26 +51,23 @@ def sincronizar_usuario():
         if not uid:
             return jsonify({"erro": "UID não fornecido"}), 400
             
-        # 1. Procura o cliente no banco de dados usando o UID único do Google
         cliente_ref = db.collection("leads").document(uid)
         doc = cliente_ref.get()
         
         if not doc.exists:
-            # 2. Se NÃO EXISTE: Cria a ficha base do cliente automaticamente!
             novo_cliente = {
                 "nome": dados.get('nome', 'Sem Nome'),
                 "email": dados.get('email', ''),
                 "foto_url": dados.get('foto', ''),
-                "telefone": "-", # Será preenchido na Fase 2
-                "polo": "-",     # Será preenchido na Fase 2
-                "status": "prospeccao", # Status inicial automático do Funil
-                "historico_compras": [], # Gaveta vazia pronta para a Fase 4
+                "telefone": "-", 
+                "polo": "-",     
+                "status": "prospeccao", 
+                "historico_compras": [], 
                 "ultimo_acesso": firestore.SERVER_TIMESTAMP
             }
             cliente_ref.set(novo_cliente)
             return jsonify({"mensagem": "Novo lead cadastrado automaticamente no funil!", "novo": True}), 201
         else:
-            # 3. Se JÁ EXISTE: Apenas atualiza a data de acesso e a foto (caso ele tenha trocado no Google)
             cliente_ref.update({
                 "foto_url": dados.get('foto', ''),
                 "ultimo_acesso": firestore.SERVER_TIMESTAMP
@@ -83,8 +80,6 @@ def sincronizar_usuario():
 # ==========================================
 # CRUD MANUAL DE CLIENTES (PAINEL ADMIN)
 # ==========================================
-
-# CREATE: Recebe os dados do formulário e salva (Cadastro manual)
 @app.route('/api/clientes', methods=['POST'])
 def criar_cliente():
     try:
@@ -94,7 +89,6 @@ def criar_cliente():
     except Exception as e:
         return jsonify({"erro": str(e)}), 500
 
-# READ: Entrega a lista de clientes para a tabela do HTML
 @app.route('/api/clientes', methods=['GET'])
 def listar_clientes():
     try:
@@ -111,7 +105,6 @@ def listar_clientes():
     except Exception as e:
         return jsonify({"erro": str(e)}), 500
 
-# DELETE: Deletar um cliente pelo ID
 @app.route('/api/clientes/<id_cliente>', methods=['DELETE'])
 def deletar_cliente(id_cliente):
     try:
@@ -120,7 +113,6 @@ def deletar_cliente(id_cliente):
     except Exception as e:
         return jsonify({"erro": str(e)}), 500
 
-# UPDATE: Atualizar os dados de um cliente existente
 @app.route('/api/clientes/<id_cliente>', methods=['PUT'])
 def atualizar_cliente(id_cliente):
     try:
@@ -133,7 +125,6 @@ def atualizar_cliente(id_cliente):
 # ==========================================
 # ROTAS DA VITRINE (CONFIGURAÇÕES DO SITE)
 # ==========================================
-
 @app.route('/api/config', methods=['GET'])
 def obter_configuracoes():
     try:
@@ -162,15 +153,46 @@ def atualizar_configuracoes():
         return jsonify({"erro": str(e)}), 500
 
 # ==========================================
+# ROTAS DE PRODUTOS (LOJA)
+# ==========================================
+@app.route('/api/produtos', methods=['POST'])
+def criar_produto():
+    try:
+        novo_produto = request.json
+        db.collection("produtos").add(novo_produto)
+        return jsonify({"mensagem": "Produto criado com sucesso!"}), 201
+    except Exception as e:
+        return jsonify({"erro": str(e)}), 500
+
+@app.route('/api/produtos', methods=['GET'])
+def listar_produtos():
+    try:
+        produtos_ref = db.collection("produtos").stream()
+        lista_produtos = []
+        for p in produtos_ref:
+            dados = p.to_dict()
+            dados['id'] = p.id
+            lista_produtos.append(dados)
+        return jsonify(lista_produtos), 200
+    except Exception as e:
+        return jsonify({"erro": str(e)}), 500
+
+@app.route('/api/produtos/<id_produto>', methods=['DELETE'])
+def deletar_produto(id_produto):
+    try:
+        db.collection("produtos").document(id_produto).delete()
+        return jsonify({"mensagem": "Produto deletado com sucesso!"}), 200
+    except Exception as e:
+        return jsonify({"erro": str(e)}), 500
+
+# ==========================================
 # ROTA DE PAGAMENTO (STRIPE)
 # ==========================================
 @app.route('/api/pagamento', methods=['POST'])
 def gerar_pagamento():
     try:
-        # 1. Busca a chave escondida nas Variáveis de Ambiente
         stripe.api_key = os.environ.get("STRIPE_KEY")
 
-        # 2. Criando a sessão de checkout
         session = stripe.checkout.Session.create(
             payment_method_types=['card'],
             line_items=[{
@@ -185,12 +207,10 @@ def gerar_pagamento():
                 'quantity': 1,
             }],
             mode='payment',
-            # LINKS ATUALIZADOS PARA A SUA VERCEL AQUI 👇
             success_url='https://crm-digital-lac.vercel.app/sucesso.html', 
             cancel_url='https://crm-digital-lac.vercel.app/servicos.html',
         )
 
-        # 3. Devolvendo o link de checkout gerado para o JavaScript
         return jsonify({"link_checkout": session.url}), 200
 
     except Exception as e:
