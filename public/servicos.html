@@ -62,9 +62,7 @@
                 </div>
             </div>
         </main>
-    </div>
-
-    <footer class="rodape-site">
+    </div> <footer class="rodape-site">
         <div class="rodape-container">
             <div class="rodape-coluna">
                 <img src="logo-crm.png" alt="Logo CRM Digital" class="rodape-logo" onerror="this.style.display='none'">
@@ -133,6 +131,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 
+        // Suas chaves Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyA6fZuQf0-GshZ_wtxJW3CRFtlvFPxfaGg",
             authDomain: "crm-digital-6b415.firebaseapp.com",
@@ -155,10 +154,16 @@
         const areaAdminProdutos = document.getElementById('area-admin-produtos');
 
         let ehAdmin = false;
+        let usuarioAtualUid = null; 
+        
         window.produtosCarregados = {};
 
+        // Monitor de Estado de Login
         onAuthStateChanged(auth, (user) => {
             if (user) {
+                usuarioAtualUid = user.uid; 
+                
+                // Remove os botões de Login e mostra o Perfil
                 if(areaDeslogada) areaDeslogada.classList.add('oculto');
                 if(areaLogada) areaLogada.classList.remove('oculto');
                 
@@ -175,6 +180,7 @@
                     userUidSpan.dataset.uid = user.uid;
                 }
 
+                // API do Python: Sincroniza usuário
                 fetch('/api/sync_user', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -186,6 +192,7 @@
                     })
                 }).catch(err => console.error(err));
 
+                // Verifica se é o Admin (Você)
                 if (user.email === "pedroeliasm08@gmail.com") {
                     ehAdmin = true;
                     if(btnAdmin) btnAdmin.classList.remove('oculto');
@@ -197,6 +204,7 @@
                 }
             } else {
                 ehAdmin = false;
+                usuarioAtualUid = null; 
                 if(areaDeslogada) areaDeslogada.classList.remove('oculto');
                 if(areaLogada) areaLogada.classList.add('oculto');
                 if(btnAdmin) btnAdmin.classList.add('oculto');
@@ -206,6 +214,7 @@
             carregarProdutos();
         });
 
+        // Botão Sair
         if(btnLogout) {
             btnLogout.addEventListener('click', () => {
                 import("https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js").then((module) => {
@@ -216,6 +225,7 @@
             });
         }
 
+        // Toggle do Menu Lateral
         document.getElementById('btn-toggle').addEventListener('click', () => {
             document.getElementById('menu-lateral').classList.toggle('oculta');
         });
@@ -226,12 +236,14 @@
         window.carregarProdutos = async function() {
             const grid = document.getElementById('grid-produtos');
             try {
+                // Chama a API do Python e pede a lista de produtos
                 const resposta = await fetch('/api/produtos');
                 const produtosDoBanco = await resposta.json();
                 
                 grid.innerHTML = '';
                 window.produtosCarregados = {};
 
+                // Se o banco estiver vazio...
                 if (!produtosDoBanco || produtosDoBanco.length === 0) {
                     grid.innerHTML = '<p style="text-align: center; width: 100%; color: #4a5568; font-weight: 500;">Nenhum serviço cadastrado no momento. ' + (ehAdmin ? 'Clique em "Adicionar Novo Produto" para cadastrar!' : '') + '</p>';
                     return;
@@ -242,14 +254,12 @@
 
                     const valorFormatado = parseFloat(prod.valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
                     
-                    // Imagem padrão caso o campo esteja vazio ou o link quebre
                     const urlImagem = prod.imagem_url ? prod.imagem_url : "https://res.cloudinary.com/demo/image/upload/v1312461204/sample.jpg";
 
                     const botaoExcluir = ehAdmin 
                         ? `<button onclick="deletarProduto('${prod.id}')" style="background: transparent; color: #ef4444; border: 1px solid #ef4444; border-radius: 6px; padding: 4px 8px; margin-top: 10px; cursor: pointer; font-weight: bold; font-size: 0.75rem; width: 100%; transition: 0.3s;" onmouseover="this.style.background='#ef4444'; this.style.color='white'" onmouseout="this.style.background='transparent'; this.style.color='#ef4444'">🗑️ Excluir</button>`
                         : '';
 
-                    // Cria o card compacto e limpo
                     grid.innerHTML += `
                         <div class="card-produto">
                             <img src="${urlImagem}" alt="${prod.nome}" class="img-produto" onerror="this.src='https://res.cloudinary.com/demo/image/upload/v1312461204/sample.jpg'">
@@ -259,7 +269,7 @@
                             </div>
                             
                             <div class="area-info-produto">
-                                <p class="produto-descricao">${prod.descricao}</p>
+                                <p class="produto-descricao" title="${prod.descricao}">${prod.descricao}</p>
                                 <span class="link-ler-mais" onclick="abrirModalLeitura('${prod.id}')">Ler mais</span>
                                 
                                 <button class="btn-comprar-preco" onclick="iniciarCheckoutStripe('${prod.id}', this)">
@@ -283,18 +293,27 @@
             const produto = window.produtosCarregados[idProduto];
             if (!produto) return;
 
+            // Verifica se o cliente fez login antes de tentar comprar
+            if (!usuarioAtualUid) {
+                alert("Por favor, faça login ou cadastre-se para contratar um serviço!");
+                window.location.href = "login.html";
+                return;
+            }
+
             const textoOriginal = botao.innerText;
             botao.innerText = "Processando...";
             botao.disabled = true;
 
             try {
+                // Manda as infos exatas daquele produto pro Python montar o link do Stripe
                 const resposta = await fetch('/api/pagamento', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         nome: produto.nome,
                         descricao: produto.descricao,
-                        valor: produto.valor
+                        valor: produto.valor,
+                        uid_cliente: usuarioAtualUid // O Python vai usar isso para atualizar o funil
                     })
                 });
 

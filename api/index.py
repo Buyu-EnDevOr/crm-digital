@@ -192,11 +192,21 @@ def gerar_pagamento():
         nome = dados.get('nome', 'Serviço Digital')
         descricao = dados.get('descricao', 'Contratação de serviço via CRM Digital')
         valor = float(dados.get('valor', 10.0))
+        uid_cliente = dados.get('uid_cliente') # <--- NOVO: Recebe o ID do cliente logado
 
-        # Stripe calcula em centavos (ex: R$ 50,00 -> 5000 centavos)
+        # Stripe calcula em centavos
         valor_centavos = int(round(valor * 100))
         if valor_centavos < 50:
-            valor_centavos = 50 # Mínimo permitido pelo Stripe
+            valor_centavos = 50 
+
+        # <--- NOVO: Atualiza o status do cliente no Firebase para "Em Negociação"
+        if uid_cliente:
+            try:
+                db.collection("leads").document(uid_cliente).update({
+                    "status": "negociacao"
+                })
+            except Exception as update_err:
+                print(f"Aviso: Não foi possível atualizar status do lead {uid_cliente}: {update_err}")
 
         session = stripe.checkout.Session.create(
             payment_method_types=['card'],
