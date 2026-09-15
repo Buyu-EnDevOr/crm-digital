@@ -912,3 +912,174 @@ body:not(.tema-escuro) { display: block; height: auto; }
 .rodape-base a:hover {
     color: #38bdf8;
 }
+/* ===== MUDANÇAS PARA A NOVA VITRINE DE PRODUTOS COMPACTA ===== */
+
+/* 1. Altera a grid para caber mais itens (menores) lado a lado */
+.grid-servicos {
+    display: grid;
+    /* Cabem até 3 itens confortáveis no PC e adapta no celular */
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 25px;
+    margin-top: 30px;
+}
+
+/* 2. O cartão principal */
+.card-produto {
+    background-color: white;
+    border-radius: 12px;
+    padding: 0; 
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden; 
+    position: relative; 
+    min-height: 300px;
+    border: 1px solid #e2e8f0;
+}
+
+/* 3. A imagem esticada e quadrada no topo */
+.img-produto {
+    width: 100%;
+    height: 180px; 
+    object-fit: cover;
+    display: block;
+    background-color: #cbd5e0; 
+}
+
+/* 4. A tag do nome do produto */
+.tag-nome-produto {
+    position: absolute;
+    top: 160px; /* Posiciona metade na foto e metade fora */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: white;
+    color: #0f172a;
+    font-weight: 700; /* Destacado, mas não grosseiro */
+    font-size: 1.1rem;
+    padding: 6px 12px;
+    border-radius: 6px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    width: 80%; 
+    box-sizing: border-box;
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis; 
+    z-index: 2;
+}
+
+/* 5. A área inferior do cartão */
+.area-info-produto {
+    padding: 35px 15px 15px 15px; 
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    justify-content: flex-end; 
+    background-color: #ffffff;
+}
+
+/* 6. Descrição truncada com reticências para max 1 linha */
+.produto-descricao {
+    font-size: 0.9rem;
+    color: #4a5568;
+    margin-bottom: 5px;
+    line-height: 1.4;
+    /* Truncar texto em 1 linha */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Link 'Ler mais' */
+.link-ler-mais {
+    color: #3b82f6;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: underline;
+    margin-bottom: 15px;
+    display: inline-block;
+}
+
+/* Ocultar preço antigo de texto (já que vai pro botão) */
+.produto-preco {
+    display: none !important; 
+}
+
+/* 7. O botão de compra verde vibrante com o preço */
+.btn-comprar-preco {
+    width: 100%;
+    padding: 12px;
+    font-size: 1.2rem;
+    background-color: #4ade80; 
+    color: #0f172a;
+    border: none;
+    border-radius: 8px;
+    font-weight: 900; 
+    cursor: pointer;
+    transition: 0.3s;
+    box-shadow: 0 4px 6px rgba(74, 222, 128, 0.2);
+}
+
+.btn-comprar-preco:hover {
+    background-color: #22c55e;
+    transform: scale(1.02);
+}
+
+/* Modal de Leitura de Descrição */
+.modal-leitura {
+    display: none; /* Inicia oculto */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    z-index: 1000; /* Acima de tudo */
+    width: 90%;
+    max-width: 400px;
+    max-height: 300px; /* Impede de ficar gigante */
+    overflow-y: auto; /* Scroll apenas vertical e interno */
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    text-align: left;
+}
+
+.modal-leitura-cabecalho {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 10px;
+}
+
+.modal-leitura-titulo {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #0f172a;
+    margin: 0;
+}
+
+.btn-fechar-leitura {
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    color: #64748b;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.btn-fechar-leitura:hover {
+    color: #ef4444;
+}
+
+.modal-leitura-texto {
+    font-size: 1rem;
+    color: #334155;
+    line-height: 1.6;
+    word-wrap: break-word; /* Quebra palavras se necessário */
+    white-space: pre-wrap; /* Respeita quebras de linha que o usuário digitou */
+}
