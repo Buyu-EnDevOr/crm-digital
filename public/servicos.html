@@ -20,7 +20,6 @@
         </div>
 
         <div id="area-logada" class="area-logada-container oculto">
-            
             <div class="perfil-card">
                 <img id="user-foto" src="" alt="Perfil" class="perfil-foto">
                 <div class="perfil-info">
@@ -58,37 +57,14 @@
                     </button>
                 </div>
 
-                <div class="grid-servicos">
-                    <div class="card-produto">
-                        <div>
-                            <h2 class="produto-titulo">Copywriting Estratégico</h2>
-                            <p class="produto-descricao">Textos persuasivos focados em conversão para páginas de vendas, anúncios e e-mail marketing.</p>
-                            <h1 class="produto-preco">R$ 150,00</h1>
-                        </div>
-                        <button class="btn-comprar" onclick="alert('Integração com Mercado Pago em breve!')">Adicionar pacote</button>
-                    </div>
-
-                    <div class="card-produto">
-                        <div>
-                            <h2 class="produto-titulo">Redação de Artigos</h2>
-                            <p class="produto-descricao">Produção de artigos otimizados (SEO) para blogs e portais, engajando sua audiência com conteúdo de valor.</p>
-                            <h1 class="produto-preco">R$ 80,00</h1>
-                        </div>
-                        <button class="btn-comprar" onclick="alert('Integração com Mercado Pago em breve!')">Adicionar pacote</button>
-                    </div>
-
-                    <div class="card-produto">
-                        <div>
-                            <h2 class="produto-titulo">Consultoria Criativa</h2>
-                            <p class="produto-descricao">Reunião de 1 hora para estruturação de ideias, revisão de roteiros ou direcionamento criativo da sua marca.</p>
-                            <h1 class="produto-preco">R$ 10,00</h1>
-                        </div>
-                        <button id="btn-teste-checkout" class="btn-comprar">Comprar Consultoria</button>
-                    </div>
+                <div class="grid-servicos" id="grid-produtos">
+                    <p style="text-align: center; width: 100%; color: #4a5568;">Carregando serviços...</p>
                 </div>
             </div>
         </main>
-    </div> <footer class="rodape-site">
+    </div>
+
+    <footer class="rodape-site">
         <div class="rodape-container">
             <div class="rodape-coluna">
                 <img src="logo-crm.png" alt="Logo CRM Digital" class="rodape-logo" onerror="this.style.display='none'">
@@ -141,11 +117,11 @@
             <button onclick="fecharModalProduto()" class="btn-modal-cancelar">Cancelar</button>
         </div>
     </div>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 
-        // Suas chaves de conexão do Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyA6fZuQf0-GshZ_wtxJW3CRFtlvFPxfaGg",
             authDomain: "crm-digital-6b415.firebaseapp.com",
@@ -158,9 +134,6 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
 
-        // ==========================================
-        // LÓGICA DE PERFIL E AUTENTICAÇÃO
-        // ==========================================
         const btnAdmin = document.getElementById('btn-admin');
         const areaDeslogada = document.getElementById('area-deslogada');
         const areaLogada = document.getElementById('area-logada');
@@ -169,6 +142,36 @@
         const userFoto = document.getElementById('user-foto');
         const btnLogout = document.getElementById('btn-logout');
         const areaAdminProdutos = document.getElementById('area-admin-produtos');
+
+        let ehAdmin = false;
+
+        // Serviços fixos originais da sua vitrine
+        const servicosFixos = [
+            {
+                id: 'fixo-1',
+                nome: 'Copywriting Estratégico',
+                descricao: 'Textos persuasivos focados em conversão para páginas de vendas, anúncios e e-mail marketing.',
+                valor: 150.00,
+                imagem_url: '',
+                tipo: 'comum'
+            },
+            {
+                id: 'fixo-2',
+                nome: 'Redação de Artigos',
+                descricao: 'Produção de artigos otimizados (SEO) para blogs e portais, engajando sua audiência com conteúdo de valor.',
+                valor: 80.00,
+                imagem_url: '',
+                tipo: 'comum'
+            },
+            {
+                id: 'fixo-3',
+                nome: 'Consultoria Criativa',
+                descricao: 'Reunião de 1 hora para estruturação de ideias, revisão de roteiros ou direcionamento criativo da sua marca.',
+                valor: 10.00,
+                imagem_url: '',
+                tipo: 'stripe'
+            }
+        ];
 
         onAuthStateChanged(auth, (user) => {
             if (user) {
@@ -188,7 +191,6 @@
                     userUidSpan.dataset.uid = user.uid;
                 }
 
-                // Sincronização automática com a API
                 fetch('/api/sync_user', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -200,43 +202,98 @@
                     })
                 })
                 .then(res => res.json())
-                .then(data => console.log("Status CRM:", data.mensagem))
-                .catch(err => console.error("Erro ao sincronizar CRM:", err));
+                .catch(err => console.error("Erro CRM:", err));
 
-                // Libera as ferramentas de Admin
                 if (user.email === "pedroeliasm08@gmail.com") {
+                    ehAdmin = true;
                     if(btnAdmin) btnAdmin.classList.remove('oculto');
                     if(areaAdminProdutos) areaAdminProdutos.classList.remove('oculto');
                 } else {
+                    ehAdmin = false;
                     if(btnAdmin) btnAdmin.classList.add('oculto');
                     if(areaAdminProdutos) areaAdminProdutos.classList.add('oculto');
                 }
             } else {
+                ehAdmin = false;
                 if(areaDeslogada) areaDeslogada.classList.remove('oculto');
                 if(areaLogada) areaLogada.classList.add('oculto');
                 if(btnAdmin) btnAdmin.classList.add('oculto');
                 if(areaAdminProdutos) areaAdminProdutos.classList.add('oculto');
             }
+
+            // Atualiza a exibição dos produtos considerando se é admin ou não
+            carregarProdutos();
         });
 
-        // Ação do Botão Sair (Logout)
         if(btnLogout) {
             btnLogout.addEventListener('click', () => {
                 import("https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js").then((module) => {
                     module.signOut(auth).then(() => {
-                        window.location.href = "index.html"; 
+                        window.location.href = "index.html";
                     });
                 });
             });
         }
 
-        // Lógica de Abrir/Fechar a Sidebar
         document.getElementById('btn-toggle').addEventListener('click', () => {
             document.getElementById('menu-lateral').classList.toggle('oculta');
         });
 
         // ==========================================
-        // LÓGICA DO MODAL DE PRODUTOS
+        // CARREGAR PRODUTOS (FIXOS + DO BANCO)
+        // ==========================================
+        window.carregarProdutos = async function() {
+            const grid = document.getElementById('grid-produtos');
+            let produtosDoBanco = [];
+
+            try {
+                const resposta = await fetch('/api/produtos');
+                if (resposta.ok) {
+                    produtosDoBanco = await resposta.json();
+                }
+            } catch (e) {
+                console.warn("Aviso: Banco de produtos ainda inicializando...", e);
+            }
+
+            const todosProdutos = [...servicosFixos, ...produtosDoBanco];
+            grid.innerHTML = '';
+
+            todosProdutos.forEach(prod => {
+                const valorFormatado = parseFloat(prod.valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                
+                const imagemHtml = prod.imagem_url 
+                    ? `<img src="${prod.imagem_url}" alt="${prod.nome}" style="width: 100%; height: 160px; object-fit: cover; border-radius: 8px; margin-bottom: 15px;" onerror="this.style.display='none'">` 
+                    : '';
+
+                let botaoAcao = `<button class="btn-comprar" onclick="alert('Integração com Mercado Pago em breve para: ${prod.nome}!')">Adicionar pacote</button>`;
+                
+                if (prod.tipo === 'stripe') {
+                    botaoAcao = `<button class="btn-comprar" onclick="iniciarCheckoutStripe(this)">Comprar Consultoria</button>`;
+                }
+
+                const botaoExcluir = (ehAdmin && prod.id && !prod.id.startsWith('fixo-')) 
+                    ? `<button onclick="deletarProduto('${prod.id}')" style="background: transparent; color: #ef4444; border: 1px solid #ef4444; border-radius: 6px; padding: 6px 12px; margin-top: 10px; cursor: pointer; font-weight: bold; font-size: 0.85rem; width: 100%; transition: 0.3s;" onmouseover="this.style.background='#ef4444'; this.style.color='white'" onmouseout="this.style.background='transparent'; this.style.color='#ef4444'">🗑️ Excluir Produto</button>`
+                    : '';
+
+                grid.innerHTML += `
+                    <div class="card-produto">
+                        <div>
+                            ${imagemHtml}
+                            <h2 class="produto-titulo">${prod.nome}</h2>
+                            <p class="produto-descricao">${prod.descricao}</p>
+                            <h1 class="produto-preco">${valorFormatado}</h1>
+                        </div>
+                        <div>
+                            ${botaoAcao}
+                            ${botaoExcluir}
+                        </div>
+                    </div>
+                `;
+            });
+        };
+
+        // ==========================================
+        // MODAL DE PRODUTOS
         // ==========================================
         window.abrirModalProduto = function() {
             document.getElementById('overlay-produto').style.display = 'block';
@@ -271,7 +328,6 @@
             botaoSalvar.disabled = true;
 
             try {
-                // Chama a API Python para salvar no banco
                 const resposta = await fetch('/api/produtos', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -287,23 +343,36 @@
                     document.getElementById('prod-valor').value = '';
                     document.getElementById('prod-imagem').value = '';
                     
-                    // Aqui entra a função para recarregar a tela (fará isso em breve!)
-                    // carregarProdutos(); 
+                    // Recarrega a tela na hora para o produto já aparecer
+                    carregarProdutos();
                 } else {
                     alert("Erro ao criar o produto.");
                 }
             } catch (erro) {
                 console.error("Erro:", erro);
-                alert("Erro de conexão com o servidor Python.");
+                alert("Erro de conexão com o servidor.");
             } finally {
                 botaoSalvar.innerText = "Salvar Produto";
                 botaoSalvar.disabled = false;
             }
         };
 
-        // Botão de Pagamento (Stripe) Existente
-        document.getElementById('btn-teste-checkout').addEventListener('click', async () => {
-            const botao = document.getElementById('btn-teste-checkout');
+        window.deletarProduto = async function(idProduto) {
+            if (!confirm("Tem certeza que deseja excluir este produto?")) return;
+            try {
+                const res = await fetch(`/api/produtos/${idProduto}`, { method: 'DELETE' });
+                if (res.ok) {
+                    alert("Produto removido com sucesso!");
+                    carregarProdutos();
+                } else {
+                    alert("Erro ao remover produto.");
+                }
+            } catch (e) {
+                alert("Erro de conexão com o servidor.");
+            }
+        };
+
+        window.iniciarCheckoutStripe = async function(botao) {
             const textoOriginal = botao.innerText;
             botao.innerText = "Conectando banco...";
             botao.disabled = true;
@@ -325,7 +394,7 @@
                 botao.innerText = textoOriginal;
                 botao.disabled = false;
             }
-        });
+        };
     </script>
 </body>
 </html>
