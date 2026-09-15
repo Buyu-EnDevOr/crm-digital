@@ -62,9 +62,7 @@
                 </div>
             </div>
         </main>
-    </div>
-
-    <footer class="rodape-site">
+    </div> <footer class="rodape-site">
         <div class="rodape-container">
             <div class="rodape-coluna">
                 <img src="logo-crm.png" alt="Logo CRM Digital" class="rodape-logo" onerror="this.style.display='none'">
@@ -101,15 +99,15 @@
         <h2 class="modal-titulo">Criar Novo Produto</h2>
         
         <label>Nome do Produto:</label>
-        <input type="text" id="prod-nome" placeholder="Ex: Copywriting para Vendas">
+        <input type="text" id="prod-nome" placeholder="Ex: Copywriting">
 
         <label>Descrição:</label>
-        <textarea id="prod-descricao" rows="3" class="modal-textarea" placeholder="Descreva os benefícios do serviço..."></textarea>
+        <textarea id="prod-descricao" rows="3" class="modal-textarea" placeholder="Descreva o serviço..."></textarea>
 
         <label>Valor (R$):</label>
         <input type="number" id="prod-valor" placeholder="Ex: 150.00" step="0.01">
 
-        <label>Link da Foto (Imgur/Cloudinary) - Opcional:</label>
+        <label>Link da Imagem (Opcional):</label>
         <input type="text" id="prod-imagem" placeholder="https://...">
 
         <div class="modal-botoes-container">
@@ -122,6 +120,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 
+        // Suas chaves Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyA6fZuQf0-GshZ_wtxJW3CRFtlvFPxfaGg",
             authDomain: "crm-digital-6b415.firebaseapp.com",
@@ -144,10 +143,13 @@
         const areaAdminProdutos = document.getElementById('area-admin-produtos');
 
         let ehAdmin = false;
+        // Variável global para guardar os produtos carregados e enviar pro Stripe depois
         window.produtosCarregados = {};
 
+        // Monitor de Estado de Login
         onAuthStateChanged(auth, (user) => {
             if (user) {
+                // Remove os botões de Login e mostra o Perfil
                 if(areaDeslogada) areaDeslogada.classList.add('oculto');
                 if(areaLogada) areaLogada.classList.remove('oculto');
                 
@@ -164,6 +166,7 @@
                     userUidSpan.dataset.uid = user.uid;
                 }
 
+                // API do Python: Sincroniza usuário
                 fetch('/api/sync_user', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -173,10 +176,9 @@
                         email: user.email,
                         foto: user.photoURL || ''
                     })
-                })
-                .then(res => res.json())
-                .catch(err => console.error("Erro CRM:", err));
+                }).catch(err => console.error(err));
 
+                // Verifica se é o Admin (Você)
                 if (user.email === "pedroeliasm08@gmail.com") {
                     ehAdmin = true;
                     if(btnAdmin) btnAdmin.classList.remove('oculto');
@@ -194,9 +196,12 @@
                 if(areaAdminProdutos) areaAdminProdutos.classList.add('oculto');
             }
 
+            // O Menu lateral pode demorar uns milissegundos para confirmar se é Admin.
+            // Quando ele tiver certeza, a gente manda carregar a loja.
             carregarProdutos();
         });
 
+        // Botão Sair
         if(btnLogout) {
             btnLogout.addEventListener('click', () => {
                 import("https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js").then((module) => {
@@ -207,35 +212,41 @@
             });
         }
 
+        // Toggle do Menu Lateral
         document.getElementById('btn-toggle').addEventListener('click', () => {
             document.getElementById('menu-lateral').classList.toggle('oculta');
         });
 
         // ==========================================
-        // CARREGAR PRODUTOS DO BANCO
+        // SISTEMA DE LOJA - RENDERIZAR PRODUTOS
         // ==========================================
         window.carregarProdutos = async function() {
             const grid = document.getElementById('grid-produtos');
             try {
+                // Chama a API do Python e pede a lista de produtos salvos no Firebase
                 const resposta = await fetch('/api/produtos');
                 const produtosDoBanco = await resposta.json();
                 
                 grid.innerHTML = '';
                 window.produtosCarregados = {};
 
+                // Se o banco estiver vazio...
                 if (!produtosDoBanco || produtosDoBanco.length === 0) {
                     grid.innerHTML = '<p style="text-align: center; width: 100%; color: #4a5568; font-weight: 500;">Nenhum serviço cadastrado no momento. ' + (ehAdmin ? 'Clique em "Adicionar Novo Produto" para cadastrar!' : '') + '</p>';
                     return;
                 }
 
+                // Cria o HTML para cada produto que voltou do banco
                 produtosDoBanco.forEach(prod => {
                     window.produtosCarregados[prod.id] = prod;
 
                     const valorFormatado = parseFloat(prod.valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                    
                     const imagemHtml = prod.imagem_url 
                         ? `<img src="${prod.imagem_url}" alt="${prod.nome}" style="width: 100%; height: 160px; object-fit: cover; border-radius: 8px; margin-bottom: 15px;" onerror="this.style.display='none'">` 
                         : '';
 
+                    // Só o Admin vê o botão vermelho de excluir
                     const botaoExcluir = ehAdmin 
                         ? `<button onclick="deletarProduto('${prod.id}')" style="background: transparent; color: #ef4444; border: 1px solid #ef4444; border-radius: 6px; padding: 6px 12px; margin-top: 10px; cursor: pointer; font-weight: bold; font-size: 0.85rem; width: 100%; transition: 0.3s;" onmouseover="this.style.background='#ef4444'; this.style.color='white'" onmouseout="this.style.background='transparent'; this.style.color='#ef4444'">🗑️ Excluir Produto</button>`
                         : '';
@@ -257,12 +268,12 @@
                 });
             } catch (erro) {
                 console.error("Erro ao carregar serviços:", erro);
-                grid.innerHTML = '<p style="text-align: center; color: red;">Erro ao carregar o catálogo de serviços.</p>';
+                grid.innerHTML = '<p style="text-align: center; color: red;">Erro ao conectar com o banco de produtos.</p>';
             }
         };
 
         // ==========================================
-        // CHECKOUT STRIPE DINÂMICO
+        // COMUNICAÇÃO COM O STRIPE
         // ==========================================
         window.iniciarCheckoutStripe = async function(idProduto, botao) {
             const produto = window.produtosCarregados[idProduto];
@@ -273,6 +284,7 @@
             botao.disabled = true;
 
             try {
+                // Manda as infos exatas daquele produto pro Python montar o link do Stripe
                 const resposta = await fetch('/api/pagamento', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -286,22 +298,23 @@
                 const dados = await resposta.json();
 
                 if (resposta.ok && dados.link_checkout) {
+                    // Mágica acontece: o navegador leva o cliente pra tela de pagamento
                     window.location.href = dados.link_checkout;
                 } else {
-                    alert(dados.erro || "Chave de pagamento ainda não configurada no Python/Vercel.");
+                    alert(dados.erro || "Verifique se a variável STRIPE_KEY está configurada na Vercel.");
                     botao.innerText = textoOriginal;
                     botao.disabled = false;
                 }
             } catch (erro) {
                 console.error(erro);
-                alert("Erro de conexão com o servidor de pagamento.");
+                alert("Erro ao conectar com o servidor. O back-end está rodando?");
                 botao.innerText = textoOriginal;
                 botao.disabled = false;
             }
         };
 
         // ==========================================
-        // MODAL DE PRODUTOS
+        // FUNCIONALIDADES DO MODAL DE PRODUTOS
         // ==========================================
         window.abrirModalProduto = function() {
             document.getElementById('overlay-produto').style.display = 'block';
@@ -343,39 +356,40 @@
                 });
 
                 if (resposta.ok) {
-                    alert("Produto criado com sucesso!");
                     fecharModalProduto();
                     
+                    // Limpa tudo pro próximo produto
                     document.getElementById('prod-nome').value = '';
                     document.getElementById('prod-descricao').value = '';
                     document.getElementById('prod-valor').value = '';
                     document.getElementById('prod-imagem').value = '';
                     
+                    // Atualiza a tela pros produtos novos brotarem na hora
                     carregarProdutos();
                 } else {
                     alert("Erro ao criar o produto.");
                 }
             } catch (erro) {
                 console.error("Erro:", erro);
-                alert("Erro de conexão com o servidor.");
+                alert("Erro de conexão com o servidor Python.");
             } finally {
                 botaoSalvar.innerText = "Salvar Produto";
                 botaoSalvar.disabled = false;
             }
         };
 
+        // Deletar o Produto
         window.deletarProduto = async function(idProduto) {
-            if (!confirm("Tem certeza que deseja excluir este produto?")) return;
+            if (!confirm("Tem certeza que deseja excluir este serviço do catálogo?")) return;
             try {
                 const res = await fetch(`/api/produtos/${idProduto}`, { method: 'DELETE' });
                 if (res.ok) {
-                    alert("Produto removido com sucesso!");
-                    carregarProdutos();
+                    carregarProdutos(); // Atualiza a tela removendo ele
                 } else {
-                    alert("Erro ao remover produto.");
+                    alert("Erro ao tentar remover o produto.");
                 }
             } catch (e) {
-                alert("Erro de conexão com o servidor.");
+                alert("Erro de conexão com o banco de dados.");
             }
         };
     </script>
