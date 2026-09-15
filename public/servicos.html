@@ -101,13 +101,13 @@
         <h2 class="modal-titulo">Criar Novo Produto</h2>
         
         <label>Nome do Produto:</label>
-        <input type="text" id="prod-nome" placeholder="Ex: Consultoria Avançada">
+        <input type="text" id="prod-nome" placeholder="Ex: Copywriting para Vendas">
 
         <label>Descrição:</label>
         <textarea id="prod-descricao" rows="3" class="modal-textarea" placeholder="Descreva os benefícios do serviço..."></textarea>
 
         <label>Valor (R$):</label>
-        <input type="number" id="prod-valor" placeholder="Ex: 199.90" step="0.01">
+        <input type="number" id="prod-valor" placeholder="Ex: 150.00" step="0.01">
 
         <label>Link da Foto (Imgur/Cloudinary) - Opcional:</label>
         <input type="text" id="prod-imagem" placeholder="https://...">
@@ -144,34 +144,7 @@
         const areaAdminProdutos = document.getElementById('area-admin-produtos');
 
         let ehAdmin = false;
-
-        // Serviços fixos originais da sua vitrine
-        const servicosFixos = [
-            {
-                id: 'fixo-1',
-                nome: 'Copywriting Estratégico',
-                descricao: 'Textos persuasivos focados em conversão para páginas de vendas, anúncios e e-mail marketing.',
-                valor: 150.00,
-                imagem_url: '',
-                tipo: 'comum'
-            },
-            {
-                id: 'fixo-2',
-                nome: 'Redação de Artigos',
-                descricao: 'Produção de artigos otimizados (SEO) para blogs e portais, engajando sua audiência com conteúdo de valor.',
-                valor: 80.00,
-                imagem_url: '',
-                tipo: 'comum'
-            },
-            {
-                id: 'fixo-3',
-                nome: 'Consultoria Criativa',
-                descricao: 'Reunião de 1 hora para estruturação de ideias, revisão de roteiros ou direcionamento criativo da sua marca.',
-                valor: 10.00,
-                imagem_url: '',
-                tipo: 'stripe'
-            }
-        ];
+        window.produtosCarregados = {};
 
         onAuthStateChanged(auth, (user) => {
             if (user) {
@@ -221,7 +194,6 @@
                 if(areaAdminProdutos) areaAdminProdutos.classList.add('oculto');
             }
 
-            // Atualiza a exibição dos produtos considerando se é admin ou não
             carregarProdutos();
         });
 
@@ -240,56 +212,92 @@
         });
 
         // ==========================================
-        // CARREGAR PRODUTOS (FIXOS + DO BANCO)
+        // CARREGAR PRODUTOS DO BANCO
         // ==========================================
         window.carregarProdutos = async function() {
             const grid = document.getElementById('grid-produtos');
-            let produtosDoBanco = [];
-
             try {
                 const resposta = await fetch('/api/produtos');
-                if (resposta.ok) {
-                    produtosDoBanco = await resposta.json();
+                const produtosDoBanco = await resposta.json();
+                
+                grid.innerHTML = '';
+                window.produtosCarregados = {};
+
+                if (!produtosDoBanco || produtosDoBanco.length === 0) {
+                    grid.innerHTML = '<p style="text-align: center; width: 100%; color: #4a5568; font-weight: 500;">Nenhum serviço cadastrado no momento. ' + (ehAdmin ? 'Clique em "Adicionar Novo Produto" para cadastrar!' : '') + '</p>';
+                    return;
                 }
-            } catch (e) {
-                console.warn("Aviso: Banco de produtos ainda inicializando...", e);
+
+                produtosDoBanco.forEach(prod => {
+                    window.produtosCarregados[prod.id] = prod;
+
+                    const valorFormatado = parseFloat(prod.valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                    const imagemHtml = prod.imagem_url 
+                        ? `<img src="${prod.imagem_url}" alt="${prod.nome}" style="width: 100%; height: 160px; object-fit: cover; border-radius: 8px; margin-bottom: 15px;" onerror="this.style.display='none'">` 
+                        : '';
+
+                    const botaoExcluir = ehAdmin 
+                        ? `<button onclick="deletarProduto('${prod.id}')" style="background: transparent; color: #ef4444; border: 1px solid #ef4444; border-radius: 6px; padding: 6px 12px; margin-top: 10px; cursor: pointer; font-weight: bold; font-size: 0.85rem; width: 100%; transition: 0.3s;" onmouseover="this.style.background='#ef4444'; this.style.color='white'" onmouseout="this.style.background='transparent'; this.style.color='#ef4444'">🗑️ Excluir Produto</button>`
+                        : '';
+
+                    grid.innerHTML += `
+                        <div class="card-produto">
+                            <div>
+                                ${imagemHtml}
+                                <h2 class="produto-titulo">${prod.nome}</h2>
+                                <p class="produto-descricao">${prod.descricao}</p>
+                                <h1 class="produto-preco">${valorFormatado}</h1>
+                            </div>
+                            <div>
+                                <button class="btn-comprar" onclick="iniciarCheckoutStripe('${prod.id}', this)">Contratar Serviço</button>
+                                ${botaoExcluir}
+                            </div>
+                        </div>
+                    `;
+                });
+            } catch (erro) {
+                console.error("Erro ao carregar serviços:", erro);
+                grid.innerHTML = '<p style="text-align: center; color: red;">Erro ao carregar o catálogo de serviços.</p>';
             }
+        };
 
-            const todosProdutos = [...servicosFixos, ...produtosDoBanco];
-            grid.innerHTML = '';
+        // ==========================================
+        // CHECKOUT STRIPE DINÂMICO
+        // ==========================================
+        window.iniciarCheckoutStripe = async function(idProduto, botao) {
+            const produto = window.produtosCarregados[idProduto];
+            if (!produto) return;
 
-            todosProdutos.forEach(prod => {
-                const valorFormatado = parseFloat(prod.valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-                
-                const imagemHtml = prod.imagem_url 
-                    ? `<img src="${prod.imagem_url}" alt="${prod.nome}" style="width: 100%; height: 160px; object-fit: cover; border-radius: 8px; margin-bottom: 15px;" onerror="this.style.display='none'">` 
-                    : '';
+            const textoOriginal = botao.innerText;
+            botao.innerText = "Conectando ao Stripe...";
+            botao.disabled = true;
 
-                let botaoAcao = `<button class="btn-comprar" onclick="alert('Integração com Mercado Pago em breve para: ${prod.nome}!')">Adicionar pacote</button>`;
-                
-                if (prod.tipo === 'stripe') {
-                    botaoAcao = `<button class="btn-comprar" onclick="iniciarCheckoutStripe(this)">Comprar Consultoria</button>`;
+            try {
+                const resposta = await fetch('/api/pagamento', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        nome: produto.nome,
+                        descricao: produto.descricao,
+                        valor: produto.valor
+                    })
+                });
+
+                const dados = await resposta.json();
+
+                if (resposta.ok && dados.link_checkout) {
+                    window.location.href = dados.link_checkout;
+                } else {
+                    alert(dados.erro || "Chave de pagamento ainda não configurada no Python/Vercel.");
+                    botao.innerText = textoOriginal;
+                    botao.disabled = false;
                 }
-
-                const botaoExcluir = (ehAdmin && prod.id && !prod.id.startsWith('fixo-')) 
-                    ? `<button onclick="deletarProduto('${prod.id}')" style="background: transparent; color: #ef4444; border: 1px solid #ef4444; border-radius: 6px; padding: 6px 12px; margin-top: 10px; cursor: pointer; font-weight: bold; font-size: 0.85rem; width: 100%; transition: 0.3s;" onmouseover="this.style.background='#ef4444'; this.style.color='white'" onmouseout="this.style.background='transparent'; this.style.color='#ef4444'">🗑️ Excluir Produto</button>`
-                    : '';
-
-                grid.innerHTML += `
-                    <div class="card-produto">
-                        <div>
-                            ${imagemHtml}
-                            <h2 class="produto-titulo">${prod.nome}</h2>
-                            <p class="produto-descricao">${prod.descricao}</p>
-                            <h1 class="produto-preco">${valorFormatado}</h1>
-                        </div>
-                        <div>
-                            ${botaoAcao}
-                            ${botaoExcluir}
-                        </div>
-                    </div>
-                `;
-            });
+            } catch (erro) {
+                console.error(erro);
+                alert("Erro de conexão com o servidor de pagamento.");
+                botao.innerText = textoOriginal;
+                botao.disabled = false;
+            }
         };
 
         // ==========================================
@@ -343,7 +351,6 @@
                     document.getElementById('prod-valor').value = '';
                     document.getElementById('prod-imagem').value = '';
                     
-                    // Recarrega a tela na hora para o produto já aparecer
                     carregarProdutos();
                 } else {
                     alert("Erro ao criar o produto.");
@@ -369,30 +376,6 @@
                 }
             } catch (e) {
                 alert("Erro de conexão com o servidor.");
-            }
-        };
-
-        window.iniciarCheckoutStripe = async function(botao) {
-            const textoOriginal = botao.innerText;
-            botao.innerText = "Conectando banco...";
-            botao.disabled = true;
-
-            try {
-                const resposta = await fetch('/api/pagamento', { method: 'POST' });
-                const dados = await resposta.json();
-
-                if (resposta.ok) {
-                    window.location.href = dados.link_checkout;
-                } else {
-                    alert("Chave de pagamento ainda não configurada no Python.");
-                    botao.innerText = textoOriginal;
-                    botao.disabled = false;
-                }
-            } catch (erro) {
-                console.error(erro);
-                alert("Erro de conexão. O servidor está rodando?");
-                botao.innerText = textoOriginal;
-                botao.disabled = false;
             }
         };
     </script>

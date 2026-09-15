@@ -4,7 +4,7 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
 import os
-import json # <-- Necessário para ler a chave da Vercel
+import json
 import stripe
 
 app = Flask(__name__)
@@ -14,22 +14,16 @@ CORS(app)
 firebase_creds_json = os.environ.get('FIREBASE_CREDENTIALS')
 
 if firebase_creds_json:
-    # SE ESTIVER NA VERCEL: Usa a variável de ambiente
     cred_dict = json.loads(firebase_creds_json)
-    
-    # IMPORTANTE: Limpeza das quebras de linha que a Vercel costuma bagunçar
     if '\\n' in cred_dict.get('private_key', ''):
         cred_dict['private_key'] = cred_dict['private_key'].replace('\\n', '\n')
-        
     cred = credentials.Certificate(cred_dict)
 else:
-    # SE ESTIVER NO SEU PC: Usa o arquivo físico .json
     diretorio_api = os.path.dirname(os.path.abspath(__file__))
     diretorio_raiz = os.path.dirname(diretorio_api)
     caminho_chave = os.path.join(diretorio_raiz, 'chave-firebase.json')
     cred = credentials.Certificate(caminho_chave)
 
-# Evita inicializar o Firebase duas vezes
 if not firebase_admin._apps:
     firebase_admin.initialize_app(cred)
 
@@ -40,7 +34,7 @@ def status():
     return jsonify({"mensagem": "Servidor Python rodando perfeitamente!", "status": 200})
 
 # ==========================================
-# ROTA DE AUTOMAÇÃO CRM (FASE 1)
+# ROTA DE AUTOMAÇÃO CRM
 # ==========================================
 @app.route('/api/sync_user', methods=['POST'])
 def sincronizar_usuario():
@@ -66,7 +60,7 @@ def sincronizar_usuario():
                 "ultimo_acesso": firestore.SERVER_TIMESTAMP
             }
             cliente_ref.set(novo_cliente)
-            return jsonify({"mensagem": "Novo lead cadastrado automaticamente no funil!", "novo": True}), 201
+            return jsonify({"mensagem": "Novo lead cadastrado no funil!", "novo": True}), 201
         else:
             cliente_ref.update({
                 "foto_url": dados.get('foto', ''),
@@ -78,7 +72,7 @@ def sincronizar_usuario():
         return jsonify({"erro": str(e)}), 500
 
 # ==========================================
-# CRUD MANUAL DE CLIENTES (PAINEL ADMIN)
+# CRUD DE CLIENTES (ADMIN)
 # ==========================================
 @app.route('/api/clientes', methods=['POST'])
 def criar_cliente():
@@ -92,15 +86,12 @@ def criar_cliente():
 @app.route('/api/clientes', methods=['GET'])
 def listar_clientes():
     try:
-        clientes_ref = db.collection("leads")
-        clientes_banco = clientes_ref.stream()
-        
+        clientes_ref = db.collection("leads").stream()
         lista_clientes = []
-        for cliente in clientes_banco:
+        for cliente in clientes_ref:
             dados = cliente.to_dict()
             dados['id'] = cliente.id 
             lista_clientes.append(dados)
-            
         return jsonify(lista_clientes)
     except Exception as e:
         return jsonify({"erro": str(e)}), 500
@@ -123,7 +114,7 @@ def atualizar_cliente(id_cliente):
         return jsonify({"erro": str(e)}), 500
 
 # ==========================================
-# ROTAS DA VITRINE (CONFIGURAÇÕES DO SITE)
+# ROTAS DA VITRINE (HOME)
 # ==========================================
 @app.route('/api/config', methods=['GET'])
 def obter_configuracoes():
@@ -153,7 +144,7 @@ def atualizar_configuracoes():
         return jsonify({"erro": str(e)}), 500
 
 # ==========================================
-# ROTAS DE PRODUTOS (LOJA)
+# ROTAS DE PRODUTOS (CATÁLOGO)
 # ==========================================
 @app.route('/api/produtos', methods=['POST'])
 def criar_produto():
@@ -186,12 +177,26 @@ def deletar_produto(id_produto):
         return jsonify({"erro": str(e)}), 500
 
 # ==========================================
-# ROTA DE PAGAMENTO (STRIPE)
+# CHECKOUT STRIPE 100% DINÂMICO
 # ==========================================
 @app.route('/api/pagamento', methods=['POST'])
 def gerar_pagamento():
     try:
-        stripe.api_key = os.environ.get("STRIPE_KEY")
+        chave_stripe = os.environ.get("STRIPE_KEY")
+        if not chave_stripe:
+            return jsonify({"erro": "Chave do Stripe não encontrada nas configurações da Vercel."}), 500
+            
+        stripe.api_key = chave_stripe
+        dados = request.json or {}
+
+        nome = dados.get('nome', 'Serviço Digital')
+        descricao = dados.get('descricao', 'Contratação de serviço via CRM Digital')
+        valor = float(dados.get('valor', 10.0))
+
+        # Stripe calcula em centavos (ex: R$ 50,00 -> 5000 centavos)
+        valor_centavos = int(round(valor * 100))
+        if valor_centavos < 50:
+            valor_centavos = 50 # Mínimo permitido pelo Stripe
 
         session = stripe.checkout.Session.create(
             payment_method_types=['card'],
@@ -199,15 +204,15 @@ def gerar_pagamento():
                 'price_data': {
                     'currency': 'brl',
                     'product_data': {
-                        'name': 'Consultoria Criativa',
-                        'description': 'Reunião de 1 hora para estruturação de ideias e roteiros.',
+                        'name': nome,
+                        'description': descricao or 'Serviço contratado',
                     },
-                    'unit_amount': 1000, 
+                    'unit_amount': valor_centavos,
                 },
                 'quantity': 1,
             }],
             mode='payment',
-            success_url='https://crm-digital-lac.vercel.app/sucesso.html', 
+            success_url='https://crm-digital-lac.vercel.app/sucesso.html',
             cancel_url='https://crm-digital-lac.vercel.app/servicos.html',
         )
 
