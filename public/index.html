@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vitrine Digital</title>
+    <title>Cardápio Digital - Delivery</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="tema-claro vitrine-fundo body-sem-margem"> 
+<body class="tema-claro vitrine-fundo body-sem-margem">
 
     <header class="upbar">
         <div class="flex-center">
@@ -39,91 +39,77 @@
     <div class="layout-vitrine">
         <aside class="sidebar" id="menu-lateral">
             <ul class="menu-lista">
-                <li class="menu-item"><a href="index.html" class="menu-link-ativo">Início</a></li>
-                <li class="menu-item"><a href="servicos.html" class="menu-link">Serviços</a></li>
-                <li class="menu-item"><a href="sobre-nos.html" class="menu-link">Sobre nós</a></li>
+                <li class="menu-item"><a href="index.html" class="menu-link-ativo">Cardápio</a></li>
                 <li class="menu-item"><a href="perfil.html" class="menu-link">Meu Perfil</a></li>
             </ul>
         </aside>
 
         <main class="conteudo-principal">
-            <div class="container-vitrine">
-                <div class="vitrine-card">
-                    <h1 id="texto-titulo" class="vitrine-titulo">Carregando...</h1>
-                    <h3 id="texto-subtitulo" class="vitrine-subtitulo">...</h3>
-
-                    <div class="vitrine-imagem-container">
-                        <img id="imagem-destaque" src="" alt="Destaque da Vitrine" class="vitrine-imagem">
+            <div class="vitrine-card container-servicos">
+                <div class="cabecalho-cardapio">
+                    <div>
+                        <h1 class="servicos-titulo">Nosso Cardápio</h1>
+                        <p class="servicos-subtitulo">Deslize para ver nossas especialidades.</p>
                     </div>
+                    <!-- Botão para futura implementação do Dark Mode -->
+                    <button id="btn-tema" class="btn-tema">🌙 Escuro</button>
+                </div>
+                
+                <div id="area-admin-produtos" class="oculto" style="text-align: right; margin-bottom: 20px;">
+                    <button onclick="abrirModalProduto()" style="background: var(--cor-primaria, #E11D48); color: white; border: none; padding: 12px 24px; border-radius: 25px; font-weight: bold; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 6px rgba(225, 29, 72, 0.3);">
+                        ➕ Adicionar Item ao Cardápio
+                    </button>
+                </div>
 
-                    <div class="vitrine-descricao-box">
-                        <p id="texto-descricao" class="vitrine-descricao-texto"></p>
-                        <p class="vitrine-contato-texto">Contato: <span id="texto-contato"></span></p>
-                    </div>
+                <!-- ONDE O JAVASCRIPT VAI INJETAR AS PRATELEIRAS -->
+                <div id="container-categorias">
+                    <p style="text-align: center; width: 100%; color: var(--cor-texto-mutado, #6B7280);">Carregando cardápio delicioso...</p>
                 </div>
             </div>
         </main>
     </div>
 
-    <footer class="rodape-site">
-        <div class="rodape-container">
-            <div class="rodape-coluna">
-                <img src="logo-crm.png" alt="Logo CRM Digital" class="rodape-logo" onerror="this.style.display='none'">
-                <p>Transformando ideias em palavras que conectam. Soluções completas de escrita criativa e redação estratégica.</p>
-            </div>
-            
-            <div class="rodape-coluna">
-                <h4>Navegação</h4>
-                <ul>
-                    <li><a href="index.html">Início</a></li>
-                    <li><a href="servicos.html">Nossos Serviços</a></li>
-                    <li><a href="sobre-nos.html">Sobre o Projeto</a></li>
-                    <li><a href="perfil.html">Meu Perfil</a></li>
-                </ul>
-            </div>
-            
-            <div class="rodape-coluna">
-                <h4>Fale Conosco</h4>
-                <p>📞 (00) 00000-0000</p>
-                <p>✉️ pedroeliasm08@gmail.com</p>
-                <p>📍 Região de Atendimento: Digital</p>
-            </div>
-        </div>
+    <!-- Overlay Global para os Modais -->
+    <div id="overlay-produto" class="admin-overlay" onclick="fecharModalProduto(); fecharModalLeitura();"></div>
+
+    <!-- Modal Admin: Criar Produto -->
+    <div id="modal-produto" class="admin-modal painel">
+        <h2 class="modal-titulo">Adicionar Item ao Cardápio</h2>
         
-        <div class="rodape-base">
-            <p>&copy; 2026 CRM Digital - Todos os direitos reservados.</p>
-            <a href="#">Política de Privacidade</a>
-        </div>
-    </footer>
+        <label>Nome do Item:</label>
+        <input type="text" id="prod-nome" placeholder="Ex: Burger Clássico">
 
-    <div class="area-admin-gear oculto" id="btn-engrenagem">
-        <div class="gear-icon" onclick="abrirConfigAdmin()">⚙️</div>
-    </div>
-
-    <div id="overlay-admin" class="admin-overlay" onclick="fecharConfigAdmin()"></div>
-
-    <div id="modal-admin" class="admin-modal painel">
-        <h2 class="modal-titulo">Central de Edição (Vitrine)</h2>
-        
-        <label>Título:</label>
-        <input type="text" id="edit-titulo">
-
-        <label>Subtítulo:</label>
-        <input type="text" id="edit-subtitulo">
-
-        <label>Link da Imagem (Cloudinary/URL):</label>
-        <input type="text" id="edit-imagem">
+        <!-- NOVO: Campo de Categoria -->
+        <label>Categoria:</label>
+        <select id="prod-categoria" class="modal-input" style="width: 100%; padding: 8px; margin-bottom: 15px; border-radius: 4px; border: 1px solid #ccc; font-family: inherit;">
+            <option value="Hambúrgueres">Hambúrgueres</option>
+            <option value="Pizzas">Pizzas</option>
+            <option value="Bebidas">Bebidas</option>
+            <option value="Combos">Combos</option>
+        </select>
 
         <label>Descrição:</label>
-        <textarea id="edit-descricao" rows="4" class="modal-textarea"></textarea>
+        <textarea id="prod-descricao" rows="3" class="modal-textarea" placeholder="Descreva os ingredientes..."></textarea>
 
-        <label>Contato / WhatsApp:</label>
-        <input type="text" id="edit-contato">
+        <label>Valor (R$):</label>
+        <input type="number" id="prod-valor" placeholder="Ex: 35.90" step="0.01">
+
+        <label>Link da Imagem:</label>
+        <input type="text" id="prod-imagem" placeholder="https://...">
 
         <div class="modal-botoes-container">
-            <button onclick="salvarConfigAdmin()" class="btn-modal-salvar">Salvar Alterações</button>
-            <button onclick="fecharConfigAdmin()" class="btn-modal-cancelar">Cancelar</button>
+            <button onclick="salvarProduto()" class="btn-modal-salvar">Salvar Item</button>
+            <button onclick="fecharModalProduto()" class="btn-modal-cancelar">Cancelar</button>
         </div>
+    </div>
+
+    <!-- Modal Cliente: Ler Descrição Completa -->
+    <div id="modal-leitura" class="modal-leitura">
+        <div class="modal-leitura-cabecalho">
+            <h3 class="modal-leitura-titulo" id="titulo-leitura">Detalhes</h3>
+            <button class="btn-fechar-leitura" onclick="fecharModalLeitura()">×</button>
+        </div>
+        <div class="modal-leitura-texto" id="texto-leitura"></div>
     </div>
 
     <script type="module">
@@ -142,7 +128,6 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
 
-        const engrenagem = document.getElementById('btn-engrenagem');
         const btnAdmin = document.getElementById('btn-admin');
         const areaDeslogada = document.getElementById('area-deslogada');
         const areaLogada = document.getElementById('area-logada');
@@ -150,16 +135,24 @@
         const userUidSpan = document.getElementById('user-uid');
         const userFoto = document.getElementById('user-foto');
         const btnLogout = document.getElementById('btn-logout');
+        const areaAdminProdutos = document.getElementById('area-admin-produtos');
+
+        let ehAdmin = false;
+        let usuarioAtualUid = null; 
+        
+        window.produtosCarregados = {};
 
         onAuthStateChanged(auth, (user) => {
             if (user) {
+                usuarioAtualUid = user.uid; 
+                
                 if(areaDeslogada) areaDeslogada.classList.add('oculto');
                 if(areaLogada) areaLogada.classList.remove('oculto');
-                
                 if(userEmailSpan) userEmailSpan.innerText = user.email;
 
                 if(userFoto) {
                     userFoto.src = user.photoURL || "https://www.gravatar.com/avatar/?d=mp";
+                    userFoto.setAttribute('referrerpolicy', 'no-referrer'); // Correção da foto de perfil
                     userFoto.style.display = 'block';
                 }
 
@@ -169,7 +162,6 @@
                     userUidSpan.dataset.uid = user.uid;
                 }
 
-                // Sincronização automática com a API
                 fetch('/api/sync_user', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -179,24 +171,27 @@
                         email: user.email,
                         foto: user.photoURL || ''
                     })
-                })
-                .then(res => res.json())
-                .then(data => console.log("Status CRM:", data.mensagem))
-                .catch(err => console.error("Erro ao sincronizar CRM:", err));
+                }).catch(err => console.error(err));
 
                 if (user.email === "pedroeliasm08@gmail.com") {
-                    if(engrenagem) engrenagem.classList.remove('oculto');
+                    ehAdmin = true;
                     if(btnAdmin) btnAdmin.classList.remove('oculto');
+                    if(areaAdminProdutos) areaAdminProdutos.classList.remove('oculto');
                 } else {
-                    if(engrenagem) engrenagem.classList.add('oculto');
+                    ehAdmin = false;
                     if(btnAdmin) btnAdmin.classList.add('oculto');
+                    if(areaAdminProdutos) areaAdminProdutos.classList.add('oculto');
                 }
             } else {
+                ehAdmin = false;
+                usuarioAtualUid = null; 
                 if(areaDeslogada) areaDeslogada.classList.remove('oculto');
                 if(areaLogada) areaLogada.classList.add('oculto');
-                if(engrenagem) engrenagem.classList.add('oculto');
                 if(btnAdmin) btnAdmin.classList.add('oculto');
+                if(areaAdminProdutos) areaAdminProdutos.classList.add('oculto');
             }
+
+            carregarProdutos();
         });
 
         if(btnLogout) {
@@ -213,67 +208,224 @@
             document.getElementById('menu-lateral').classList.toggle('oculta');
         });
 
-        window.carregarVitrine = async function() {
+        // ==========================================
+        // RENDERIZAR PRATELEIRAS (CARROSSEL)
+        // ==========================================
+        window.carregarProdutos = async function() {
+            const container = document.getElementById('container-categorias');
             try {
-                const resposta = await fetch('/api/config');
-                const dados = await resposta.json();
-
-                document.getElementById('texto-titulo').innerText = dados.titulo;
-                document.getElementById('texto-subtitulo').innerText = dados.subtitulo;
-                document.getElementById('imagem-destaque').src = dados.imagem_url;
-                document.getElementById('texto-descricao').innerText = dados.descricao;
-                document.getElementById('texto-contato').innerText = dados.contato;
+                const resposta = await fetch('/api/produtos');
+                const produtosDoBanco = await resposta.json();
                 
-                document.getElementById('edit-titulo').value = dados.titulo;
-                document.getElementById('edit-subtitulo').value = dados.subtitulo;
-                document.getElementById('edit-imagem').value = dados.imagem_url;
-                document.getElementById('edit-descricao').value = dados.descricao;
-                document.getElementById('edit-contato').value = dados.contato;
+                container.innerHTML = '';
+                window.produtosCarregados = {};
+
+                if (!produtosDoBanco || produtosDoBanco.length === 0) {
+                    container.innerHTML = '<p style="text-align: center; width: 100%; color: var(--cor-texto-mutado); font-weight: 500;">O cardápio está sendo preparado. Volte em breve!</p>';
+                    return;
+                }
+
+                // 1. Agrupar produtos por Categoria
+                const categorias = {};
+                produtosDoBanco.forEach(prod => {
+                    window.produtosCarregados[prod.id] = prod;
+                    // Se o produto foi criado antes de termos categoria, joga em "Destaques"
+                    const cat = prod.categoria || 'Destaques'; 
+                    if (!categorias[cat]) categorias[cat] = [];
+                    categorias[cat].push(prod);
+                });
+
+                // 2. Renderizar cada Categoria em uma Prateleira separada
+                for (const [nomeCategoria, produtos] of Object.entries(categorias)) {
+                    
+                    let htmlPrateleira = `
+                        <div class="secao-categoria">
+                            <div class="cabecalho-categoria">
+                                <h2 class="titulo-categoria">${nomeCategoria}</h2>
+                                <button class="btn-ver-mais" onclick="verMais('${nomeCategoria}')">Ver mais ></button>
+                            </div>
+                            <div class="prateleira">
+                    `;
+
+                    produtos.forEach(prod => {
+                        const valorFormatado = parseFloat(prod.valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                        const urlImagem = prod.imagem_url ? prod.imagem_url : "https://res.cloudinary.com/demo/image/upload/v1312461204/sample.jpg";
+                        
+                        const botaoExcluir = ehAdmin 
+                            ? `<button onclick="deletarProduto('${prod.id}')" style="background: transparent; color: #ef4444; border: 1px solid #ef4444; border-radius: 6px; padding: 4px 8px; margin-top: 10px; cursor: pointer; font-weight: bold; font-size: 0.75rem; width: 100%; transition: 0.3s;">🗑️ Excluir</button>`
+                            : '';
+
+                        htmlPrateleira += `
+                            <div class="card-produto">
+                                <img src="${urlImagem}" alt="${prod.nome}" class="img-produto" onerror="this.src='https://res.cloudinary.com/demo/image/upload/v1312461204/sample.jpg'">
+                                
+                                <div class="area-info-produto">
+                                    <div class="tag-nome-produto" title="${prod.nome}">${prod.nome}</div>
+                                    <p class="produto-descricao" title="${prod.descricao}">${prod.descricao}</p>
+                                    <span class="link-ler-mais" onclick="abrirModalLeitura('${prod.id}')" style="color: var(--cor-primaria, #E11D48); cursor: pointer; font-size: 0.9rem; font-weight: bold; margin-bottom: 10px; display: inline-block;">Ler detalhes</span>
+                                    
+                                    <button class="btn-comprar-preco" onclick="iniciarCheckoutStripe('${prod.id}', this)">
+                                        ${valorFormatado}
+                                    </button>
+                                    ${botaoExcluir}
+                                </div>
+                            </div>
+                        `;
+                    });
+
+                    htmlPrateleira += `
+                            </div>
+                        </div>
+                    `;
+                    container.innerHTML += htmlPrateleira;
+                }
             } catch (erro) {
-                console.error("Erro ao carregar a vitrine:", erro);
+                console.error("Erro ao carregar cardápio:", erro);
+                container.innerHTML = '<p style="text-align: center; color: red;">Erro ao conectar com o banco de dados.</p>';
             }
         };
 
-        window.abrirConfigAdmin = function() {
-            document.getElementById('overlay-admin').style.display = 'block';
-            document.getElementById('modal-admin').style.display = 'block';
+        // Função placeholder para a próxima etapa (Filtros Avançados)
+        window.verMais = function(categoria) {
+            alert(`Em breve: Tela completa com ordenação avançada para a categoria ${categoria}!`);
         };
 
-        window.fecharConfigAdmin = function() {
-            document.getElementById('overlay-admin').style.display = 'none';
-            document.getElementById('modal-admin').style.display = 'none';
-        };
+        window.iniciarCheckoutStripe = async function(idProduto, botao) {
+            const produto = window.produtosCarregados[idProduto];
+            if (!produto) return;
 
-        window.salvarConfigAdmin = async function() {
-            const novosDados = {
-                titulo: document.getElementById('edit-titulo').value,
-                subtitulo: document.getElementById('edit-subtitulo').value,
-                imagem_url: document.getElementById('edit-imagem').value,
-                descricao: document.getElementById('edit-descricao').value,
-                contato: document.getElementById('edit-contato').value
-            };
+            if (!usuarioAtualUid) {
+                alert("Por favor, faça login para fazer um pedido!");
+                window.location.href = "login.html";
+                return;
+            }
+
+            const textoOriginal = botao.innerText;
+            botao.innerText = "Processando...";
+            botao.disabled = true;
 
             try {
-                const resposta = await fetch('/api/config', {
-                    method: 'PUT',
+                const resposta = await fetch('/api/pagamento', {
+                    method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(novosDados)
+                    body: JSON.stringify({
+                        nome: produto.nome,
+                        descricao: produto.descricao,
+                        valor: produto.valor,
+                        email: document.getElementById('user-email').innerText, 
+                        uid_cliente: usuarioAtualUid
+                    })
+                });
+
+                const dados = await resposta.json();
+
+                if (resposta.ok && dados.link_checkout) {
+                    window.location.href = dados.link_checkout;
+                } else {
+                    alert(dados.erro || "Erro no pagamento.");
+                    botao.innerText = textoOriginal;
+                    botao.disabled = false;
+                }
+            } catch (erro) {
+                console.error(erro);
+                alert("Erro ao conectar com o servidor.");
+                botao.innerText = textoOriginal;
+                botao.disabled = false;
+            }
+        };
+
+        // ==========================================
+        // MODAIS
+        // ==========================================
+        window.abrirModalLeitura = function(idProduto) {
+            const produto = window.produtosCarregados[idProduto];
+            if(!produto) return;
+
+            document.getElementById('titulo-leitura').innerText = produto.nome;
+            document.getElementById('texto-leitura').innerText = produto.descricao;
+            
+            document.getElementById('overlay-produto').style.display = 'block';
+            document.getElementById('modal-leitura').style.display = 'block';
+        };
+
+        window.fecharModalLeitura = function() {
+            document.getElementById('overlay-produto').style.display = 'none';
+            document.getElementById('modal-leitura').style.display = 'none';
+        };
+
+        window.abrirModalProduto = function() {
+            document.getElementById('overlay-produto').style.display = 'block';
+            document.getElementById('modal-produto').style.display = 'block';
+        };
+
+        window.fecharModalProduto = function() {
+            document.getElementById('overlay-produto').style.display = 'none';
+            document.getElementById('modal-produto').style.display = 'none';
+        };
+
+        window.salvarProduto = async function() {
+            const nome = document.getElementById('prod-nome').value.trim();
+            const categoria = document.getElementById('prod-categoria').value; // Pega a categoria selecionada
+            const descricao = document.getElementById('prod-descricao').value.trim();
+            const valor = document.getElementById('prod-valor').value;
+            const imagem = document.getElementById('prod-imagem').value.trim();
+
+            if (!nome || !valor) {
+                alert("O Nome e o Valor são obrigatórios!");
+                return;
+            }
+
+            const novoProduto = {
+                nome: nome,
+                categoria: categoria, // Envia para o banco
+                descricao: descricao,
+                valor: parseFloat(valor),
+                imagem_url: imagem
+            };
+
+            const botaoSalvar = document.querySelector('#modal-produto .btn-modal-salvar');
+            botaoSalvar.innerText = "Salvando...";
+            botaoSalvar.disabled = true;
+
+            try {
+                const resposta = await fetch('/api/produtos', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(novoProduto)
                 });
 
                 if (resposta.ok) {
-                    alert("Vitrine atualizada com sucesso!");
-                    fecharConfigAdmin();
-                    carregarVitrine(); 
+                    fecharModalProduto();
+                    document.getElementById('prod-nome').value = '';
+                    document.getElementById('prod-descricao').value = '';
+                    document.getElementById('prod-valor').value = '';
+                    document.getElementById('prod-imagem').value = '';
+                    carregarProdutos();
                 } else {
-                    alert("Erro ao salvar configurações.");
+                    alert("Erro ao criar o produto.");
                 }
             } catch (erro) {
-                console.error("Erro ao salvar:", erro);
-                alert("Erro de conexão com o servidor.");
+                console.error("Erro:", erro);
+                alert("Erro de conexão.");
+            } finally {
+                botaoSalvar.innerText = "Salvar Item";
+                botaoSalvar.disabled = false;
             }
         };
 
-        carregarVitrine();
+        window.deletarProduto = async function(idProduto) {
+            if (!confirm("Tem certeza que deseja excluir este item do cardápio?")) return;
+            try {
+                const res = await fetch(`/api/produtos/${idProduto}`, { method: 'DELETE' });
+                if (res.ok) {
+                    carregarProdutos(); 
+                } else {
+                    alert("Erro ao tentar remover o item.");
+                }
+            } catch (e) {
+                alert("Erro de conexão com o banco de dados.");
+            }
+        };
     </script>
 </body>
 </html>
