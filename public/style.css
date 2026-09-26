@@ -261,7 +261,7 @@ body {
 
 /* ===== ESTRUTURA DA VITRINE (INDEX) ===== */
 /* Remove o flex do body apenas para a vitrine não centralizar tudo no meio da tela */
-body:not(.tema-escuro) { display: block; height: auto; }
+body.body-sem-margem { display: block; height: auto; }
 
 .upbar {
     background: #0f172a;
