@@ -197,8 +197,102 @@ window.carregarProdutos = async function() {
     }
 };
 
+// ==========================================
+// TELA VER MAIS E FILTROS AVANÇADOS
+// ==========================================
+let categoriaAtualVerMais = '';
+let layoutAtual = 'grid';
+
 window.verMais = function(categoria) {
-    alert(`Em breve: Tela completa com ordenação avançada para a categoria ${categoria}!`);
+    categoriaAtualVerMais = categoria;
+    
+    // Esconde vitrine, mostra "Ver Mais"
+    document.getElementById('container-categorias').classList.add('oculto');
+    document.getElementById('tela-ver-mais').classList.remove('oculto');
+    document.getElementById('titulo-ver-mais').innerText = categoria;
+    
+    // Reseta o filtro sempre que entra
+    document.getElementById('select-ordenacao').value = 'padrao';
+    
+    window.renderizarCategoriaFiltrada();
+};
+
+window.voltarParaVitrine = function() {
+    document.getElementById('tela-ver-mais').classList.add('oculto');
+    document.getElementById('container-categorias').classList.remove('oculto');
+};
+
+window.mudarLayout = function(tipo) {
+    layoutAtual = tipo;
+    const grid = document.getElementById('grid-ver-mais');
+    const btnGrid = document.getElementById('btn-grid');
+    const btnLista = document.getElementById('btn-lista');
+
+    if (tipo === 'lista') {
+        grid.classList.add('modo-lista');
+        btnLista.classList.add('ativo');
+        btnGrid.classList.remove('ativo');
+    } else {
+        grid.classList.remove('modo-lista');
+        btnGrid.classList.add('ativo');
+        btnLista.classList.remove('ativo');
+    }
+};
+
+window.ordenarProdutos = function() {
+    window.renderizarCategoriaFiltrada();
+};
+
+window.renderizarCategoriaFiltrada = function() {
+    const container = document.getElementById('grid-ver-mais');
+    container.innerHTML = '';
+    
+    const ordenacao = document.getElementById('select-ordenacao').value;
+    
+    // Filtra apenas os produtos da categoria clicada
+    let produtosFiltrados = Object.values(window.produtosCarregados).filter(p => (p.categoria || 'Destaques') === categoriaAtualVerMais);
+    
+    // Sistema de Ordenação Matemática e Alfabética
+    if (ordenacao === 'preco-asc') {
+        produtosFiltrados.sort((a, b) => a.valor - b.valor); // Mais barato
+    } else if (ordenacao === 'preco-desc') {
+        produtosFiltrados.sort((a, b) => b.valor - a.valor); // Mais caro
+    } else if (ordenacao === 'az') {
+        produtosFiltrados.sort((a, b) => a.nome.localeCompare(b.nome)); // A-Z
+    } else if (ordenacao === 'za') {
+        produtosFiltrados.sort((a, b) => b.nome.localeCompare(a.nome)); // Z-A
+    }
+
+    // Renderiza na tela
+    produtosFiltrados.forEach(prod => {
+        const valorFormatado = parseFloat(prod.valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        const urlImagem = prod.imagem_url ? prod.imagem_url : "https://res.cloudinary.com/demo/image/upload/v1312461204/sample.jpg";
+        
+        const botaoExcluir = ehAdmin 
+            ? `<button onclick="window.deletarProduto('${prod.id}')" style="background: transparent; color: #ef4444; border: 1px solid #ef4444; border-radius: 6px; padding: 4px 8px; margin-left: 10px; cursor: pointer; font-weight: bold; font-size: 0.75rem; transition: 0.3s;">🗑️ Excluir</button>`
+            : '';
+
+        container.innerHTML += `
+            <div class="card-produto" style="max-width: none;"> 
+                <img src="${urlImagem}" alt="${prod.nome}" class="img-produto" onerror="this.src='https://res.cloudinary.com/demo/image/upload/v1312461204/sample.jpg'">
+                
+                <div class="area-info-produto">
+                    <div style="flex: 1;">
+                        <div class="tag-nome-produto" title="${prod.nome}">${prod.nome}</div>
+                        <p class="produto-descricao" title="${prod.descricao}">${prod.descricao}</p>
+                        <span class="link-ler-mais" onclick="window.abrirModalLeitura('${prod.id}')" style="color: var(--cor-primaria, #E11D48); cursor: pointer; font-size: 0.9rem; font-weight: bold; margin-bottom: 10px; display: inline-block;">Ler detalhes</span>
+                    </div>
+                    
+                    <div style="display: flex; align-items: center; margin-top: auto;">
+                        <button class="btn-comprar-preco" onclick="window.iniciarCheckoutStripe('${prod.id}', this)">
+                            ${valorFormatado}
+                        </button>
+                        ${botaoExcluir}
+                    </div>
+                </div>
+            </div>
+        `;
+    });
 };
 
 window.iniciarCheckoutStripe = async function(idProduto, botao) {

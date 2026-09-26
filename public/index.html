@@ -69,6 +69,33 @@
                 <div id="container-categorias">
                     <p style="text-align: center; width: 100%; color: var(--cor-texto-mutado, #6B7280);">Carregando cardápio delicioso...</p>
                 </div>
+                <!-- TELA DE VER MAIS (ESCONDIDA POR PADRÃO) -->
+                <div id="tela-ver-mais" class="oculto">
+                    <div class="cabecalho-ver-mais">
+                        <button onclick="voltarParaVitrine()" class="btn-voltar">← Voltar</button>
+                        <h2 id="titulo-ver-mais" class="titulo-categoria">Categoria</h2>
+                    </div>
+                    
+                    <div class="barra-filtros">
+                        <select id="select-ordenacao" onchange="ordenarProdutos()">
+                            <option value="padrao">Relevância (Padrão)</option>
+                            <option value="preco-asc">Menor Preço</option>
+                            <option value="preco-desc">Maior Preço</option>
+                            <option value="az">Alfabética (A-Z)</option>
+                            <option value="za">Alfabética (Z-A)</option>
+                        </select>
+                        
+                        <div class="botoes-layout">
+                            <button id="btn-grid" onclick="mudarLayout('grid')" class="ativo">Grid 🔲</button>
+                            <button id="btn-lista" onclick="mudarLayout('lista')">Lista ☰</button>
+                        </div>
+                    </div>
+
+                    <!-- O Grid que vai receber os produtos filtrados -->
+                    <div id="grid-ver-mais" class="grid-servicos">
+                        <!-- O JS injeta aqui -->
+                    </div>
+                </div>
             </div>
         </main>
     </div>

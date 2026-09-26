@@ -1343,3 +1343,89 @@ body.tema-escuro .btn-tema {
     color: #D4AF37 !important;
     border: 1px solid #D4AF37 !important;
 }
+/* ==========================================
+   TELA VER MAIS (FILTROS E ORDENAÇÃO)
+   ========================================== */
+.cabecalho-ver-mais {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+.barra-filtros {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--cor-fundo-card, #FFFFFF);
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid var(--cor-borda, #E5E7EB);
+    margin-bottom: 30px;
+}
+
+body.tema-escuro .barra-filtros {
+    background-color: #141416 !important;
+    border-color: #332910 !important;
+}
+
+#select-ordenacao {
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid var(--cor-borda, #E5E7EB);
+    background: transparent;
+    color: var(--cor-texto, #1F2937);
+    font-weight: bold;
+    cursor: pointer;
+}
+body.tema-escuro #select-ordenacao { border-color: #332910; color: #D4AF37; }
+
+.botoes-layout button {
+    background: transparent;
+    border: 1px solid var(--cor-borda, #E5E7EB);
+    color: var(--cor-texto-mutado, #6B7280);
+    padding: 8px 15px;
+    cursor: pointer;
+    border-radius: 6px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+.botoes-layout button.ativo {
+    background: var(--cor-primaria, #E11D48);
+    color: white;
+    border-color: var(--cor-primaria, #E11D48);
+}
+body.tema-escuro .botoes-layout button { border-color: #332910; }
+body.tema-escuro .botoes-layout button.ativo {
+    background: linear-gradient(45deg, #B8860B, #F1C40F);
+    color: #000;
+}
+
+/* --- MAGIA DO MODO LISTA --- */
+.grid-servicos.modo-lista {
+    display: flex;
+    flex-direction: column;
+}
+.grid-servicos.modo-lista .card-produto {
+    min-width: 100%; /* Ocupa a tela toda */
+    max-width: 100%;
+    flex-direction: row; /* Fica deitado */
+    height: 140px;
+}
+.grid-servicos.modo-lista .img-produto {
+    width: 140px;
+    height: 100%;
+}
+.grid-servicos.modo-lista .area-info-produto {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 20px;
+}
+.grid-servicos.modo-lista .produto-descricao {
+    display: none; /* Esconde a descrição para ficar compacto */
+}
+.grid-servicos.modo-lista .btn-comprar-preco {
+    width: auto;
+    margin-top: 0;
+    padding: 10px 30px;
+}
