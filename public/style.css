@@ -1036,7 +1036,8 @@ body.body-sem-margem { display: block; height: auto; }
     
     /* Trava de segurança: Corta o texto na 3ª linha com "..." se for muito grande */
     display: -webkit-box;
-    -webkit-line-clamp: 3; 
+    -webkit-line-clamp: 3;
+line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
