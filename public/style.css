@@ -1429,3 +1429,110 @@ body.tema-escuro .botoes-layout button.ativo {
     margin-top: 0;
     padding: 10px 30px;
 }
+/* ==========================================
+   POLIMENTO GRÁFICO (ARREDONDAMENTOS E LUXO)
+   ========================================== */
+
+/* Arredonda todos os botões principais para um formato "pílula" suave */
+.btn-comprar-preco, 
+.btn-modal-salvar, 
+.btn-modal-cancelar, 
+.btn-tema, 
+#area-admin-produtos button {
+    border-radius: 30px !important; 
+    transition: all 0.3s ease;
+}
+
+/* Corrige o botão "Adicionar Item" no Modo Escuro (estava cor-de-rosa no print) */
+body.tema-escuro #area-admin-produtos button {
+    background: transparent !important;
+    border: 2px solid #D4AF37 !important;
+    color: #D4AF37 !important;
+    box-shadow: none !important;
+}
+body.tema-escuro #area-admin-produtos button:hover {
+    background: #D4AF37 !important;
+    color: #000 !important;
+}
+
+/* Oculta os botões "Excluir" e "Painel Admin" num botão compacto no telemóvel para poupar espaço */
+.btn-excluir, .btn-editar {
+    border-radius: 8px !important;
+}
+
+/* ==========================================
+   REGRAS DE RESPONSIVIDADE (MOBILE)
+   ========================================== */
+
+/* Regra: Aplica isto apenas se o ecrã for menor que 768px (Telemóveis e Tablets pequenos) */
+@media screen and (max-width: 768px) {
+    
+    /* 1. Remove o "esmagamento" lateral */
+    .conteudo-principal {
+        padding: 20px 10px 80px 10px !important; /* Margens mínimas no telemóvel */
+    }
+    
+    .vitrine-card {
+        padding: 20px 15px !important; /* O cartão branco ocupa mais ecrã */
+        border-radius: 0px !important; /* Cola nas bordas estilo App nativa */
+    }
+
+    /* 2. Arruma o Cabeçalho (Upbar) que estava amontoado */
+    .upbar {
+        padding: 10px 15px !important;
+        flex-wrap: wrap; /* Permite que os itens desçam se não couberem */
+        gap: 10px;
+    }
+    
+    .area-logada-container {
+        width: 100%;
+        justify-content: space-between;
+        margin-top: 5px;
+    }
+    
+    .perfil-card {
+        padding: 4px 10px 4px 4px !important;
+    }
+
+    /* 3. Ajusta o tamanho dos textos para não quebrarem a linha no telemóvel */
+    .servicos-titulo {
+        font-size: 1.8rem !important;
+    }
+    .servicos-subtitulo {
+        font-size: 0.9rem !important;
+        margin-bottom: 20px !important;
+    }
+    
+    /* 4. Encolhe os Cartões das Prateleiras para caberem melhor no ecrã */
+    .card-produto {
+        min-width: 220px !important; /* Era 260px, agora está mais estreito */
+        max-width: 220px !important;
+    }
+    
+    .img-produto {
+        height: 130px !important; /* Foto mais pequena para dar espaço aos botões */
+    }
+    
+    .tag-nome-produto {
+        font-size: 1rem !important;
+    }
+    
+    .btn-comprar-preco {
+        font-size: 1rem !important; /* Botão mais subtil */
+        padding: 8px 0 !important;
+    }
+    
+    /* 5. Menu Lateral Oculto por padrão no telemóvel e ocupa o ecrã todo quando aberto */
+    .sidebar {
+        position: fixed;
+        height: 100%;
+        top: 0;
+        left: 0;
+        z-index: 1000;
+        width: 0; /* Começa escondido */
+    }
+    .sidebar:not(.oculta) {
+        width: 250px !important; /* Abre por cima do site */
+        box-shadow: 10px 0 25px rgba(0,0,0,0.5);
+    }
+}
