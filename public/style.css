@@ -1244,47 +1244,87 @@ body:not(.tema-escuro) { display: block; height: auto; }
 }
 
 /* ==========================================
-   SISTEMA DE MODO ESCURO / LUXO (PRETO E DOURADO)
+   CORREÇÃO DO NOME DENTRO DO CARTÃO (BASE)
+   ========================================== */
+.card-produto {
+    min-width: 260px;
+    max-width: 260px;
+    display: flex;
+    flex-direction: column;
+    position: relative; 
+}
+
+.area-info-produto {
+    padding: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.tag-nome-produto {
+    position: static !important; /* Desliga o balão flutuante antigo */
+    order: -1; /* Coloca o nome no topo da área branca */
+    font-size: 1.15rem !important;
+    font-weight: 700 !important;
+    color: var(--cor-texto, #1F2937);
+    margin-bottom: 0.3rem !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    text-align: left;
+    width: 100%;
+}
+
+
+/* ==========================================
+   MÁGICA DO TEMA ESCURO (PRETO & DOURADO)
    ========================================== */
 body {
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Quando o botão é clicado, o body ganha a classe .tema-escuro.
-   Tudo o que estiver dentro desta classe sobrepõe as cores antigas. */
-body.tema-escuro {
+/* 1. MUDANÇA DE FUNDOS */
+/* Apanhamos as classes antigas do CRM (.vitrine-fundo, .upbar, etc) e forçamos o preto quando o tema-escuro está ativo no body */
+body.tema-escuro, 
+body.tema-escuro.vitrine-fundo {
     background-color: #0a0a0c !important;
-    background-image: none !important; /* Mata o gradiente laranja do fundo */
+    background-image: none !important; /* Remove o degradê laranja */
     color: #F5F5F5 !important;
 }
 
-/* Alterações específicas do Modo Escuro */
 body.tema-escuro .upbar, 
 body.tema-escuro .sidebar {
-    background-color: #050506 !important; /* Fica preto em vez do azul corporativo */
+    background-color: #050506 !important; /* Preto profundo nos menus */
     border-color: #332910 !important;
 }
 
 body.tema-escuro .vitrine-card {
-    background-color: #141416 !important;
+    background-color: transparent !important; /* Tira o fundo branco central */
     box-shadow: none !important;
 }
 
 body.tema-escuro .card-produto {
-    background-color: #1a1a1c !important;
+    background-color: #141416 !important;
     border-color: #332910 !important;
 }
 
-/* Títulos Dourados no Modo Escuro */
+/* 2. TEXTOS E DETALHES DOURADOS */
 body.tema-escuro .tag-nome-produto,
 body.tema-escuro .titulo-categoria {
     color: #D4AF37 !important;
 }
+
 body.tema-escuro .titulo-categoria {
     border-left-color: #D4AF37 !important;
 }
 
-/* Botões Dourados (Estilo Ouro Metálico) apenas no Modo Escuro */
+body.tema-escuro p, 
+body.tema-escuro .produto-descricao,
+body.tema-escuro .servicos-subtitulo {
+    color: #9CA3AF !important; /* Cinza claro para não ferir os olhos */
+}
+
+/* 3. BOTÕES METÁLICOS */
 body.tema-escuro .btn-comprar-preco, 
 body.tema-escuro .btn-modal-salvar {
     background: linear-gradient(45deg, #B8860B, #F1C40F, #D4AF37) !important;
@@ -1292,13 +1332,14 @@ body.tema-escuro .btn-modal-salvar {
     font-weight: 900 !important;
     border: none !important;
 }
+
 body.tema-escuro .btn-comprar-preco:hover, 
 body.tema-escuro .btn-modal-salvar:hover {
     background: linear-gradient(45deg, #F1C40F, #FFF8DC, #F1C40F) !important;
 }
 
-/* Botão de alternar tema no modo escuro */
 body.tema-escuro .btn-tema {
-    background-color: #332910;
-    color: #D4AF37;
+    background-color: #332910 !important;
+    color: #D4AF37 !important;
+    border: 1px solid #D4AF37 !important;
 }
