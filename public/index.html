@@ -6,7 +6,7 @@
     <title>Cardápio Digital - Delivery</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="body-sem-margem"></body>
+<body class="body-sem-margem">
 
     <!-- LOGÓTIPO CLICÁVEL NO CABEÇALHO -->
     <header class="upbar">
@@ -40,14 +40,14 @@
     </header>
 
     <div class="layout-vitrine">
-       <!-- MENU LATERAL UNIFICADO -->
-    <aside class="sidebar" id="menu-lateral">
-        <ul class="menu-lista">
-            <li class="menu-item"><a href="index.html" class="menu-link-ativo">Início</a></li>
-            <li class="menu-item"><a href="sobre-nos.html" class="menu-link">Sobre nós</a></li>
-            <li class="menu-item"><a href="perfil.html" class="menu-link">Meu Perfil</a></li>
-        </ul>
-    </aside>
+        <!-- MENU LATERAL UNIFICADO -->
+        <aside class="sidebar" id="menu-lateral">
+            <ul class="menu-lista">
+                <li class="menu-item"><a href="index.html" class="menu-link-ativo">Início</a></li>
+                <li class="menu-item"><a href="sobre-nos.html" class="menu-link">Sobre nós</a></li>
+                <li class="menu-item"><a href="perfil.html" class="menu-link">Meu Perfil</a></li>
+            </ul>
+        </aside>
     
         <main class="conteudo-principal">
             <div class="vitrine-card container-servicos">
@@ -56,7 +56,7 @@
                         <h1 class="servicos-titulo">Nosso Cardápio</h1>
                         <p class="servicos-subtitulo">Deslize para ver nossas especialidades.</p>
                     </div>
-                    <!-- Botão para futura implementação do Dark Mode -->
+                    <!-- Botão do Dark Mode -->
                     <button id="btn-tema" class="btn-tema">🌙 Escuro</button>
                 </div>
                 
@@ -84,7 +84,7 @@
         <label>Nome do Item:</label>
         <input type="text" id="prod-nome" placeholder="Ex: Burger Clássico">
 
-        <!-- NOVO: Campo de Categoria -->
+        <!-- Campo de Categoria -->
         <label>Categoria:</label>
         <select id="prod-categoria" class="modal-input" style="width: 100%; padding: 8px; margin-bottom: 15px; border-radius: 4px; border: 1px solid #ccc; font-family: inherit;">
             <option value="Hambúrgueres">Hambúrgueres</option>
@@ -117,320 +117,7 @@
         <div class="modal-leitura-texto" id="texto-leitura"></div>
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyA6fZuQf0-GshZ_wtxJW3CRFtlvFPxfaGg",
-            authDomain: "crm-digital-6b415.firebaseapp.com",
-            projectId: "crm-digital-6b415",
-            storageBucket: "crm-digital-6b415.firebasestorage.app",
-            messagingSenderId: "686804789801",
-            appId: "1:686804789801:web:26ddd8979fc38ab4864a38"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-
-        const btnAdmin = document.getElementById('btn-admin');
-        const areaDeslogada = document.getElementById('area-deslogada');
-        const areaLogada = document.getElementById('area-logada');
-        const userEmailSpan = document.getElementById('user-email');
-        const userUidSpan = document.getElementById('user-uid');
-        const userFoto = document.getElementById('user-foto');
-        const btnLogout = document.getElementById('btn-logout');
-        const areaAdminProdutos = document.getElementById('area-admin-produtos');
-
-        let ehAdmin = false;
-        let usuarioAtualUid = null; 
-        
-        window.produtosCarregados = {};
-
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                usuarioAtualUid = user.uid; 
-                
-                if(areaDeslogada) areaDeslogada.classList.add('oculto');
-                if(areaLogada) areaLogada.classList.remove('oculto');
-                if(userEmailSpan) userEmailSpan.innerText = user.email;
-
-                if(userFoto) {
-                    userFoto.src = user.photoURL || "https://www.gravatar.com/avatar/?d=mp";
-                    userFoto.setAttribute('referrerpolicy', 'no-referrer'); // Correção da foto de perfil
-                    userFoto.style.display = 'block';
-                }
-
-                if(userUidSpan) {
-                    const idCurto = user.uid.substring(0, 8).toUpperCase();
-                    userUidSpan.innerText = "ID: #" + idCurto;
-                    userUidSpan.dataset.uid = user.uid;
-                }
-
-                fetch('/api/sync_user', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        uid: user.uid,
-                        nome: user.displayName || 'Sem Nome',
-                        email: user.email,
-                        foto: user.photoURL || ''
-                    })
-                }).catch(err => console.error(err));
-
-                if (user.email === "pedroeliasm08@gmail.com") {
-                    ehAdmin = true;
-                    if(btnAdmin) btnAdmin.classList.remove('oculto');
-                    if(areaAdminProdutos) areaAdminProdutos.classList.remove('oculto');
-                } else {
-                    ehAdmin = false;
-                    if(btnAdmin) btnAdmin.classList.add('oculto');
-                    if(areaAdminProdutos) areaAdminProdutos.classList.add('oculto');
-                }
-            } else {
-                ehAdmin = false;
-                usuarioAtualUid = null; 
-                if(areaDeslogada) areaDeslogada.classList.remove('oculto');
-                if(areaLogada) areaLogada.classList.add('oculto');
-                if(btnAdmin) btnAdmin.classList.add('oculto');
-                if(areaAdminProdutos) areaAdminProdutos.classList.add('oculto');
-            }
-
-            carregarProdutos();
-        });
-
-        if(btnLogout) {
-            btnLogout.addEventListener('click', () => {
-                import("https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js").then((module) => {
-                    module.signOut(auth).then(() => {
-                        window.location.href = "index.html";
-                    });
-                });
-            });
-        }
-
-        document.getElementById('btn-toggle').addEventListener('click', () => {
-            document.getElementById('menu-lateral').classList.toggle('oculta');
-        });
-
-        // ==========================================
-        // RENDERIZAR PRATELEIRAS (CARROSSEL)
-        // ==========================================
-        window.carregarProdutos = async function() {
-            const container = document.getElementById('container-categorias');
-            try {
-                const resposta = await fetch('/api/produtos');
-                const produtosDoBanco = await resposta.json();
-                
-                container.innerHTML = '';
-                window.produtosCarregados = {};
-
-                if (!produtosDoBanco || produtosDoBanco.length === 0) {
-                    container.innerHTML = '<p style="text-align: center; width: 100%; color: var(--cor-texto-mutado); font-weight: 500;">O cardápio está sendo preparado. Volte em breve!</p>';
-                    return;
-                }
-
-                // 1. Agrupar produtos por Categoria
-                const categorias = {};
-                produtosDoBanco.forEach(prod => {
-                    window.produtosCarregados[prod.id] = prod;
-                    // Se o produto foi criado antes de termos categoria, joga em "Destaques"
-                    const cat = prod.categoria || 'Destaques'; 
-                    if (!categorias[cat]) categorias[cat] = [];
-                    categorias[cat].push(prod);
-                });
-
-                // 2. Renderizar cada Categoria em uma Prateleira separada
-                for (const [nomeCategoria, produtos] of Object.entries(categorias)) {
-                    
-                    let htmlPrateleira = `
-                        <div class="secao-categoria">
-                            <div class="cabecalho-categoria">
-                                <h2 class="titulo-categoria">${nomeCategoria}</h2>
-                                <button class="btn-ver-mais" onclick="verMais('${nomeCategoria}')">Ver mais ></button>
-                            </div>
-                            <div class="prateleira">
-                    `;
-
-                    produtos.forEach(prod => {
-                        const valorFormatado = parseFloat(prod.valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-                        const urlImagem = prod.imagem_url ? prod.imagem_url : "https://res.cloudinary.com/demo/image/upload/v1312461204/sample.jpg";
-                        
-                        const botaoExcluir = ehAdmin 
-                            ? `<button onclick="deletarProduto('${prod.id}')" style="background: transparent; color: #ef4444; border: 1px solid #ef4444; border-radius: 6px; padding: 4px 8px; margin-top: 10px; cursor: pointer; font-weight: bold; font-size: 0.75rem; width: 100%; transition: 0.3s;">🗑️ Excluir</button>`
-                            : '';
-
-                        htmlPrateleira += `
-                            <div class="card-produto">
-                                <img src="${urlImagem}" alt="${prod.nome}" class="img-produto" onerror="this.src='https://res.cloudinary.com/demo/image/upload/v1312461204/sample.jpg'">
-                                
-                                <div class="area-info-produto">
-                                    <div class="tag-nome-produto" title="${prod.nome}">${prod.nome}</div>
-                                    <p class="produto-descricao" title="${prod.descricao}">${prod.descricao}</p>
-                                    <span class="link-ler-mais" onclick="abrirModalLeitura('${prod.id}')" style="color: var(--cor-primaria, #E11D48); cursor: pointer; font-size: 0.9rem; font-weight: bold; margin-bottom: 10px; display: inline-block;">Ler detalhes</span>
-                                    
-                                    <button class="btn-comprar-preco" onclick="iniciarCheckoutStripe('${prod.id}', this)">
-                                        ${valorFormatado}
-                                    </button>
-                                    ${botaoExcluir}
-                                </div>
-                            </div>
-                        `;
-                    });
-
-                    htmlPrateleira += `
-                            </div>
-                        </div>
-                    `;
-                    container.innerHTML += htmlPrateleira;
-                }
-            } catch (erro) {
-                console.error("Erro ao carregar cardápio:", erro);
-                container.innerHTML = '<p style="text-align: center; color: red;">Erro ao conectar com o banco de dados.</p>';
-            }
-        };
-
-        // Função placeholder para a próxima etapa (Filtros Avançados)
-        window.verMais = function(categoria) {
-            alert(`Em breve: Tela completa com ordenação avançada para a categoria ${categoria}!`);
-        };
-
-        window.iniciarCheckoutStripe = async function(idProduto, botao) {
-            const produto = window.produtosCarregados[idProduto];
-            if (!produto) return;
-
-            if (!usuarioAtualUid) {
-                alert("Por favor, faça login para fazer um pedido!");
-                window.location.href = "login.html";
-                return;
-            }
-
-            const textoOriginal = botao.innerText;
-            botao.innerText = "Processando...";
-            botao.disabled = true;
-
-            try {
-                const resposta = await fetch('/api/pagamento', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        nome: produto.nome,
-                        descricao: produto.descricao,
-                        valor: produto.valor,
-                        email: document.getElementById('user-email').innerText, 
-                        uid_cliente: usuarioAtualUid
-                    })
-                });
-
-                const dados = await resposta.json();
-
-                if (resposta.ok && dados.link_checkout) {
-                    window.location.href = dados.link_checkout;
-                } else {
-                    alert(dados.erro || "Erro no pagamento.");
-                    botao.innerText = textoOriginal;
-                    botao.disabled = false;
-                }
-            } catch (erro) {
-                console.error(erro);
-                alert("Erro ao conectar com o servidor.");
-                botao.innerText = textoOriginal;
-                botao.disabled = false;
-            }
-        };
-
-        // ==========================================
-        // MODAIS
-        // ==========================================
-        window.abrirModalLeitura = function(idProduto) {
-            const produto = window.produtosCarregados[idProduto];
-            if(!produto) return;
-
-            document.getElementById('titulo-leitura').innerText = produto.nome;
-            document.getElementById('texto-leitura').innerText = produto.descricao;
-            
-            document.getElementById('overlay-produto').style.display = 'block';
-            document.getElementById('modal-leitura').style.display = 'block';
-        };
-
-        window.fecharModalLeitura = function() {
-            document.getElementById('overlay-produto').style.display = 'none';
-            document.getElementById('modal-leitura').style.display = 'none';
-        };
-
-        window.abrirModalProduto = function() {
-            document.getElementById('overlay-produto').style.display = 'block';
-            document.getElementById('modal-produto').style.display = 'block';
-        };
-
-        window.fecharModalProduto = function() {
-            document.getElementById('overlay-produto').style.display = 'none';
-            document.getElementById('modal-produto').style.display = 'none';
-        };
-
-        window.salvarProduto = async function() {
-            const nome = document.getElementById('prod-nome').value.trim();
-            const categoria = document.getElementById('prod-categoria').value; // Pega a categoria selecionada
-            const descricao = document.getElementById('prod-descricao').value.trim();
-            const valor = document.getElementById('prod-valor').value;
-            const imagem = document.getElementById('prod-imagem').value.trim();
-
-            if (!nome || !valor) {
-                alert("O Nome e o Valor são obrigatórios!");
-                return;
-            }
-
-            const novoProduto = {
-                nome: nome,
-                categoria: categoria, // Envia para o banco
-                descricao: descricao,
-                valor: parseFloat(valor),
-                imagem_url: imagem
-            };
-
-            const botaoSalvar = document.querySelector('#modal-produto .btn-modal-salvar');
-            botaoSalvar.innerText = "Salvando...";
-            botaoSalvar.disabled = true;
-
-            try {
-                const resposta = await fetch('/api/produtos', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(novoProduto)
-                });
-
-                if (resposta.ok) {
-                    fecharModalProduto();
-                    document.getElementById('prod-nome').value = '';
-                    document.getElementById('prod-descricao').value = '';
-                    document.getElementById('prod-valor').value = '';
-                    document.getElementById('prod-imagem').value = '';
-                    carregarProdutos();
-                } else {
-                    alert("Erro ao criar o produto.");
-                }
-            } catch (erro) {
-                console.error("Erro:", erro);
-                alert("Erro de conexão.");
-            } finally {
-                botaoSalvar.innerText = "Salvar Item";
-                botaoSalvar.disabled = false;
-            }
-        };
-
-        window.deletarProduto = async function(idProduto) {
-            if (!confirm("Tem certeza que deseja excluir este item do cardápio?")) return;
-            try {
-                const res = await fetch(`/api/produtos/${idProduto}`, { method: 'DELETE' });
-                if (res.ok) {
-                    carregarProdutos(); 
-                } else {
-                    alert("Erro ao tentar remover o item.");
-                }
-            } catch (e) {
-                alert("Erro de conexão com o banco de dados.");
-            }
-        };
-    </script>
+    <!-- CHAMA O JAVASCRIPT EXTERNO AQUI (COMO MÓDULO) -->
+    <script type="module" src="script.js"></script>
 </body>
 </html>
