@@ -40,7 +40,11 @@
 
     <div class="layout-vitrine">
         <!-- MENU LATERAL UNIFICADO -->
-        <aside class="sidebar" id="menu-lateral">
+       <!-- MENU LATERAL UNIFICADO -->
+        <aside class="sidebar oculta" id="menu-lateral">
+            <!-- Botão que só aparece no telemóvel -->
+            <button class="btn-fechar-menu-mobile" onclick="document.getElementById('menu-lateral').classList.add('oculta')">✕ Fechar Menu</button>
+            
             <ul class="menu-lista">
                 <li class="menu-item"><a href="index.html" class="menu-link-ativo">Início</a></li>
                 <li class="menu-item"><a href="sobre-nos.html" class="menu-link">Sobre nós</a></li>

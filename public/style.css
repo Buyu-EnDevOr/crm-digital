@@ -1526,3 +1526,62 @@ body.tema-escuro #area-admin-produtos button:hover {
         box-shadow: 15px 0 30px rgba(0,0,0,0.8) !important; /* Sombra pesada para destacar */
     }
 }
+/* ==========================================
+   BOTÃO DE FECHAR MENU (MOBILE)
+   ========================================== */
+.btn-fechar-menu-mobile {
+    display: none; /* Escondido no Computador */
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    border: 1px solid #ef4444;
+    padding: 10px;
+    width: 100%;
+    border-radius: 8px;
+    font-weight: bold;
+    margin-bottom: 25px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.btn-fechar-menu-mobile:hover {
+    background: #ef4444;
+    color: white;
+}
+
+@media screen and (max-width: 768px) {
+    .btn-fechar-menu-mobile {
+        display: block; /* Aparece no telemóvel */
+    }
+}
+
+/* ==========================================
+   BLINDAGEM DO PAINEL ADMIN (ANTI-BUG)
+   ========================================== */
+/* Garante que o contentor do admin fica largo e centrado */
+.admin-container {
+    display: block !important;
+    width: 95% !important;
+    max-width: 1000px !important;
+    margin: 40px auto !important; /* O 'auto' centra no meio do ecrã */
+    background: #ffffff !important;
+    position: relative !important;
+    clear: both !important;
+}
+
+/* Força o cabeçalho do admin a ficar em linha reta e com fundo transparente */
+.cabecalho-admin {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    background: transparent !important;
+    padding: 0 0 20px 0 !important;
+    width: 100% !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+}
+
+.cabecalho-admin h2 {
+    color: #1a365d !important;
+    background: transparent !important;
+    margin: 0 !important;
+    font-size: 1.5rem !important;
+}
