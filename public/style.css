@@ -1202,3 +1202,100 @@ body:not(.tema-escuro) { display: block; height: auto; }
     word-wrap: break-word; /* Quebra palavras se necessário */
     white-space: pre-wrap; /* Respeita quebras de linha que o usuário digitou */
 }
+/* ==========================================
+   TEMA PREMIUM: PRETO & DOURADO (CARDÁPIO)
+   ========================================== */
+:root {
+    /* Fundo Escuro Profundo (Inspirado na imagem) */
+    --cor-fundo: #0a0a0c; 
+    --cor-fundo-card: #141416; 
+    --cor-texto: #F5F5F5; 
+    --cor-texto-mutado: #9CA3AF; 
+    
+    /* Dourado Metálico Brilhante */
+    --cor-primaria: #D4AF37; 
+    --cor-primaria-hover: #F1C40F; 
+    --cor-secundaria: #1F1F23; 
+    
+    --cor-borda: #332910; /* Borda levemente dourada escura */
+    --sombra-card: 0 8px 20px rgba(0, 0, 0, 0.8);
+    --sombra-flutuante: 0 10px 25px rgba(212, 175, 55, 0.15); /* Brilho dourado ao passar o mouse */
+}
+
+/* 1. FORÇANDO O FUNDO ESCURO EM TUDO (Mata o laranja antigo) */
+body, .layout-vitrine, .conteudo-principal, .sidebar {
+    background: var(--cor-fundo) !important;
+    background-image: none !important;
+    color: var(--cor-texto) !important;
+}
+
+.vitrine-card {
+    background-color: transparent !important;
+    box-shadow: none !important;
+}
+
+.upbar {
+    background-color: #050506 !important; /* Preto absoluto no topo */
+    border-bottom: 1px solid var(--cor-borda);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* 2. CORREÇÃO DO BUG DO TEXTO VOADOR */
+.tag-nome-produto {
+    position: relative !important; /* Prende o texto no lugar certo */
+    font-size: 1.25rem !important;
+    font-weight: 800 !important;
+    color: var(--cor-primaria) !important; /* Títulos em Dourado */
+    background: transparent !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    width: 100% !important;
+    text-align: left !important;
+    margin-bottom: 5px !important;
+}
+
+/* 3. ESTILO LUXO DOS CARDS */
+.card-produto {
+    background-color: var(--cor-fundo-card) !important;
+    border: 1px solid var(--cor-borda) !important;
+}
+
+.card-produto:hover {
+    box-shadow: var(--sombra-flutuante) !important;
+    border-color: var(--cor-primaria) !important;
+}
+
+/* Botões com Gradiente Dourado (Imitando a textura 3D) */
+.btn-comprar-preco, .btn-modal-salvar {
+    background: linear-gradient(45deg, #B8860B, #F1C40F, #D4AF37) !important;
+    color: #000 !important; /* Texto preto para dar contraste com o ouro */
+    font-weight: 900 !important;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 10px rgba(212, 175, 55, 0.3);
+}
+
+.btn-comprar-preco:hover, .btn-modal-salvar:hover {
+    background: linear-gradient(45deg, #F1C40F, #FFF8DC, #F1C40F) !important;
+    transform: translateY(-2px);
+}
+
+.titulo-categoria {
+    color: #FFF !important;
+    border-left: 4px solid var(--cor-primaria) !important;
+}
+
+.btn-ver-mais {
+    color: var(--cor-primaria) !important;
+}
+
+/* Ajuste no botão de adicionar item (Admin) */
+#area-admin-produtos button {
+    background: transparent !important;
+    border: 1px solid var(--cor-primaria) !important;
+    color: var(--cor-primaria) !important;
+}
+#area-admin-produtos button:hover {
+    background: var(--cor-primaria) !important;
+    color: #000 !important;
+}
