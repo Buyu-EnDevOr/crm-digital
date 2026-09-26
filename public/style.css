@@ -1463,24 +1463,20 @@ body.tema-escuro #area-admin-produtos button:hover {
 /* ==========================================
    REGRAS DE RESPONSIVIDADE (MOBILE)
    ========================================== */
-
-/* Regra: Aplica isto apenas se o ecrã for menor que 768px (Telemóveis e Tablets pequenos) */
 @media screen and (max-width: 768px) {
     
-    /* 1. Remove o "esmagamento" lateral */
     .conteudo-principal {
-        padding: 20px 10px 80px 10px !important; /* Margens mínimas no telemóvel */
+        padding: 20px 10px 80px 10px !important; 
     }
     
     .vitrine-card {
-        padding: 20px 15px !important; /* O cartão branco ocupa mais ecrã */
-        border-radius: 0px !important; /* Cola nas bordas estilo App nativa */
+        padding: 20px 15px !important; 
+        border-radius: 0px !important; 
     }
 
-    /* 2. Arruma o Cabeçalho (Upbar) que estava amontoado */
     .upbar {
         padding: 10px 15px !important;
-        flex-wrap: wrap; /* Permite que os itens desçam se não couberem */
+        flex-wrap: wrap; 
         gap: 10px;
     }
     
@@ -1494,45 +1490,39 @@ body.tema-escuro #area-admin-produtos button:hover {
         padding: 4px 10px 4px 4px !important;
     }
 
-    /* 3. Ajusta o tamanho dos textos para não quebrarem a linha no telemóvel */
-    .servicos-titulo {
-        font-size: 1.8rem !important;
-    }
-    .servicos-subtitulo {
-        font-size: 0.9rem !important;
-        margin-bottom: 20px !important;
-    }
+    .servicos-titulo { font-size: 1.8rem !important; }
+    .servicos-subtitulo { font-size: 0.9rem !important; margin-bottom: 20px !important; }
     
-    /* 4. Encolhe os Cartões das Prateleiras para caberem melhor no ecrã */
     .card-produto {
-        min-width: 220px !important; /* Era 260px, agora está mais estreito */
+        min-width: 220px !important; 
         max-width: 220px !important;
     }
     
-    .img-produto {
-        height: 130px !important; /* Foto mais pequena para dar espaço aos botões */
-    }
+    .img-produto { height: 130px !important; }
+    .tag-nome-produto { font-size: 1rem !important; }
+    .btn-comprar-preco { font-size: 1rem !important; padding: 8px 0 !important; }
     
-    .tag-nome-produto {
-        font-size: 1rem !important;
-    }
-    
-    .btn-comprar-preco {
-        font-size: 1rem !important; /* Botão mais subtil */
-        padding: 8px 0 !important;
-    }
-    
-    /* 5. Menu Lateral Oculto por padrão no telemóvel e ocupa o ecrã todo quando aberto */
+    /* CORREÇÃO DA BARRA LATERAL (SIDEBAR) MOBILE */
     .sidebar {
-        position: fixed;
-        height: 100%;
-        top: 0;
-        left: 0;
-        z-index: 1000;
-        width: 0; /* Começa escondido */
+        position: fixed !important;
+        height: 100vh !important;
+        top: 0 !important;
+        left: 0 !important;
+        z-index: 99999 !important; /* Força a ficar ACIMA da upbar e de tudo */
+        width: 0 !important; 
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        background-color: #0f172a !important; /* Cor SÓLIDA azul escuro (Tira a transparência) */
     }
+    
+    /* Fundo sólido preto no modo escuro */
+    body.tema-escuro .sidebar {
+        background-color: #050506 !important; 
+    }
+
     .sidebar:not(.oculta) {
-        width: 250px !important; /* Abre por cima do site */
-        box-shadow: 10px 0 25px rgba(0,0,0,0.5);
+        width: 250px !important; 
+        padding: 30px 20px !important;
+        box-shadow: 15px 0 30px rgba(0,0,0,0.8) !important; /* Sombra pesada para destacar */
     }
 }
