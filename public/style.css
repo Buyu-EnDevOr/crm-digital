@@ -923,21 +923,140 @@ body:not(.tema-escuro) { display: block; height: auto; }
     margin-top: 30px;
 }
 
-/* 2. O cartão principal */
+/* ===== 1. PALETA DO RESTAURANTE (CORES QUENTES) ===== */
+:root {
+    --cor-fundo: #FAFAFA;
+    --cor-fundo-card: #FFFFFF;
+    --cor-texto: #1F2937;
+    --cor-texto-mutado: #6B7280;
+    --cor-primaria: #E11D48; /* Vermelho Fome (Burger/Pizza) */
+    --cor-primaria-hover: #BE123C;
+    --cor-secundaria: #F59E0B; /* Laranja Queijo */
+    --cor-borda: #E5E7EB;
+    --sombra-card: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    
+    --raio-borda: 16px; /* Cantos arredondados do card */
+    --raio-borda-btn: 25px; /* Botão em formato de pílula */
+}
+
+/* ===== 2. ESTRUTURA DA CATEGORIA E PRATELEIRA ===== */
+.secao-categoria {
+    margin-bottom: 3rem; /* Espaço entre a prateleira de Burger e a de Pizza */
+}
+
+.cabecalho-categoria {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-right: 1rem;
+}
+
+.titulo-categoria {
+    font-size: 1.5rem;
+    color: var(--cor-texto);
+    border-left: 4px solid var(--cor-primaria); /* Tracinho vermelho charmoso do lado do título */
+    padding-left: 10px;
+    font-weight: 800;
+}
+
+.btn-ver-mais {
+    color: var(--cor-primaria);
+    background: transparent;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+/* O Carrossel de Roleta */
+.prateleira {
+    display: flex;
+    gap: 1.5rem;
+    overflow-x: auto;
+    padding-bottom: 1.5rem;
+    padding-left: 5px; /* Deixa a sombra do primeiro card respirar */
+    
+    /* Efeito Roleta Magnética no Celular */
+    scroll-snap-type: x mandatory; 
+    
+    /* Esconde barra de rolagem nativa */
+    scrollbar-width: none; 
+    -ms-overflow-style: none; 
+}
+.prateleira::-webkit-scrollbar {
+    display: none; 
+}
+
+/* ===== 3. O CARD DE PRODUTO (ESTILO APP DELIVERY) ===== */
 .card-produto {
-    background-color: white;
-    border-radius: 12px;
-    padding: 0; 
-    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-    text-align: center;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    min-width: 260px; /* Largura fixa para manter a roleta alinhada */
+    max-width: 260px;
+    scroll-snap-align: start; /* Onde o card gruda quando você solta o dedo */
+    
+    background-color: var(--cor-fundo-card);
+    border: 1px solid var(--cor-borda);
+    border-radius: var(--raio-borda);
+    box-shadow: var(--sombra-card);
+    overflow: hidden;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    overflow: hidden; 
-    position: relative; 
-    min-height: 300px;
-    border: 1px solid #e2e8f0;
+    transition: transform 0.2s ease;
+}
+
+.card-produto:hover {
+    transform: translateY(-4px); /* Pulinho ao passar o mouse (PC) */
+}
+
+.img-produto {
+    width: 100%;
+    height: 160px;
+    object-fit: cover; /* Não deixa a foto da pizza achatada */
+}
+
+.area-info-produto {
+    padding: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.tag-nome-produto {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--cor-texto);
+    margin-bottom: 0.3rem;
+}
+
+.produto-descricao {
+    color: var(--cor-texto-mutado);
+    font-size: 0.85rem;
+    margin-bottom: 1rem;
+    flex-grow: 1;
+    
+    /* Trava de segurança: Corta o texto na 3ª linha com "..." se for muito grande */
+    display: -webkit-box;
+    -webkit-line-clamp: 3; 
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.btn-comprar-preco {
+    background-color: var(--cor-primaria);
+    color: white;
+    font-size: 1.1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: var(--raio-borda-btn);
+    padding: 10px 0;
+    width: 100%;
+    cursor: pointer;
+    transition: 0.2s;
+    margin-top: auto; /* Empurra o botão sempre pro fundo do card */
+}
+
+.btn-comprar-preco:hover {
+    background-color: var(--cor-primaria-hover);
 }
 
 /* 3. A imagem esticada e quadrada no topo */
