@@ -1203,59 +1203,102 @@ body:not(.tema-escuro) { display: block; height: auto; }
     white-space: pre-wrap; /* Respeita quebras de linha que o usuário digitou */
 }
 /* ==========================================
-   SISTEMA DE TEMAS (CLARO / ESCURO DE LUXO)
+   CORREÇÃO ESTRUTURAL DOS CARTÕES (AMBOS OS TEMAS)
    ========================================== */
-
-/* Transição suave ao mudar de tema */
-body {
-    transition: background-color 0.3s, color 0.3s;
+.card-produto {
+    /* Força os cartões a terem um tamanho uniforme e sem comportamentos estranhos */
+    min-width: 260px;
+    max-width: 260px;
+    background-color: var(--cor-fundo-card, #FFFFFF);
+    border: 1px solid var(--cor-borda, #E5E7EB);
+    border-radius: 16px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    position: relative; /* O cartão é a âncora de tudo lá dentro */
 }
 
-/* Quando o botão de Dark Mode for ativado, estas variáveis assumem o controlo */
-body.tema-escuro {
-    --cor-fundo: #0a0a0c; 
-    --cor-fundo-card: #141416; 
-    --cor-texto: #F5F5F5; 
-    --cor-texto-mutado: #9CA3AF; 
-    --cor-primaria: #D4AF37; /* Dourado */
-    --cor-primaria-hover: #F1C40F; 
-    --cor-secundaria: #1F1F23; 
-    --cor-borda: #332910;
-    --sombra-card: 0 8px 20px rgba(0, 0, 0, 0.8);
-    --sombra-flutuante: 0 10px 25px rgba(212, 175, 55, 0.15);
-}
-
-/* Aplica fundo neutro na barra superior e painéis baseados na variável ativa */
-.upbar, .sidebar { background-color: var(--cor-fundo-card); }
-body.tema-escuro .upbar { border-bottom: 1px solid var(--cor-borda); }
-
-/* Gradiente dourado nos botões apenas no modo escuro */
-body.tema-escuro .btn-comprar-preco, 
-body.tema-escuro .btn-modal-salvar {
-    background: linear-gradient(45deg, #B8860B, #F1C40F, #D4AF37);
-    color: #000;
-    font-weight: 900;
-}
-
-/* ==========================================
-   CORREÇÃO DO BUG DO NOME NO CARTÃO
-   ========================================== */
 .area-info-produto {
     padding: 1.2rem;
     display: flex;
     flex-direction: column;
     flex-grow: 1;
-    justify-content: flex-start; /* Força os elementos a começarem do topo */
 }
 
+/* O FIM DO BUG DO TEXTO VOADOR */
 .tag-nome-produto {
-    position: static !important; /* Mata o bug que atirava o texto para baixo */
-    order: -1; /* Força a ser o primeiro elemento a aparecer (abaixo da foto) */
-    font-size: 1.25rem !important;
-    font-weight: 800 !important;
-    color: var(--cor-primaria);
-    margin-bottom: 0.5rem;
+    /* Desliga as posições absolutas que estavam a destruir o layout */
+    position: relative !important; 
+    top: auto !important;
+    left: auto !important;
+    transform: none !important;
+    
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--cor-texto, #1F2937);
+    margin-bottom: 0.3rem;
     background: transparent !important;
+    box-shadow: none !important;
+    padding: 0 !important;
     text-align: left;
-    width: 100%;
+}
+
+/* ==========================================
+   SISTEMA DE MODO ESCURO / LUXO (PRETO E DOURADO)
+   ========================================== */
+body {
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Quando o botão é clicado, o body ganha a classe .tema-escuro.
+   Tudo o que estiver dentro desta classe sobrepõe as cores antigas. */
+body.tema-escuro {
+    background-color: #0a0a0c !important;
+    background-image: none !important; /* Mata o gradiente laranja do fundo */
+    color: #F5F5F5 !important;
+}
+
+/* Alterações específicas do Modo Escuro */
+body.tema-escuro .upbar, 
+body.tema-escuro .sidebar {
+    background-color: #050506 !important; /* Fica preto em vez do azul corporativo */
+    border-color: #332910 !important;
+}
+
+body.tema-escuro .vitrine-card {
+    background-color: #141416 !important;
+    box-shadow: none !important;
+}
+
+body.tema-escuro .card-produto {
+    background-color: #1a1a1c !important;
+    border-color: #332910 !important;
+}
+
+/* Títulos Dourados no Modo Escuro */
+body.tema-escuro .tag-nome-produto,
+body.tema-escuro .titulo-categoria {
+    color: #D4AF37 !important;
+}
+body.tema-escuro .titulo-categoria {
+    border-left-color: #D4AF37 !important;
+}
+
+/* Botões Dourados (Estilo Ouro Metálico) apenas no Modo Escuro */
+body.tema-escuro .btn-comprar-preco, 
+body.tema-escuro .btn-modal-salvar {
+    background: linear-gradient(45deg, #B8860B, #F1C40F, #D4AF37) !important;
+    color: #000 !important;
+    font-weight: 900 !important;
+    border: none !important;
+}
+body.tema-escuro .btn-comprar-preco:hover, 
+body.tema-escuro .btn-modal-salvar:hover {
+    background: linear-gradient(45deg, #F1C40F, #FFF8DC, #F1C40F) !important;
+}
+
+/* Botão de alternar tema no modo escuro */
+body.tema-escuro .btn-tema {
+    background-color: #332910;
+    color: #D4AF37;
 }
