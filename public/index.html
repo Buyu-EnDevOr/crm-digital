@@ -8,10 +8,13 @@
 </head>
 <body class="body-sem-margem"></body>
 
+    <!-- LOGÓTIPO CLICÁVEL NO CABEÇALHO -->
     <header class="upbar">
         <div class="flex-center">
             <button id="btn-toggle" class="btn-toggle">☰</button>
-            <img src="logo-crm.png" alt="Logo" class="logo-bolinha" id="nav-logo" onerror="this.style.display='none'">
+            <a href="index.html">
+                <img src="logo-crm.png" alt="Logo" class="logo-bolinha" id="nav-logo" onerror="this.style.display='none'">
+            </a>
         </div>
         
         <div id="area-deslogada">
@@ -37,13 +40,15 @@
     </header>
 
     <div class="layout-vitrine">
-        <aside class="sidebar" id="menu-lateral">
-            <ul class="menu-lista">
-                <li class="menu-item"><a href="index.html" class="menu-link-ativo">Cardápio</a></li>
-                <li class="menu-item"><a href="perfil.html" class="menu-link">Meu Perfil</a></li>
-            </ul>
-        </aside>
-
+       <!-- MENU LATERAL UNIFICADO -->
+    <aside class="sidebar" id="menu-lateral">
+        <ul class="menu-lista">
+            <li class="menu-item"><a href="index.html" class="menu-link-ativo">Início</a></li>
+            <li class="menu-item"><a href="sobre-nos.html" class="menu-link">Sobre nós</a></li>
+            <li class="menu-item"><a href="perfil.html" class="menu-link">Meu Perfil</a></li>
+        </ul>
+    </aside>
+    
         <main class="conteudo-principal">
             <div class="vitrine-card container-servicos">
                 <div class="cabecalho-cardapio">

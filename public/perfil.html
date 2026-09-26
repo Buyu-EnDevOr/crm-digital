@@ -9,11 +9,15 @@
 <body class="tema-claro vitrine-fundo body-sem-margem">
 
     <!-- Upbar (Navegação Superior) -->
+    <!-- LOGÓTIPO CLICÁVEL NO CABEÇALHO -->
     <header class="upbar">
         <div class="flex-center">
             <button id="btn-toggle" class="btn-toggle">☰</button>
-            <img src="logo-crm.png" alt="Logo" class="logo-bolinha" id="nav-logo" onerror="this.style.display='none'">
+            <a href="index.html">
+                <img src="logo-crm.png" alt="Logo" class="logo-bolinha" id="nav-logo" onerror="this.style.display='none'">
+            </a>
         </div>
+        <!-- ... resto do cabeçalho ... -->
         
         <div id="area-logada" class="area-logada-container-perfil">
             <div class="perfil-card">
@@ -29,14 +33,14 @@
 
     <!-- Layout Principal -->
     <div class="layout-vitrine">
-        <aside class="sidebar" id="menu-lateral">
-            <ul class="menu-lista">
-                <li class="menu-item"><a href="index.html" class="menu-link">Início</a></li>
-                <li class="menu-item"><a href="servicos.html" class="menu-link">Serviços</a></li>
-                <li class="menu-item"><a href="perfil.html" class="menu-link-ativo">Meu Perfil</a></li>
-                <li class="menu-item"><a href="sobre-nos.html" class="menu-link">Sobre nós</a></li>
-            </ul>
-        </aside>
+       <!-- MENU LATERAL UNIFICADO -->
+    <aside class="sidebar" id="menu-lateral">
+        <ul class="menu-lista">
+            <li class="menu-item"><a href="index.html" class="menu-link-ativo">Início</a></li>
+            <li class="menu-item"><a href="sobre-nos.html" class="menu-link">Sobre nós</a></li>
+            <li class="menu-item"><a href="perfil.html" class="menu-link">Meu Perfil</a></li>
+        </ul>
+    </aside>
         
         <main class="conteudo-principal">
             <div class="perfil-container">
