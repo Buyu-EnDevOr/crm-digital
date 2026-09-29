@@ -1401,34 +1401,99 @@ body.tema-escuro .botoes-layout button.ativo {
     color: #000;
 }
 
-/* --- MAGIA DO MODO LISTA --- */
+/* --- MAGIA DO MODO LISTA (ESTILO ANOTA.AI / WHATSMENU) --- */
 .grid-servicos.modo-lista {
     display: flex;
     flex-direction: column;
+    gap: 0; /* Remove os buracos entre os cartões */
+    background-color: var(--cor-fundo-card, #FFFFFF);
+    border-radius: 12px;
+    padding: 10px 15px;
 }
+
+body.tema-escuro .grid-servicos.modo-lista {
+    background-color: #141416 !important;
+}
+
+/* Transforma o cartão num item de lista plano */
 .grid-servicos.modo-lista .card-produto {
-    min-width: 100%; /* Ocupa a tela toda */
-    max-width: 100%;
-    flex-direction: row; /* Fica deitado */
-    height: 140px;
+    min-width: 100% !important;
+    max-width: 100% !important;
+    flex-direction: row; 
+    align-items: center; 
+    height: auto;
+    min-height: 120px;
+    padding: 15px 0;
+    border: none !important;
+    border-bottom: 1px solid var(--cor-borda, #E5E7EB) !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    background: transparent !important;
 }
+
+/* Remove a linha divisória do último item da lista */
+.grid-servicos.modo-lista .card-produto:last-child {
+    border-bottom: none !important;
+}
+
+/* A imagem vai para a DIREITA, quadrada e pequena */
 .grid-servicos.modo-lista .img-produto {
-    width: 140px;
-    height: 100%;
+    width: 90px !important;
+    height: 90px !important;
+    border-radius: 12px !important;
+    order: 2; /* Joga a imagem para a direita */
+    margin-left: 15px;
+    object-fit: cover;
 }
+
+/* A área de texto fica na ESQUERDA */
 .grid-servicos.modo-lista .area-info-produto {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    padding: 15px 20px;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 0 !important;
+    flex: 1;
+    order: 1; /* Joga o texto para a esquerda */
 }
+
+.grid-servicos.modo-lista .tag-nome-produto {
+    font-size: 1.05rem !important;
+    margin-bottom: 4px !important;
+    white-space: normal !important;
+}
+
+/* A descrição volta a aparecer, mas cortada na 2ª linha */
 .grid-servicos.modo-lista .produto-descricao {
-    display: none; /* Esconde a descrição para ficar compacto */
+    display: -webkit-box !important; 
+    -webkit-line-clamp: 2; 
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    font-size: 0.85rem !important;
+    margin-bottom: 10px !important;
+    line-height: 1.3;
 }
+
+/* Transforma o botão "gordo" num texto de preço minimalista */
 .grid-servicos.modo-lista .btn-comprar-preco {
-    width: auto;
-    margin-top: 0;
-    padding: 10px 30px;
+    background: transparent !important;
+    color: #10B981 !important; /* Verde preço clássico */
+    padding: 0 !important;
+    font-size: 1.05rem !important;
+    font-weight: 800 !important;
+    box-shadow: none !important;
+    width: auto !important;
+    text-align: left;
+}
+
+/* O preço fica dourado no Modo Escuro */
+body.tema-escuro .grid-servicos.modo-lista .btn-comprar-preco {
+    color: #D4AF37 !important; 
+}
+
+/* Esconde links secundários no modo lista para manter a limpeza visual */
+.grid-servicos.modo-lista .link-ler-mais { 
+    display: none !important; 
 }
 /* ==========================================
    POLIMENTO GRÁFICO (ARREDONDAMENTOS E LUXO)
