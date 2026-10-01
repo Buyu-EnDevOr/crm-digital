@@ -18,7 +18,7 @@ const auth = getAuth(app);
 
 // Variáveis Globais de Estado
 let ehAdmin = false;
-let usuarioAtualUid = null; 
+let usuarioAtualUid = null;
 window.produtosCarregados = {};
 let clienteEditandoId = null;
 
@@ -37,19 +37,17 @@ const areaAdminProdutos = document.getElementById('area-admin-produtos');
 // ==========================================
 onAuthStateChanged(auth, (user) => {
     if (user) {
-        usuarioAtualUid = user.uid; 
+        usuarioAtualUid = user.uid;
         
-        if(areaDeslogada) areaDeslogada.classList.add('oculto');
-        if(areaLogada) areaLogada.classList.remove('oculto');
-        if(userEmailSpan) userEmailSpan.innerText = user.email;
-
-        if(userFoto) {
+        if (areaDeslogada) areaDeslogada.classList.add('oculto');
+        if (areaLogada) areaLogada.classList.remove('oculto');
+        if (userEmailSpan) userEmailSpan.innerText = user.email;
+        if (userFoto) {
             userFoto.src = user.photoURL || "https://www.gravatar.com/avatar/?d=mp";
             userFoto.setAttribute('referrerpolicy', 'no-referrer');
             userFoto.style.display = 'block';
         }
-
-        if(userUidSpan) {
+        if (userUidSpan) {
             const idCurto = user.uid.substring(0, 8).toUpperCase();
             userUidSpan.innerText = "ID: #" + idCurto;
             userUidSpan.dataset.uid = user.uid;
@@ -70,29 +68,29 @@ onAuthStateChanged(auth, (user) => {
         // Controle de Acesso Admin
         if (user.email === "pedroeliasm08@gmail.com") {
             ehAdmin = true;
-            if(btnAdmin) btnAdmin.classList.remove('oculto');
-            if(areaAdminProdutos) areaAdminProdutos.classList.remove('oculto');
+            if (btnAdmin) btnAdmin.classList.remove('oculto');
+            if (areaAdminProdutos) areaAdminProdutos.classList.remove('oculto');
         } else {
             ehAdmin = false;
-            if(btnAdmin) btnAdmin.classList.add('oculto');
-            if(areaAdminProdutos) areaAdminProdutos.classList.add('oculto');
+            if (btnAdmin) btnAdmin.classList.add('oculto');
+            if (areaAdminProdutos) areaAdminProdutos.classList.add('oculto');
         }
     } else {
         ehAdmin = false;
-        usuarioAtualUid = null; 
-        if(areaDeslogada) areaDeslogada.classList.remove('oculto');
-        if(areaLogada) areaLogada.classList.add('oculto');
-        if(btnAdmin) btnAdmin.classList.add('oculto');
-        if(areaAdminProdutos) areaAdminProdutos.classList.add('oculto');
+        usuarioAtualUid = null;
+        if (areaDeslogada) areaDeslogada.classList.remove('oculto');
+        if (areaLogada) areaLogada.classList.add('oculto');
+        if (btnAdmin) btnAdmin.classList.add('oculto');
+        if (areaAdminProdutos) areaAdminProdutos.classList.add('oculto');
     }
 
     // Tenta carregar os produtos caso estejamos na tela de cardápio
-    if(document.getElementById('container-categorias')) {
+    if (document.getElementById('container-categorias')) {
         window.carregarProdutos();
     }
 });
 
-if(btnLogout) {
+if (btnLogout) {
     btnLogout.addEventListener('click', () => {
         import("https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js").then((module) => {
             module.signOut(auth).then(() => {
@@ -109,7 +107,7 @@ const btnToggle = document.getElementById('btn-toggle');
 if (btnToggle) {
     btnToggle.addEventListener('click', () => {
         const menu = document.getElementById('menu-lateral');
-        if(menu) menu.classList.toggle('oculta');
+        if (menu) menu.classList.toggle('oculta');
     });
 }
 
@@ -117,7 +115,7 @@ const btnTema = document.getElementById('btn-tema');
 if (btnTema) {
     btnTema.addEventListener('click', () => {
         document.body.classList.toggle('tema-escuro');
-        if(document.body.classList.contains('tema-escuro')) {
+        if (document.body.classList.contains('tema-escuro')) {
             btnTema.innerHTML = '☀️ Claro';
         } else {
             btnTema.innerHTML = '🌙 Escuro';
@@ -130,7 +128,7 @@ if (btnTema) {
 // ==========================================
 window.carregarProdutos = async function() {
     const container = document.getElementById('container-categorias');
-    if (!container) return; // Trava de segurança para não dar erro em outras páginas
+    if (!container) return; 
 
     try {
         const resposta = await fetch('/api/produtos');
@@ -147,7 +145,7 @@ window.carregarProdutos = async function() {
         const categorias = {};
         produtosDoBanco.forEach(prod => {
             window.produtosCarregados[prod.id] = prod;
-            const cat = prod.categoria || 'Destaques'; 
+            const cat = prod.categoria || 'Destaques';
             if (!categorias[cat]) categorias[cat] = [];
             categorias[cat].push(prod);
         });
@@ -161,13 +159,12 @@ window.carregarProdutos = async function() {
                     </div>
                     <div class="prateleira">
             `;
-
             produtos.forEach(prod => {
                 const valorFormatado = parseFloat(prod.valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
                 const urlImagem = prod.imagem_url ? prod.imagem_url : "https://res.cloudinary.com/demo/image/upload/v1312461204/sample.jpg";
                 
                 const botaoExcluir = ehAdmin 
-                    ? `<button onclick="window.deletarProduto('${prod.id}')" style="background: transparent; color: #ef4444; border: 1px solid #ef4444; border-radius: 6px; padding: 4px 8px; margin-top: 10px; cursor: pointer; font-weight: bold; font-size: 0.75rem; width: 100%; transition: 0.3s;">🗑️ Excluir</button>`
+                    ? `<button onclick="window.deletarProduto('${prod.id}')" style="background: transparent; color: #ef4444; border: 1px solid #ef4444; border-radius: 6px; padding: 4px 8px; margin-top: 10px; cursor: pointer; font-weight: bold; font-size:12px; width: 100%; transition: 0.3s;">🗑️ Excluir</button>` 
                     : '';
 
                 htmlPrateleira += `
@@ -177,9 +174,10 @@ window.carregarProdutos = async function() {
                         <div class="area-info-produto">
                             <div class="tag-nome-produto" title="${prod.nome}">${prod.nome}</div>
                             <p class="produto-descricao" title="${prod.descricao}">${prod.descricao}</p>
-                            <span class="link-ler-mais" onclick="window.abrirModalLeitura('${prod.id}')" style="color: var(--cor-primaria, #D4AF37); cursor: pointer; font-size: 0.9rem; font-weight: bold; margin-bottom: 10px; display: inline-block;">Ler detalhes</span>
+                            <span class="link-ler-mais" onclick="window.abrirModalLeitura('${prod.id}')" style="color: var(--cor-primaria, #D4AF37); cursor: pointer; font-size:14.4px; font-weight: bold; margin-bottom: 10px; display: inline-block;">Ler detalhes</span>
                             
-                            <button class="btn-comprar-preco" onclick="window.iniciarCheckoutStripe('${prod.id}', this)">
+                            <!-- BOTAO ALTERADO PARA ADICIONAR AO CARRINHO -->
+                            <button class="btn-comprar-preco" onclick="adicionarAoCarrinho('${prod.nome.replace(/'/g, "\\'")}', ${prod.valor})">
                                 ${valorFormatado}
                             </button>
                             ${botaoExcluir}
@@ -187,7 +185,6 @@ window.carregarProdutos = async function() {
                     </div>
                 `;
             });
-
             htmlPrateleira += `</div></div>`;
             container.innerHTML += htmlPrateleira;
         }
@@ -206,14 +203,11 @@ let layoutAtual = 'grid';
 window.verMais = function(categoria) {
     categoriaAtualVerMais = categoria;
     
-    // Esconde vitrine, mostra "Ver Mais"
     document.getElementById('container-categorias').classList.add('oculto');
     document.getElementById('tela-ver-mais').classList.remove('oculto');
     document.getElementById('titulo-ver-mais').innerText = categoria;
     
-    // Reseta o filtro sempre que entra
     document.getElementById('select-ordenacao').value = 'padrao';
-    
     window.renderizarCategoriaFiltrada();
 };
 
@@ -248,43 +242,40 @@ window.renderizarCategoriaFiltrada = function() {
     container.innerHTML = '';
     
     const ordenacao = document.getElementById('select-ordenacao').value;
-    
-    // Filtra apenas os produtos da categoria clicada
     let produtosFiltrados = Object.values(window.produtosCarregados).filter(p => (p.categoria || 'Destaques') === categoriaAtualVerMais);
     
-    // Sistema de Ordenação Matemática e Alfabética
     if (ordenacao === 'preco-asc') {
-        produtosFiltrados.sort((a, b) => a.valor - b.valor); // Mais barato
+        produtosFiltrados.sort((a, b) => a.valor - b.valor); 
     } else if (ordenacao === 'preco-desc') {
-        produtosFiltrados.sort((a, b) => b.valor - a.valor); // Mais caro
+        produtosFiltrados.sort((a, b) => b.valor - a.valor); 
     } else if (ordenacao === 'az') {
-        produtosFiltrados.sort((a, b) => a.nome.localeCompare(b.nome)); // A-Z
+        produtosFiltrados.sort((a, b) => a.nome.localeCompare(b.nome)); 
     } else if (ordenacao === 'za') {
-        produtosFiltrados.sort((a, b) => b.nome.localeCompare(a.nome)); // Z-A
+        produtosFiltrados.sort((a, b) => b.nome.localeCompare(a.nome)); 
     }
 
-    // Renderiza na tela
     produtosFiltrados.forEach(prod => {
         const valorFormatado = parseFloat(prod.valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
         const urlImagem = prod.imagem_url ? prod.imagem_url : "https://res.cloudinary.com/demo/image/upload/v1312461204/sample.jpg";
         
         const botaoExcluir = ehAdmin 
-            ? `<button onclick="window.deletarProduto('${prod.id}')" style="background: transparent; color: #ef4444; border: 1px solid #ef4444; border-radius: 6px; padding: 4px 8px; margin-left: 10px; cursor: pointer; font-weight: bold; font-size: 0.75rem; transition: 0.3s;">🗑️ Excluir</button>`
+            ? `<button onclick="window.deletarProduto('${prod.id}')" style="background: transparent; color: #ef4444; border: 1px solid #ef4444; border-radius: 6px; padding: 4px 8px; margin-left: 10px; cursor: pointer; font-weight: bold; font-size:12px; transition: 0.3s;">🗑️ Excluir</button>` 
             : '';
 
         container.innerHTML += `
-            <div class="card-produto" style="max-width: none;"> 
+            <div class="card-produto" style="max-width: none;">
                 <img src="${urlImagem}" alt="${prod.nome}" class="img-produto" onerror="this.src='https://res.cloudinary.com/demo/image/upload/v1312461204/sample.jpg'">
                 
                 <div class="area-info-produto">
                     <div style="flex: 1;">
                         <div class="tag-nome-produto" title="${prod.nome}">${prod.nome}</div>
                         <p class="produto-descricao" title="${prod.descricao}">${prod.descricao}</p>
-                        <span class="link-ler-mais" onclick="window.abrirModalLeitura('${prod.id}')" style="color: var(--cor-primaria, #E11D48); cursor: pointer; font-size: 0.9rem; font-weight: bold; margin-bottom: 10px; display: inline-block;">Ler detalhes</span>
+                        <span class="link-ler-mais" onclick="window.abrirModalLeitura('${prod.id}')" style="color: var(--cor-primaria, #E11D48); cursor: pointer; font-size:14.4px; font-weight: bold; margin-bottom: 10px; display: inline-block;">Ler detalhes</span>
                     </div>
                     
                     <div style="display: flex; align-items: center; margin-top: auto;">
-                        <button class="btn-comprar-preco" onclick="window.iniciarCheckoutStripe('${prod.id}', this)">
+                        <!-- BOTAO ALTERADO PARA ADICIONAR AO CARRINHO -->
+                        <button class="btn-comprar-preco" onclick="adicionarAoCarrinho('${prod.nome.replace(/'/g, "\\'")}', ${prod.valor})">
                             ${valorFormatado}
                         </button>
                         ${botaoExcluir}
@@ -294,43 +285,39 @@ window.renderizarCategoriaFiltrada = function() {
         `;
     });
 };
-// A memória do nosso carrinho
+
+// ==========================================
+// A MEMÓRIA DO CARRINHO DE COMPRAS
+// ==========================================
 let carrinhoDeCompras = [];
 
-// Função que será chamada quando o cliente clicar em "Comprar" ou "Adicionar"
-function adicionarAoCarrinho(nomeProduto, precoProduto) {
-    // 1. Adiciona o item à lista
+// Precisa estar no "window" para os botões do HTML conseguirem chamar
+window.adicionarAoCarrinho = function(nomeProduto, precoProduto) {
     carrinhoDeCompras.push({
         nome: nomeProduto,
         preco: parseFloat(precoProduto)
     });
     
-    // 2. Atualiza os números no botão flutuante
     atualizarBotaoCarrinho();
     
-    // Opcional: Um avisozinho rápido na tela
-    alert(`🛒 ${nomeProduto} adicionado à sacola!`);
-}
+    // Pequeno aviso que some rápido no mobile
+    // alert(`🛒 ${nomeProduto} adicionado à sacola!`);
+};
 
 function atualizarBotaoCarrinho() {
     const btnCarrinho = document.getElementById('btn-carrinho-flutuante');
     const spanQtd = document.getElementById('qtd-carrinho');
     const spanTotal = document.getElementById('total-carrinho');
     
-    // Se a sacola tiver alguma coisa, mostra o botão
+    if (!btnCarrinho) return;
+
     if (carrinhoDeCompras.length > 0) {
         btnCarrinho.classList.remove('oculto');
-        
-        // Atualiza a quantidade
         spanQtd.innerText = carrinhoDeCompras.length;
         
-        // Calcula o total (soma todos os preços)
         let valorTotal = carrinhoDeCompras.reduce((soma, item) => soma + item.preco, 0);
-        
-        // Escreve o total formatado em Reais (ex: 45,90)
         spanTotal.innerText = valorTotal.toFixed(2).replace('.', ',');
     } else {
-        // Se a sacola estiver vazia, esconde o botão
         btnCarrinho.classList.add('oculto');
     }
 }
@@ -338,14 +325,11 @@ function atualizarBotaoCarrinho() {
 // ==========================================
 // LÓGICA DE CHECKOUT E WHATSAPP
 // ==========================================
-
-function abrirModalCheckout() {
-    // 1. Mostra o modal
+window.abrirModalCheckout = function() {
     document.getElementById('modal-checkout-overlay').classList.remove('oculto');
     
-    // 2. Preenche o resumo do pedido
     const listaHtml = document.getElementById('checkout-lista-itens');
-    listaHtml.innerHTML = ''; // Limpa antes de preencher
+    listaHtml.innerHTML = ''; 
     
     let total = 0;
     carrinhoDeCompras.forEach(item => {
@@ -356,36 +340,32 @@ function abrirModalCheckout() {
         total += item.preco;
     });
     
-    // 3. Atualiza totais
     document.getElementById('checkout-qtd').innerText = carrinhoDeCompras.length;
     document.getElementById('checkout-total-valor').innerText = total.toFixed(2).replace('.', ',');
-}
+};
 
-function fecharModalCheckout() {
+window.fecharModalCheckout = function() {
     document.getElementById('modal-checkout-overlay').classList.add('oculto');
-}
+};
 
-function verificarTroco() {
+window.verificarTroco = function() {
     const formaPagamento = document.getElementById('pedido-pagamento').value;
     const areaTroco = document.getElementById('area-troco');
     
-    // Se escolheu dinheiro, mostra o campo de troco
     if (formaPagamento === 'Dinheiro') {
         areaTroco.classList.remove('oculto');
     } else {
         areaTroco.classList.add('oculto');
     }
-}
+};
 
-function enviarPedidoWhatsApp() {
-    // 1. Pega os valores digitados
+window.enviarPedidoWhatsApp = function() {
     const rua = document.getElementById('pedido-rua').value;
     const bairro = document.getElementById('pedido-bairro').value;
     const pagamento = document.getElementById('pedido-pagamento').value;
     const troco = document.getElementById('pedido-troco').value;
     const obs = document.getElementById('pedido-obs').value;
     
-    // 2. Validação simples para não deixar o cliente mandar pedido em branco
     if (!rua || !bairro) {
         alert("Por favor, preencha o seu endereço para a entrega!");
         return;
@@ -395,10 +375,8 @@ function enviarPedidoWhatsApp() {
         return;
     }
 
-    // 3. Calcula o total novamente
     let total = carrinhoDeCompras.reduce((soma, item) => soma + item.preco, 0);
     
-    // 4. Monta a mensagem bonita para o WhatsApp
     let texto = `*NOVO PEDIDO!* 🍔🛵\n\n`;
     texto += `*Resumo do Pedido:*\n`;
     
@@ -419,60 +397,20 @@ function enviarPedidoWhatsApp() {
         texto += `\n*Observações:* ${obs}\n`;
     }
 
-    // 5. Gera o link mágico do WhatsApp (Substitua o número aqui no futuro)
-    const numeroWhatsApp = "5532999082129"; // Número do Casarão
+    // Número do restaurante configurado aqui
+    const numeroWhatsApp = "5532999082129"; 
     const linkZap = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(texto)}`;
     
-    // 6. Envia o cliente para o Zap!
     window.open(linkZap, '_blank');
-    
-    // 7. Opcional: Limpa o carrinho depois de enviar
-    // carrinhoDeCompras = [];
-    // fecharModalCheckout();
-    // atualizarBotaoCarrinho();
-}
-window.iniciarCheckoutStripe = async function(idProduto, botao) {
-    const produto = window.produtosCarregados[idProduto];
-    if (!produto) return;
-    if (!usuarioAtualUid) {
-        alert("Por favor, faça login para fazer um pedido!");
-        window.location.href = "login.html";
-        return;
-    }
-    const textoOriginal = botao.innerText;
-    botao.innerText = "Processando...";
-    botao.disabled = true;
-
-    try {
-        const resposta = await fetch('/api/pagamento', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                nome: produto.nome,
-                descricao: produto.descricao,
-                valor: produto.valor,
-                email: document.getElementById('user-email').innerText, 
-                uid_cliente: usuarioAtualUid
-            })
-        });
-        const dados = await resposta.json();
-        if (resposta.ok && dados.link_checkout) {
-            window.location.href = dados.link_checkout;
-        } else {
-            alert(dados.erro || "Erro no pagamento.");
-            botao.innerText = textoOriginal;
-            botao.disabled = false;
-        }
-    } catch (erro) {
-        alert("Erro ao conectar com o servidor.");
-        botao.innerText = textoOriginal;
-        botao.disabled = false;
-    }
 };
 
+
+// ==========================================
+// FUNÇÕES DE ADMINISTRAÇÃO E MODAIS
+// ==========================================
 window.abrirModalLeitura = function(idProduto) {
     const produto = window.produtosCarregados[idProduto];
-    if(!produto) return;
+    if (!produto) return;
     document.getElementById('titulo-leitura').innerText = produto.nome;
     document.getElementById('texto-leitura').innerText = produto.descricao;
     document.getElementById('overlay-produto').style.display = 'block';
@@ -496,7 +434,7 @@ window.fecharModalProduto = function() {
 
 window.salvarProduto = async function() {
     const nome = document.getElementById('prod-nome').value.trim();
-    const categoria = document.getElementById('prod-categoria').value; 
+    const categoria = document.getElementById('prod-categoria').value;
     const descricao = document.getElementById('prod-descricao').value.trim();
     const valor = document.getElementById('prod-valor').value;
     const imagem = document.getElementById('prod-imagem').value.trim();
@@ -524,6 +462,7 @@ window.salvarProduto = async function() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(novoProduto)
         });
+
         if (resposta.ok) {
             window.fecharModalProduto();
             document.getElementById('prod-nome').value = '';
@@ -546,7 +485,7 @@ window.deletarProduto = async function(idProduto) {
     if (!confirm("Tem certeza que deseja excluir este item do cardápio?")) return;
     try {
         const res = await fetch(`/api/produtos/${idProduto}`, { method: 'DELETE' });
-        if (res.ok) window.carregarProdutos(); 
+        if (res.ok) window.carregarProdutos();
         else alert("Erro ao tentar remover o item.");
     } catch (e) {
         alert("Erro de conexão com o banco de dados.");
@@ -563,13 +502,13 @@ function formatarTexto(texto) {
 
 window.carregarClientes = async function() {
     const tabela = document.getElementById('lista-corpo');
-    if (!tabela) return; 
+    if (!tabela) return;
 
     try {
         const resposta = await fetch('/api/clientes');
         const clientes = await resposta.json();
-        tabela.innerHTML = ''; 
-
+        
+        tabela.innerHTML = '';
         if (clientes.length === 0) {
             tabela.innerHTML = '<tr><td colspan="5" style="text-align: center;">Nenhum lead encontrado.</td></tr>';
             return;
@@ -581,7 +520,7 @@ window.carregarClientes = async function() {
             const telStr = (cliente.telefone && cliente.telefone !== 'undefined') ? cliente.telefone : '-';
             const poloStr = cliente.polo || 'indefinido';
             const statusStr = cliente.status || 'indefinido';
-            const nomeSafe = nomeStr.replace(/'/g, "\\'"); 
+            const nomeSafe = nomeStr.replace(/'/g, "\\'");
             
             linha.innerHTML = `
                 <td><strong>${nomeStr}</strong></td>
@@ -602,10 +541,10 @@ window.carregarClientes = async function() {
 };
 
 window.deletarCliente = async function(id) {
-    if(confirm("Tem certeza que deseja excluir este Lead permanentemente?")) {
+    if (confirm("Tem certeza que deseja excluir este Lead permanentemente?")) {
         try {
             const resposta = await fetch(`/api/clientes/${id}`, { method: 'DELETE' });
-            if(resposta.ok) window.carregarClientes(); 
+            if (resposta.ok) window.carregarClientes();
             else alert("Erro ao tentar excluir o cliente.");
         } catch (erro) {
             alert("Erro de conexão ao excluir.");
@@ -614,27 +553,29 @@ window.deletarCliente = async function(id) {
 };
 
 window.mostrarFormulario = function() {
-    clienteEditandoId = null; 
+    clienteEditandoId = null;
     document.querySelector('#form-cadastro h2').innerText = "Cadastrar Novo Lead";
     document.getElementById('input-nome').value = '';
     document.getElementById('input-telefone').value = '';
     
     const selectPolo = document.getElementById('select-polo');
-    if(selectPolo) selectPolo.value = 'lagoa_dourada';
+    if (selectPolo) selectPolo.value = 'lagoa_dourada';
+    
     const selectStatus = document.getElementById('select-status');
-    if(selectStatus) selectStatus.value = 'prospeccao';
+    if (selectStatus) selectStatus.value = 'prospeccao';
     
     document.getElementById('form-cadastro').style.display = 'block';
 };
 
 window.prepararEdicao = function(id, nome, telefone, polo, status) {
-    clienteEditandoId = id; 
+    clienteEditandoId = id;
     document.querySelector('#form-cadastro h2').innerText = "Editar Lead";
     document.getElementById('input-nome').value = nome !== '-' ? nome : '';
     document.getElementById('input-telefone').value = telefone !== '-' ? telefone : '';
     
     const poloSelect = document.getElementById('select-polo');
     if (poloSelect) poloSelect.value = polo;
+    
     const statusSelect = document.getElementById('select-status');
     if (statusSelect) statusSelect.value = status;
     
@@ -643,7 +584,7 @@ window.prepararEdicao = function(id, nome, telefone, polo, status) {
 
 window.fecharFormulario = function() {
     document.getElementById('form-cadastro').style.display = 'none';
-    clienteEditandoId = null; 
+    clienteEditandoId = null;
 };
 
 window.salvarCadastro = async function() {
@@ -667,8 +608,8 @@ window.salvarCadastro = async function() {
 
         if (resposta.ok) {
             alert(clienteEditandoId ? "Lead atualizado com sucesso!" : "Lead cadastrado com sucesso!");
-            window.fecharFormulario(); 
-            window.carregarClientes(); 
+            window.fecharFormulario();
+            window.carregarClientes();
         } else {
             alert("Erro no servidor ao tentar salvar.");
         }
@@ -680,7 +621,6 @@ window.salvarCadastro = async function() {
 // ==========================================
 // 6. INICIALIZAÇÃO
 // ==========================================
-// Tenta carregar a tabela de clientes assim que a página abre (se estiver no Painel Admin)
-if(document.getElementById('lista-corpo')) {
+if (document.getElementById('lista-corpo')) {
     window.carregarClientes();
 }
