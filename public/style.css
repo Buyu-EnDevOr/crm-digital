@@ -926,7 +926,7 @@ body.body-sem-margem { display: block; height: auto; }
 /* ===== 1. PALETA DO RESTAURANTE (CORES QUENTES) ===== */
 :root {
     --cor-fundo: #FAFAFA;
-    --cor-fundo-card: #FFFFFF;
+   --cor-fundo-card: #e1caf7;
     --cor-texto: #1F2937;
     --cor-texto-mutado: #6B7280;
     --cor-primaria: #E11D48; /* Vermelho Fome (Burger/Pizza) */
