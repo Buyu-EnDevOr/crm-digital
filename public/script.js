@@ -329,19 +329,54 @@ window.abrirModalCheckout = function() {
     document.getElementById('modal-checkout-overlay').classList.remove('oculto');
     
     const listaHtml = document.getElementById('checkout-lista-itens');
-    listaHtml.innerHTML = ''; 
+    
+    // Adiciona o botão de Esvaziar no topo da lista
+    listaHtml.innerHTML = `
+        <div style="text-align: right; margin-bottom: 15px;">
+            <span onclick="window.esvaziarCarrinho()" style="color: #ef4444; font-size: 0.85rem; cursor: pointer; text-decoration: underline; font-weight: bold;">🗑️ Esvaziar Sacola</span>
+        </div>
+    `; 
     
     let total = 0;
-    carrinhoDeCompras.forEach(item => {
-        listaHtml.innerHTML += `<div style="display: flex; justify-content: space-between; margin-bottom: 5px; color: #475569;">
-            <span>1x ${item.nome}</span>
-            <span>R$ ${item.preco.toFixed(2).replace('.', ',')}</span>
+    carrinhoDeCompras.forEach((item, index) => {
+        // Adicionada uma linha pontilhada e um botão "X" de exclusão para cada item
+        listaHtml.innerHTML += `
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; color: #475569; padding-bottom: 8px; border-bottom: 1px dashed #e2e8f0;">
+            <span style="flex: 1;">1x ${item.nome}</span>
+            <span style="font-weight: bold; margin-right: 15px;">R$ ${item.preco.toFixed(2).replace('.', ',')}</span>
+            <button onclick="window.removerItemCarrinho(${index})" style="background: transparent; border: none; color: #ef4444; font-size: 1.1rem; cursor: pointer; padding: 0;" title="Remover item">✕</button>
         </div>`;
         total += item.preco;
     });
     
     document.getElementById('checkout-qtd').innerText = carrinhoDeCompras.length;
     document.getElementById('checkout-total-valor').innerText = total.toFixed(2).replace('.', ',');
+};
+
+// ==========================================
+// NOVAS FUNÇÕES: REMOVER E ESVAZIAR
+// ==========================================
+window.removerItemCarrinho = function(index) {
+    // Remove 1 item exatamente na posição 'index' que foi clicada
+    carrinhoDeCompras.splice(index, 1); 
+    
+    atualizarBotaoCarrinho();
+    
+    // Se apagou o último item da lista, fecha a janela automaticamente
+    if (carrinhoDeCompras.length === 0) {
+        fecharModalCheckout();
+    } else {
+        // Caso contrário, apenas atualiza a tela para mostrar a lista nova
+        abrirModalCheckout(); 
+    }
+};
+
+window.esvaziarCarrinho = function() {
+    if (confirm("Tem a certeza que deseja remover todos os itens da sacola?")) {
+        carrinhoDeCompras = []; // Zera a memória do carrinho
+        atualizarBotaoCarrinho();
+        fecharModalCheckout();
+    }
 };
 
 window.fecharModalCheckout = function() {
