@@ -1688,3 +1688,160 @@ html, body {
         min-width: 100% !important;
     }
 }
+/* ==========================================
+   CARRINHO FLUTUANTE (ESTILO IFOOD)
+   ========================================== */
+#btn-carrinho-flutuante {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 95%;
+    max-width: 400px;
+    background-color: #10B981; /* Verde conversão */
+    color: white;
+    border-radius: 8px;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+    z-index: 9999;
+    cursor: pointer;
+    transition: transform 0.2s, background-color 0.2s;
+}
+
+#btn-carrinho-flutuante:hover {
+    background-color: #059669;
+    transform: translateX(-50%) scale(1.02);
+}
+
+.carrinho-info {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+}
+
+.carrinho-texto {
+    font-size: 1.1rem;
+}
+
+.carrinho-total {
+    font-size: 1.1rem;
+}
+/* ==========================================
+   TELA DE CHECKOUT (MODAL WHATSAPP)
+   ========================================== */
+#modal-checkout-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 99999;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end; /* Fica colado no fundo no celular */
+    transition: opacity 0.3s;
+}
+
+.modal-checkout-container {
+    background: #ffffff;
+    width: 100%;
+    max-width: 500px;
+    max-height: 90vh; /* Não deixa passar da tela */
+    border-radius: 20px 20px 0 0;
+    display: flex;
+    flex-direction: column;
+    animation: subirModal 0.3s ease-out;
+}
+
+@keyframes subirModal {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+}
+
+.checkout-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.checkout-header h3 {
+    margin: 0;
+    color: #1e293b;
+    font-size: 1.2rem;
+}
+
+.btn-fechar-checkout {
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    color: #64748b;
+    cursor: pointer;
+}
+
+.checkout-body {
+    padding: 20px;
+    overflow-y: auto; /* Permite rolar se tiver muita coisa */
+}
+
+.checkout-secao {
+    margin-bottom: 25px;
+}
+
+.checkout-secao h4 {
+    margin: 0 0 10px 0;
+    color: #334155;
+    font-size: 1rem;
+    border-left: 3px solid #10B981;
+    padding-left: 8px;
+}
+
+.input-checkout {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 10px;
+    border: 1px solid #cbd5e0;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: inherit;
+    box-sizing: border-box;
+}
+
+.obs-textarea {
+    resize: none;
+    height: 80px;
+}
+
+.checkout-total {
+    font-weight: 900;
+    font-size: 1.3rem;
+    color: #10B981;
+    text-align: right;
+    margin-top: 10px;
+}
+
+.checkout-footer {
+    padding: 15px 20px 25px 20px;
+    border-top: 1px solid #e2e8f0;
+}
+
+.btn-enviar-whatsapp {
+    width: 100%;
+    background-color: #25D366; /* Verde Oficial do WhatsApp */
+    color: white;
+    border: none;
+    padding: 15px;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-enviar-whatsapp:hover {
+    background-color: #128C7E;
+}

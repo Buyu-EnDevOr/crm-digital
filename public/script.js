@@ -294,7 +294,143 @@ window.renderizarCategoriaFiltrada = function() {
         `;
     });
 };
+// A memória do nosso carrinho
+let carrinhoDeCompras = [];
 
+// Função que será chamada quando o cliente clicar em "Comprar" ou "Adicionar"
+function adicionarAoCarrinho(nomeProduto, precoProduto) {
+    // 1. Adiciona o item à lista
+    carrinhoDeCompras.push({
+        nome: nomeProduto,
+        preco: parseFloat(precoProduto)
+    });
+    
+    // 2. Atualiza os números no botão flutuante
+    atualizarBotaoCarrinho();
+    
+    // Opcional: Um avisozinho rápido na tela
+    alert(`🛒 ${nomeProduto} adicionado à sacola!`);
+}
+
+function atualizarBotaoCarrinho() {
+    const btnCarrinho = document.getElementById('btn-carrinho-flutuante');
+    const spanQtd = document.getElementById('qtd-carrinho');
+    const spanTotal = document.getElementById('total-carrinho');
+    
+    // Se a sacola tiver alguma coisa, mostra o botão
+    if (carrinhoDeCompras.length > 0) {
+        btnCarrinho.classList.remove('oculto');
+        
+        // Atualiza a quantidade
+        spanQtd.innerText = carrinhoDeCompras.length;
+        
+        // Calcula o total (soma todos os preços)
+        let valorTotal = carrinhoDeCompras.reduce((soma, item) => soma + item.preco, 0);
+        
+        // Escreve o total formatado em Reais (ex: 45,90)
+        spanTotal.innerText = valorTotal.toFixed(2).replace('.', ',');
+    } else {
+        // Se a sacola estiver vazia, esconde o botão
+        btnCarrinho.classList.add('oculto');
+    }
+}
+
+// ==========================================
+// LÓGICA DE CHECKOUT E WHATSAPP
+// ==========================================
+
+function abrirModalCheckout() {
+    // 1. Mostra o modal
+    document.getElementById('modal-checkout-overlay').classList.remove('oculto');
+    
+    // 2. Preenche o resumo do pedido
+    const listaHtml = document.getElementById('checkout-lista-itens');
+    listaHtml.innerHTML = ''; // Limpa antes de preencher
+    
+    let total = 0;
+    carrinhoDeCompras.forEach(item => {
+        listaHtml.innerHTML += `<div style="display: flex; justify-content: space-between; margin-bottom: 5px; color: #475569;">
+            <span>1x ${item.nome}</span>
+            <span>R$ ${item.preco.toFixed(2).replace('.', ',')}</span>
+        </div>`;
+        total += item.preco;
+    });
+    
+    // 3. Atualiza totais
+    document.getElementById('checkout-qtd').innerText = carrinhoDeCompras.length;
+    document.getElementById('checkout-total-valor').innerText = total.toFixed(2).replace('.', ',');
+}
+
+function fecharModalCheckout() {
+    document.getElementById('modal-checkout-overlay').classList.add('oculto');
+}
+
+function verificarTroco() {
+    const formaPagamento = document.getElementById('pedido-pagamento').value;
+    const areaTroco = document.getElementById('area-troco');
+    
+    // Se escolheu dinheiro, mostra o campo de troco
+    if (formaPagamento === 'Dinheiro') {
+        areaTroco.classList.remove('oculto');
+    } else {
+        areaTroco.classList.add('oculto');
+    }
+}
+
+function enviarPedidoWhatsApp() {
+    // 1. Pega os valores digitados
+    const rua = document.getElementById('pedido-rua').value;
+    const bairro = document.getElementById('pedido-bairro').value;
+    const pagamento = document.getElementById('pedido-pagamento').value;
+    const troco = document.getElementById('pedido-troco').value;
+    const obs = document.getElementById('pedido-obs').value;
+    
+    // 2. Validação simples para não deixar o cliente mandar pedido em branco
+    if (!rua || !bairro) {
+        alert("Por favor, preencha o seu endereço para a entrega!");
+        return;
+    }
+    if (!pagamento) {
+        alert("Por favor, escolha como deseja pagar.");
+        return;
+    }
+
+    // 3. Calcula o total novamente
+    let total = carrinhoDeCompras.reduce((soma, item) => soma + item.preco, 0);
+    
+    // 4. Monta a mensagem bonita para o WhatsApp
+    let texto = `*NOVO PEDIDO!* 🍔🛵\n\n`;
+    texto += `*Resumo do Pedido:*\n`;
+    
+    carrinhoDeCompras.forEach(item => {
+        texto += `▪️ 1x ${item.nome} (R$ ${item.preco.toFixed(2).replace('.', ',')})\n`;
+    });
+    
+    texto += `\n*Total a pagar:* R$ ${total.toFixed(2).replace('.', ',')}\n`;
+    texto += `-----------------------\n`;
+    texto += `*Endereço de Entrega:*\n${rua} - ${bairro}\n\n`;
+    texto += `*Pagamento:* ${pagamento}\n`;
+    
+    if (pagamento === 'Dinheiro' && troco) {
+        texto += `*Troco para:* R$ ${troco}\n`;
+    }
+    
+    if (obs) {
+        texto += `\n*Observações:* ${obs}\n`;
+    }
+
+    // 5. Gera o link mágico do WhatsApp (Substitua o número aqui no futuro)
+    const numeroWhatsApp = "5532999082129"; // Número do Casarão
+    const linkZap = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(texto)}`;
+    
+    // 6. Envia o cliente para o Zap!
+    window.open(linkZap, '_blank');
+    
+    // 7. Opcional: Limpa o carrinho depois de enviar
+    // carrinhoDeCompras = [];
+    // fecharModalCheckout();
+    // atualizarBotaoCarrinho();
+}
 window.iniciarCheckoutStripe = async function(idProduto, botao) {
     const produto = window.produtosCarregados[idProduto];
     if (!produto) return;

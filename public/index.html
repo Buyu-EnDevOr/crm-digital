@@ -149,5 +149,71 @@
 
     <!-- CHAMA O JAVASCRIPT EXTERNO AQUI (COMO MÓDULO) -->
     <script type="module" src="script.js"></script>
+    <!-- BOTÃO CARRINHO FLUTUANTE (Fica escondido até ter itens) -->
+    <div id="btn-carrinho-flutuante" class="oculto" onclick="abrirModalCheckout()">
+        <div class="carrinho-info">
+            <span id="qtd-carrinho">0</span> itens
+        </div>
+        <div class="carrinho-texto">Ver Sacola</div>
+        <div class="carrinho-total">R$ <span id="total-carrinho">0,00</span></div>
+    </div>
+    <!-- ==========================================
+         MODAL DE CHECKOUT (FINALIZAR PEDIDO)
+         ========================================== -->
+    <div id="modal-checkout-overlay" class="oculto">
+        <div class="modal-checkout-container">
+            <div class="checkout-header">
+                <h3>Finalizar Pedido</h3>
+                <button onclick="fecharModalCheckout()" class="btn-fechar-checkout">✕</button>
+            </div>
+            
+            <div class="checkout-body">
+                <!-- Resumo do Pedido -->
+                <div class="checkout-secao">
+                    <h4>Seu Pedido (<span id="checkout-qtd">0</span> itens)</h4>
+                    <div id="checkout-lista-itens">
+                        <!-- O JS vai injetar os itens aqui -->
+                    </div>
+                    <div class="checkout-total">Total: R$ <span id="checkout-total-valor">0,00</span></div>
+                </div>
+
+                <!-- Endereço -->
+                <div class="checkout-secao">
+                    <h4>Endereço de Entrega</h4>
+                    <input type="text" id="pedido-rua" placeholder="Rua e Número (ex: Rua Direita, 123)" class="input-checkout">
+                    <input type="text" id="pedido-bairro" placeholder="Bairro" class="input-checkout">
+                </div>
+
+                <!-- Pagamento -->
+                <div class="checkout-secao">
+                    <h4>Forma de Pagamento</h4>
+                    <select id="pedido-pagamento" class="input-checkout" onchange="verificarTroco()">
+                        <option value="">Selecione como vai pagar...</option>
+                        <option value="Pix">Pix (Chave: 32999082129)</option>
+                        <option value="Cartão de Crédito">Cartão de Crédito (Maquininha)</option>
+                        <option value="Cartão de Débito">Cartão de Débito (Maquininha)</option>
+                        <option value="Dinheiro">Dinheiro</option>
+                    </select>
+                    
+                    <!-- Campo de troco (Escondido por padrão) -->
+                    <div id="area-troco" class="oculto" style="margin-top: 10px;">
+                        <input type="number" id="pedido-troco" placeholder="Troco para quanto? (Ex: 50)" class="input-checkout">
+                    </div>
+                </div>
+
+                <!-- Observações -->
+                <div class="checkout-secao">
+                    <h4>Observações (Opcional)</h4>
+                    <textarea id="pedido-obs" placeholder="Tirar cebola, ponto da carne, etc..." class="input-checkout obs-textarea"></textarea>
+                </div>
+            </div>
+
+            <div class="checkout-footer">
+                <button onclick="enviarPedidoWhatsApp()" class="btn-enviar-whatsapp">
+                    Enviar Pedido pelo WhatsApp 📲
+                </button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
