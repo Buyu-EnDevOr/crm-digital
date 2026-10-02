@@ -1096,7 +1096,7 @@ line-clamp: 3;
     flex-direction: column;
     flex: 1;
     justify-content: flex-end; 
-    background-color: #fcf7ff;
+    background-color: transparent !important;
 }
 
 /* 6. Descrição truncada com reticências para max 1 linha */
@@ -1205,17 +1205,23 @@ line-clamp: 3;
 /* ==========================================
    CORREÇÃO ESTRUTURAL DOS CARTÕES (AMBOS OS TEMAS)
    ========================================== */
-.card-produto {
-    /* Força os cartões a terem um tamanho uniforme e sem comportamentos estranhos */
+.card-produto{
     min-width: 260px;
     max-width: 260px;
-    background-color: var(--cor-fundo-card, #FFFFFF);
-    border: 1px solid var(--cor-borda, #E5E7EB);
-    border-radius: 16px;
+    scroll-snap-align: start;
+    
+    /* Efeito Roxo-Vidro (Glassmorphism) */
+    background-color: rgba(228, 199, 255, 0.5) !important; /* Roxo translúcido */
+    backdrop-filter: blur(10px); /* Desfoque do vidro */
+    -webkit-backdrop-filter: blur(10px); /* Suporte para iPhone */
+    
+    border: 1px solid rgba(255, 255, 255, 0.4); /* Bordinha de vidro brilhante */
+    border-radius: var(--raio-borda);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1); /* Sombra suave de vidro */
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    position: relative; /* O cartão é a âncora de tudo lá dentro */
+    transition: transform 0.2s ease;
 }
 
 .area-info-produto {
@@ -1356,7 +1362,7 @@ body.tema-escuro .btn-tema {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: var(--cor-fundo-card, #FFFFFF);
+    background-color: #FFFFFF !important;
     padding: 15px;
     border-radius: 8px;
     border: 1px solid var(--cor-borda, #E5E7EB);
