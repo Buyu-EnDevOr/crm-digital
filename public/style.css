@@ -92,7 +92,7 @@ body {
 .btn-google { 
     width: 100%; 
     padding: 12px; 
-    background-color: #ffffff; 
+    background-color: transparent; 
     color: #0f172a; 
     border: none; 
     border-radius: 6px; 
