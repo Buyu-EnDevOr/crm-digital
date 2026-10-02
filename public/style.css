@@ -10,8 +10,8 @@ body {
 
 /* ===== TEMAS DE FUNDO ===== */
 .tema-claro {
-    background-color: #eef2f5;
-    color: #333;
+    background-color: #2A160F; /* Fundo base marrom escuro */
+    color: #fff; /* Muda a letra base para branco para dar contraste */
 }
 
 .tema-escuro {
@@ -797,11 +797,10 @@ body.body-sem-margem { display: block; height: auto; }
 
 /* ===== NOVO VISUAL VITRINE (SHOPEE STYLE) ===== */
 .vitrine-fundo {
-    background-image: url('plano-fundo.png');
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-    background-repeat: no-repeat;
+    /* Fundo Marrom Madeira Escuro (Baseado na Logo do Casarão) */
+    background: #2A160F !important; 
+    background: linear-gradient(135deg, #3E2314 0%, #1A0D09 100%) !important; 
+    background-attachment: fixed !important;
 }
 
 .logo-bolinha {
@@ -925,8 +924,8 @@ body.body-sem-margem { display: block; height: auto; }
 
 /* ===== 1. PALETA DO RESTAURANTE (CORES QUENTES) ===== */
 :root {
-    --cor-fundo: #FAFAFA;
-   --cor-fundo-card: #e1caf7;
+    --cor-fundo: #e4c7ff;
+   --cor-fundo-card: #e4c7ff;
     --cor-texto: #1F2937;
     --cor-texto-mutado: #6B7280;
     --cor-primaria: #E11D48; /* Vermelho Fome (Burger/Pizza) */
