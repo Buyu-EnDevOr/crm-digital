@@ -92,7 +92,7 @@ body {
 .btn-google { 
     width: 100%; 
     padding: 12px; 
-    background-color: transparent; 
+    background-color: #ffffff; 
     color: #0f172a; 
     border: none; 
     border-radius: 6px; 
@@ -924,7 +924,7 @@ body.body-sem-margem { display: block; height: auto; }
 
 /* ===== 1. PALETA DO RESTAURANTE (CORES QUENTES) ===== */
 :root {
-    --cor-fundo: #e4c7ff;
+    --cor-fundo: #ffffff;
    --cor-fundo-card: #e4c7ff;
     --cor-texto: #1F2937;
     --cor-texto-mutado: #6B7280;
@@ -1096,7 +1096,7 @@ line-clamp: 3;
     flex-direction: column;
     flex: 1;
     justify-content: flex-end; 
-    background-color: #ffffff;
+    background-color: #fcf7ff;
 }
 
 /* 6. Descrição truncada com reticências para max 1 linha */
