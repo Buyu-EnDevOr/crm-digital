@@ -9,28 +9,35 @@ firebase_admin.initialize_app(cred)
 # 2. Conectando ao Banco de Dados
 db = firestore.client()
 
-print("Conexão estabelecida! Buscando clientes...\n")
-print("-" * 40)
+print("Conexão estabelecida! Buscando clientes e leads...\n")
+print("-" * 50)
 
-# 3. O Python vai na pasta 'leads' e puxa todo mundo
+# 3. O Python vai na coleção 'leads' e puxa todos os documentos
 clientes_ref = db.collection("leads")
 clientes = clientes_ref.stream()
 
 contador = 0
+
 for cliente in clientes:
     contador += 1
-    # Transformando os dados brutos em um dicionário do Python
+    # Transformando os dados brutos num dicionário do Python
     dados = cliente.to_dict()
     
     nome = dados.get("nome", "Sem Nome")
     telefone = dados.get("telefone", "Sem Telefone")
-    polo = dados.get("polo", "Não definido")
-    status = dados.get("status", "Não definido")
+    
+    # NOVAS VARIÁVEIS DE ENDEREÇO (Substituindo o antigo 'polo')
+    rua = dados.get("rua", "Não definida")
+    bairro = dados.get("bairro", "Não definido")
+    
+    # STATUS NO FUNIL DE VENDAS
+    status = dados.get("status", "indefinido").upper()
     
     print(f"Cliente {contador}: {nome}")
     print(f"WhatsApp: {telefone}")
-    print(f"Polo: {polo} | Status: {status}")
-    print("-" * 40)
+    print(f"Endereço: {rua} - Bairro {bairro}")
+    print(f"Status no Funil: [{status}]")
+    print("-" * 50)
 
 if contador == 0:
-    print("Nenhum cliente cadastrado ainda.")
+    print("Nenhum cliente cadastrado ainda. A base de dados está vazia.")

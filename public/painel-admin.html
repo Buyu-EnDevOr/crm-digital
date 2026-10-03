@@ -2,12 +2,14 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Trava de zoom para mobile (Garante que o app usa 100% da tela) -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Painel Administrativo - CRM</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="tema-claro body-sem-margem"></body>
-<!-- Barra Superior do Administrador -->
+<body class="tema-claro body-sem-margem">
+    
+    <!-- Barra Superior do Administrador -->
     <header style="display: flex; justify-content: space-between; align-items: center; padding: 15px 30px; background: #0f172a; margin-bottom: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
         <div style="font-weight: bold; font-size: 1.2rem; color: white;">Painel de Gestão - CRM</div>
         <div>
@@ -16,70 +18,89 @@
             </a>
         </div>
     </header>
-<div class="admin-container">
-    <div class="cabecalho-admin">
-        <h2>Gestão de Clientes (Leads)</h2>
-        <!-- O botão agora chama a função para mostrar o formulário -->
-        <button onclick="mostrarFormulario()" class="btn-voltar">Novo Cadastro</button>
-    </div>
 
-    <!-- Formulário de Cadastro (Criamos classes para o CSS cuidar do visual) -->
-    <div class="painel form-cadastro-container" id="form-cadastro">
-        <h2>Cadastrar Novo Lead</h2>
-        
-        <div class="form-grupo-linha">
-            <div class="form-campo">
-                <label>Nome do Cliente:</label>
-                <input type="text" id="input-nome" placeholder="Ex: João da Silva">
-            </div>
-            
-            <div class="form-campo">
-                <label>Telefone (WhatsApp):</label>
-                <input type="text" id="input-telefone" placeholder="(32) 99999-9999">
-            </div>
-            
-            <div class="form-campo">
-                <label>Polo de Atendimento:</label>
-                <select id="select-polo">
-                    <option value="lagoa_dourada">Lagoa Dourada</option>
-                    <option value="juiz_de_fora">Juiz de Fora</option>
-                    <option value="atendimento_digital">Atendimento Digital</option>
-                </select>
-            </div>
-
-            <div class="form-campo">
-                <label>Status da Negociação:</label>
-                <select id="select-status">
-                    <option value="prospeccao">Em Prospecção</option>
-                    <option value="negociacao">Em Negociação</option>
-                    <option value="fechado">Venda Fechada</option>
-                </select>
-            </div>
+    <div class="admin-container">
+        <div class="cabecalho-admin">
+            <h2>Gestão de Clientes (Leads)</h2>
+            <button onclick="mostrarFormulario()" class="btn-voltar">Novo Cadastro</button>
         </div>
         
-        <div class="form-acoes">
-            <button onclick="salvarCadastro()" class="btn-salvar">Salvar Cliente</button>
-            <button onclick="fecharFormulario()" class="btn-cancelar">Cancelar</button>
+        <!-- Formulário de Cadastro / Edição -->
+        <div class="painel form-cadastro-container" id="form-cadastro">
+            <h2>Cadastrar Novo Lead</h2>
+            
+            <div class="form-grupo-linha">
+                <div class="form-campo">
+                    <label>Nome do Cliente:</label>
+                    <input type="text" id="input-nome" placeholder="Ex: João da Silva">
+                </div>
+                
+                <div class="form-campo">
+                    <label>Telefone (WhatsApp):</label>
+                    <input type="text" id="input-telefone" placeholder="(32) 99999-9999">
+                </div>
+                
+                <!-- CAMPOS DE ENDEREÇO (Substituíram o antigo Polo) -->
+                <div class="form-campo">
+                    <label>Rua / Nº:</label>
+                    <input type="text" id="input-rua" placeholder="Ex: Rua das Flores, 123">
+                </div>
+
+                <div class="form-campo">
+                    <label>Bairro:</label>
+                    <input type="text" id="input-bairro" placeholder="Ex: Centro">
+                </div>
+                
+                <div class="form-campo">
+                    <label>Status da Negociação:</label>
+                    <select id="select-status">
+                        <option value="prospeccao">Em Prospecção</option>
+                        <option value="negociacao">Em Negociação</option>
+                        <option value="fechado">Venda Fechada</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-acoes">
+                <button onclick="salvarCadastro()" class="btn-salvar">Salvar Cliente</button>
+                <button onclick="fecharFormulario()" class="btn-cancelar">Cancelar</button>
+            </div>
+        </div>
+
+        <!-- Tabela de Leads -->
+        <table class="tabela-clientes">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Telefone</th>
+                    <th>Bairro/Rua</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody id="lista-corpo">
+                <tr><td colspan="5" style="text-align: center;">Carregando dados do servidor Python...</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- MODAL DE HISTÓRICO DE COMPRAS (ADMIN) -->
+    <div id="modal-historico-overlay" class="oculto" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 99999; display: flex; justify-content: center; align-items: center;">
+        <div style="background: white; width: 90%; max-width: 500px; border-radius: 12px; padding: 20px; max-height: 80vh; display: flex; flex-direction: column;">
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 15px;">
+                <h3 style="margin: 0; color: #1a365d;">Histórico: <span id="hist-nome-cliente">Cliente</span></h3>
+                <button onclick="document.getElementById('modal-historico-overlay').classList.add('oculto')" style="background: transparent; border: none; font-size: 1.5rem; cursor: pointer; color: #ef4444;">✕</button>
+            </div>
+            
+            <!-- LISTA DE PEDIDOS AQUI -->
+            <div id="hist-lista-pedidos" style="overflow-y: auto; flex: 1; padding-right: 5px;">
+                <p style="text-align: center; color: #64748b;">Carregando histórico...</p>
+            </div>
+            
         </div>
     </div>
 
-    <table class="tabela-clientes">
-        <thead>
-            <tr>
-                <th>Nome</th>
-                <th>Telefone</th>
-                <th>Polo</th>
-                <th>Status</th>
-                <th>Ações</th>
-            </tr>
-        </thead>
-        <tbody id="lista-corpo">
-            <tr><td colspan="5" style="text-align: center;">Carregando dados do servidor Python...</td></tr>
-        </tbody>
-    </table>
-</div>
-
-<script type="module" src="script.js"></script>
-
+    <script type="module" src="script.js"></script>
 </body>
 </html>

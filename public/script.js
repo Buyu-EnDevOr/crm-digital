@@ -106,6 +106,7 @@ onAuthStateChanged(auth, (user) => {
     // Tenta carregar os produtos caso estejamos na tela de cardápio
     if(document.getElementById('container-categorias')) {
         window.carregarProdutos();
+        window.atualizarStatusFunil('prospeccao');
     }
 });
 
@@ -310,6 +311,9 @@ let carrinhoDeCompras = [];
 window.adicionarAoCarrinho = function(nomeProduto, precoProduto) {
     carrinhoDeCompras.push({ nome: nomeProduto, preco: parseFloat(precoProduto) });
     window.atualizarBotaoCarrinho();
+    
+    // GATILHO DO FUNIL: O cliente adicionou algo, logo entrou em Negociação!
+    window.atualizarStatusFunil('negociacao');
 };
 
 window.atualizarBotaoCarrinho = function() {
@@ -433,6 +437,36 @@ window.enviarPedidoWhatsApp = function() {
     
     const numeroWhatsApp = "5532999082129";
     const linkZap = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(texto)}`;
+    // 1. Atualiza o status do Funil
+    window.atualizarStatusFunil('fechado');
+    
+    // 2. Salva o endereço novo para o futuro (Auto-preenchimento)
+    if(usuarioAtualUid) {
+        localStorage.setItem(`perfil_rua_${usuarioAtualUid}`, rua);
+        localStorage.setItem(`perfil_bairro_${usuarioAtualUid}`, bairro);
+        
+        // 3. Regista o histórico da compra no Banco de Dados
+        fetch('/api/historico/compras', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                uid: usuarioAtualUid,
+                produtos: carrinhoDeCompras,
+                total: total,
+                data: new Date().toISOString()
+            })
+        }).catch(e => console.log("Erro ao salvar histórico."));
+        
+        // 4. Sincroniza o novo endereço com o CRM de Leads
+        fetch('/api/clientes/sync-endereco', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ uid: usuarioAtualUid, rua: rua, bairro: bairro })
+        }).catch(e => console.log("Erro ao sincronizar CRM."));
+    }
+    
+    // 5. Zera o carrinho (para não disparar o carrinho abandonado ao sair)
+    carrinhoDeCompras = [];
     window.open(linkZap, '_blank');
 };
 
@@ -590,7 +624,8 @@ window.carregarClientes = async function() {
                 <td>
                     <button class="btn-editar" onclick="window.prepararEdicao('${cliente.id}', '${nomeSafe}', '${telStr}', '${ruaStr}', '${bairroStr}', '${statusStr}')">Editar</button>
                     <button class="btn-excluir" onclick="window.deletarCliente('${cliente.id}')">Excluir</button>
-                </td>
+                <button class="btn-editar" onclick="window.abrirHistoricoCliente('${cliente.uid}', '${nomeSafe}')" style="background: #3b82f6; color: white; margin-bottom: 5px;">Histórico</button>
+                    </td>
             `;
             tabela.appendChild(linha);
         });
@@ -713,4 +748,70 @@ window.aceitarTermos = function() {
     if(!usuarioAtualUid) return;
     localStorage.setItem(`termos_aceitos_${usuarioAtualUid}`, 'true');
     document.getElementById('modal-termos-overlay').classList.add('oculto');
+};
+// ==========================================
+// RASTREAMENTO DE FUNIL E MÉTRICAS
+// ==========================================
+window.atualizarStatusFunil = function(statusNovo) {
+    if(!usuarioAtualUid) return;
+    
+    // Dispara para o backend silenciosamente
+    fetch('/api/clientes/status', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ uid: usuarioAtualUid, status: statusNovo })
+    }).catch(e => console.log("Erro ao atualizar funil."));
+};
+
+// Detetor de Carrinho Abandonado (Dispara quando o cliente tenta fechar/sair do site)
+window.addEventListener('beforeunload', function (e) {
+    if(carrinhoDeCompras.length > 0) {
+        // Envia um "Beacon" (sinal rápido antes do site fechar) marcando abandono
+        const dadosAbandono = JSON.stringify({ 
+            uid: usuarioAtualUid, 
+            produtos: carrinhoDeCompras, 
+            data: new Date().toISOString() 
+        });
+        navigator.sendBeacon('/api/log/carrinho-abandonado', dadosAbandono);
+    }
+});
+// ==========================================
+// HISTÓRICO DE COMPRAS (MODAL ADMIN)
+// ==========================================
+window.abrirHistoricoCliente = async function(uidCliente, nomeCliente) {
+    document.getElementById('modal-historico-overlay').classList.remove('oculto');
+    document.getElementById('hist-nome-cliente').innerText = nomeCliente;
+    const containerLista = document.getElementById('hist-lista-pedidos');
+    containerLista.innerHTML = '<p style="text-align: center;">Buscando histórico...</p>';
+
+    try {
+        const resposta = await fetch(`/api/historico/${uidCliente}`);
+        const historico = await resposta.json();
+        
+        containerLista.innerHTML = '';
+        if(historico.length === 0) {
+            containerLista.innerHTML = '<p style="text-align: center; color: #64748b;">Nenhuma compra registrada.</p>';
+            return;
+        }
+
+        historico.forEach(pedido => {
+            const dataPedido = new Date(pedido.data).toLocaleString('pt-BR');
+            let listaProdHtml = '';
+            pedido.produtos.forEach(p => {
+                listaProdHtml += `<li style="font-size: 0.85rem; color: #475569;">1x ${p.nome} - R$ ${p.preco.toFixed(2)}</li>`;
+            });
+
+            containerLista.innerHTML += `
+                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; margin-bottom: 10px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                        <span style="font-weight: bold; font-size: 0.85rem; color: #1e293b;">📅 ${dataPedido}</span>
+                        <span style="font-weight: 900; color: #10B981;">R$ ${pedido.total.toFixed(2).replace('.', ',')}</span>
+                    </div>
+                    <ul style="margin: 5px 0 0 15px; padding: 0;">${listaProdHtml}</ul>
+                </div>
+            `;
+        });
+    } catch(erro) {
+        containerLista.innerHTML = '<p style="text-align: center; color: #ef4444;">Erro ao carregar histórico.</p>';
+    }
 };
