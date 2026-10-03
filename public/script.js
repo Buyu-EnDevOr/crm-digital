@@ -39,6 +39,16 @@ onAuthStateChanged(auth, (user) => {
     if (user) {
         usuarioAtualUid = user.uid;
         
+        // --- INÍCIO DA TRAVA DE SEGURANÇA LGPD ---
+        const termosAceitos = localStorage.getItem(`termos_aceitos_${user.uid}`);
+        const modalTermos = document.getElementById('modal-termos-overlay');
+        
+        // Se a pessoa NÃO aceitou os termos ainda, mostramos a trava!
+        if (!termosAceitos && modalTermos) {
+            modalTermos.classList.remove('oculto');
+        }
+        // --- FIM DA TRAVA DE SEGURANÇA ---
+        
         if (areaDeslogada) areaDeslogada.classList.add('oculto');
         if (areaLogada) areaLogada.classList.remove('oculto');
         if (userEmailSpan) userEmailSpan.innerText = user.email;
@@ -659,3 +669,27 @@ window.salvarCadastro = async function() {
 if (document.getElementById('lista-corpo')) {
     window.carregarClientes();
 }
+// ==========================================
+// LÓGICA DO MODAL LGPD (TERMOS)
+// ==========================================
+window.validarTermos = function() {
+    const checkbox = document.getElementById('check-termos');
+    const botao = document.getElementById('btn-aceitar-termos');
+    
+    // Se marcou, libera o botão. Se desmarcou, bloqueia.
+    if (checkbox.checked) {
+        botao.disabled = false;
+    } else {
+        botao.disabled = true;
+    }
+};
+
+window.aceitarTermos = function() {
+    if (!usuarioAtualUid) return; // Segurança
+    
+    // Salva na memória do navegador (LocalStorage) que este utilizador já aceitou
+    localStorage.setItem(`termos_aceitos_${usuarioAtualUid}`, 'true');
+    
+    // Esconde o modal e libera o site
+    document.getElementById('modal-termos-overlay').classList.add('oculto');
+};
