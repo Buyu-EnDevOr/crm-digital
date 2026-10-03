@@ -797,10 +797,11 @@ body.body-sem-margem { display: block; height: auto; }
 
 /* ===== NOVO VISUAL VITRINE (SHOPEE STYLE) ===== */
 .vitrine-fundo {
-    /* Fundo Marrom Madeira Escuro (Baseado na Logo do Casarão) */
-    background: #2A160F !important; 
-    background: linear-gradient(135deg, #3E2314 0%, #1A0D09 100%) !important; 
-    background-attachment: fixed !important;
+    background-color: #FAFAFA !important; /* Fundo branco/cinza claro */
+    background-image: url('fundo-claro.jpg') !important; /* Puxa a imagem da grelha */
+    background-repeat: repeat !important; /* Faz o padrão repetir infinitamente */
+    background-attachment: fixed !important; /* Fica pregado na tela ao rolar */
+    background-position: center top !important;
 }
 
 .logo-bolinha {
@@ -1290,11 +1291,14 @@ body {
 }
 
 /* 1. MUDANÇA DE FUNDOS */
-/* Apanhamos as classes antigas do CRM (.vitrine-fundo, .upbar, etc) e forçamos o preto quando o tema-escuro está ativo no body */
-body.tema-escuro, 
+body.tema-escuro,
 body.tema-escuro.vitrine-fundo {
-    background-color: #0a0a0c !important;
-    background-image: none !important; /* Remove o degradê laranja */
+    background-color: #000000 !important; /* Fundo preto puro */
+    background-image: url('fundo-escuro.jpg') !important; /* Puxa a Logo Dourada */
+    background-repeat: no-repeat !important; /* NÃO repete, aparece só 1 vez */
+    background-attachment: fixed !important; /* Fica pregado na tela ao rolar */
+    background-position: center center !important; /* Crava exatamente no meio da tela */
+    background-size: contain !important; /* Garante que a logo não fica cortada nas bordas do celular */
     color: #F5F5F5 !important;
 }
 
