@@ -1524,69 +1524,96 @@ body.tema-escuro #area-admin-produtos button:hover {
 }
 
 /* ==========================================
-   REGRAS DE RESPONSIVIDADE (MOBILE)
+   REGRAS DE RESPONSIVIDADE OTIMIZADAS (MOBILE)
    ========================================== */
 @media screen and (max-width: 768px) {
     
+    /* 1. ESPAÇO DE TELA (Nativo como um App) */
     .conteudo-principal {
-        padding: 20px 10px 80px 10px !important; 
+        padding: 10px 0px 80px 0px !important; /* Tira as margens laterais no celular */
     }
-    
     .vitrine-card {
-        padding: 20px 15px !important; 
-        border-radius: 0px !important; 
+        padding: 20px 15px !important;
+        border-radius: 0px !important; /* Fica colado nas bordas do celular */
+        box-shadow: none !important;
     }
 
-    .upbar {
-        padding: 10px 15px !important;
-        flex-wrap: wrap; 
-        gap: 10px;
+    /* 2. BARRA DE FILTROS E BOTÕES GRID/LISTA */
+    .barra-filtros {
+        flex-direction: column; /* Coloca a ordenação em cima e os botões embaixo */
+        align-items: flex-start;
+        gap: 15px;
+        padding: 12px;
     }
-    
-    .area-logada-container {
+    .botoes-layout {
         width: 100%;
+        display: flex;
         justify-content: space-between;
-        margin-top: 5px;
     }
-    
-    .perfil-card {
-        padding: 4px 10px 4px 4px !important;
+    .botoes-layout button {
+        flex: 1; /* Faz os botões Grid/Lista dividirem o espaço 50/50 */
+        margin: 0 5px;
     }
 
-    .servicos-titulo { font-size: 1.8rem !important; }
-    .servicos-subtitulo { font-size: 0.9rem !important; margin-bottom: 20px !important; }
-    
+    /* 3. MODO GRID (Roleta de Cartões) */
     .card-produto {
-        min-width: 220px !important; 
-        max-width: 220px !important;
+        /* Reduz o tamanho do cartão para caber ~1.5 cartões na tela, incentivando o scroll lateral */
+        min-width: 180px !important; 
+        max-width: 180px !important;
     }
-    
-    .img-produto { height: 130px !important; }
-    .tag-nome-produto { font-size: 1rem !important; }
-    .btn-comprar-preco { font-size: 1rem !important; padding: 8px 0 !important; }
-    
-    /* CORREÇÃO DA BARRA LATERAL (SIDEBAR) MOBILE */
+    .img-produto { 
+        height: 120px !important; 
+    }
+    .tag-nome-produto { 
+        font-size: 1rem !important; 
+    }
+    .btn-comprar-preco { 
+        font-size: 1rem !important; 
+        padding: 8px 0 !important; 
+    }
+
+    /* 4. CURA DO MODO LISTA (Esmagamento de Botões) */
+    .grid-servicos.modo-lista .card-produto {
+        padding: 12px 0;
+    }
+    .grid-servicos.modo-lista .img-produto {
+        width: 80px !important;
+        height: 80px !important;
+        margin-left: 10px;
+    }
+    .grid-servicos.modo-lista .produto-descricao {
+        font-size: 0.8rem !important;
+    }
+    /* Organiza os botões de ação do modo lista para não baterem no preço */
+    .grid-servicos.modo-lista .btn-comprar-preco {
+        font-size: 0.95rem !important;
+        padding: 6px 15px !important;
+        width: auto !important; /* Tira o 100% de largura */
+        display: inline-block;
+    }
+
+    /* 5. MENU LATERAL MOBILE */
     .sidebar {
         position: fixed !important;
         height: 100vh !important;
         top: 0 !important;
         left: 0 !important;
-        z-index: 99999 !important; /* Força a ficar ACIMA da upbar e de tudo */
-        width: 0 !important; 
+        z-index: 99999 !important;
+        width: 0 !important;
         padding-left: 0 !important;
         padding-right: 0 !important;
-        background-color: #0f172a !important; /* Cor SÓLIDA azul escuro (Tira a transparência) */
+        background-color: #0f172a !important;
     }
-    
-    /* Fundo sólido preto no modo escuro */
     body.tema-escuro .sidebar {
-        background-color: #050506 !important; 
+        background-color: #050506 !important;
     }
-
     .sidebar:not(.oculta) {
-        width: 250px !important; 
+        width: 250px !important;
         padding: 30px 20px !important;
-        box-shadow: 15px 0 30px rgba(0,0,0,0.8) !important; /* Sombra pesada para destacar */
+        box-shadow: 15px 0 30px rgba(0,0,0,0.8) !important;
+    }
+    .btn-fechar-menu-mobile {
+        display: block; 
     }
 }
 /* ==========================================
