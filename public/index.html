@@ -5,8 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cardápio Digital - Delivery</title>
     <link rel="stylesheet" href="style.css?v=2">
+    <style>
+    /* 1. Força o fundo marrom global ignorando qualquer outra regra */
+    body.tema-claro, .vitrine-fundo {
+        background-color: #2A160F !important;
+        background-image: none !important;
+    }
+
+    /* 2. Força a grelha na caixa central */
+    .vitrine-card {
+        background-color: #FFFFFF !important;
+        background-image: url('fundo-claro.jpg') !important;
+        background-blend-mode: multiply !important;
+        background-attachment: fixed !important;
+    }
+    
+    /* 3. Força a cor dos textos para não sumirem */
+    .vitrine-titulo { color: #1a365d !important; }
+    .vitrine-subtitulo { color: #4a5568 !important; }
+</style>
 </head>
-<body class="vitrine-fundo body-sem-margem"></body>
+<body class="tema-claro vitrine-fundo body-sem-margem"></body>
     <!-- LOGÓTIPO CLICÁVEL NO CABEÇALHO -->
     <header class="upbar">
         <div class="flex-center">
