@@ -56,33 +56,36 @@
             <button class="btn-fechar-menu-mobile" onclick="document.getElementById('menu-lateral').classList.add('oculta')">✕ Fechar Menu</button>
             
             <ul class="menu-lista">
-                <li class="menu-item"><a href="index.html" class="menu-link-ativo">Início</a></li>
-                <li class="menu-item"><a href="sobre-nos.html" class="menu-link">Sobre nós</a></li>
-                <li class="menu-item"><a href="perfil.html" class="menu-link">Meu Perfil</a></li>
+                <li class="menu-item"><a href="index.html" class="menu-link-ativo">Cardápio</a></li>
+                <li class="menu-item"><a href="sobre-nos.html" class="menu-link">Casarão</a></li>
+                <li class="menu-item"><a href="perfil.html" class="menu-link">Endereço</a></li>
             </ul>
         </aside>
 
         <!-- Conteúdo Central -->
         <main class="conteudo-principal">
+            <button id="btn-tema" class="btn-tema" onclick="toggleTema()" style="margin-bottom: 20px; padding: 5px 12px; border-radius: 20px; cursor: pointer; border: 1px solid #cbd5e0; background: white; color: #1e293b; font-weight: bold; display: flex; align-items: center; gap: 5px;">
+        🌙 Escuro
+    </button>
             <div class="container-vitrine">
                 
                 <!-- Card flutuante translúcido -->
                 <div class="vitrine-card">
-                    <h1 class="vitrine-titulo">Sobre o CRM-Digital</h1>
-                    <h3 class="vitrine-subtitulo">Transformando ideias em palavras que conectam.</h3>
+                    <h1 style="color: #1a365d; margin-bottom: 5px;">Bem-vindo ao Casarão</h1>
+<h3 style="color: #D4AF37; margin-top: 0; margin-bottom: 30px; font-style: italic;">Boas histórias pedem boas comidas.</h3>
 
-                    <div class="sobre-texto-container">
-                        <p>Nascemos com um propósito claro: eliminar os intermediários entre a boa escrita e os clientes que precisam dela. Ao invés de depender das altas taxas e burocracias das plataformas de marketplace tradicionais, decidimos criar nosso próprio espaço.</p>
-                        
-                        <p>Somos focados em <strong>Escrita Criativa, Redação Estratégica (SEO) e Copywriting</strong>. Nosso objetivo não é apenas entregar um texto, mas arquitetar mensagens que engajam o seu público-alvo e convertem acessos em resultados reais.</p>
-                        
-                        <p>Toda a estrutura que você vê aqui foi construída do zero, combinando tecnologia de ponta no back-end com um atendimento direto e humanizado na linha de frente. Quando você contrata um pacote, está investindo diretamente na qualidade do serviço.</p>
-                    </div>
+<div class="sobre-texto-container">
+    <p>Nascemos com um propósito claro: oferecer muito mais do que apenas uma refeição, mas uma experiência que fica na memória. O Casarão Pub e Restaurante é o ponto de encontro perfeito onde o ambiente rústico e acolhedor se une à verdadeira gastronomia de pub.</p>
 
-                    <div class="sobre-missao-box">
-                        <h4 class="sobre-missao-titulo">Nossa Missão</h4>
-                        <p class="sobre-missao-texto">Fornecer conteúdo textual autêntico, criativo e de alta performance, valorizando a comunicação direta com nossos clientes.</p>
-                    </div>
+    <p>Somos focados em criar momentos únicos. Nossos hambúrgueres artesanais, porções generosas e bebidas geladas são preparados com ingredientes selecionados e muito cuidado. Nosso objetivo não é apenas saciar a sua fome, mas proporcionar um espaço onde amigos e famílias possam rir, relaxar e celebrar a vida.</p>
+
+    <p>Toda a estrutura que você vê aqui, desde o nosso espaço físico agradável até a facilidade do nosso cardápio digital, foi pensada para o seu conforto. Quando você escolhe o Casarão, está escolhendo qualidade, sabor autêntico e muita energia boa.</p>
+</div>
+
+<div class="sobre-missao-box" style="margin-top: 40px; padding: 20px; background-color: #f8fafc; border-radius: 8px; border-left: 4px solid #D4AF37;">
+    <h4 class="sobre-missao-titulo" style="color: #1a365d; margin-top: 0;">Nossa Missão</h4>
+    <p class="sobre-missao-texto" style="color: #4a5568; margin: 0;">Servir pratos deliciosos em um ambiente vibrante e acolhedor, valorizando o atendimento humanizado e a conexão real com cada cliente que cruza a nossa porta ou pede no nosso delivery.</p>
+</div>
                 </div>
 
             </div>

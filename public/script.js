@@ -36,7 +36,7 @@ const areaAdminProdutos = document.getElementById('area-admin-produtos');
 // 2. AUTENTICAÇÃO E ESTADO DO USUÁRIO
 // ==========================================
 onAuthStateChanged(auth, (user) => {
-    if (user) {
+    if(user) {
         usuarioAtualUid = user.uid;
         
         // --- INÍCIO DA TRAVA DE SEGURANÇA LGPD ---
@@ -44,24 +44,33 @@ onAuthStateChanged(auth, (user) => {
         const modalTermos = document.getElementById('modal-termos-overlay');
         
         // Se a pessoa NÃO aceitou os termos ainda, mostramos a trava!
-        if (!termosAceitos && modalTermos) {
+        if(!termosAceitos && modalTermos) {
             modalTermos.classList.remove('oculto');
         }
         // --- FIM DA TRAVA DE SEGURANÇA ---
         
-        if (areaDeslogada) areaDeslogada.classList.add('oculto');
-        if (areaLogada) areaLogada.classList.remove('oculto');
-        if (userEmailSpan) userEmailSpan.innerText = user.email;
-        if (userFoto) {
+        if(areaDeslogada) areaDeslogada.classList.add('oculto');
+        if(areaLogada) areaLogada.classList.remove('oculto');
+        if(userEmailSpan) userEmailSpan.innerText = user.email;
+        if(userFoto) {
             userFoto.src = user.photoURL || "https://www.gravatar.com/avatar/?d=mp";
             userFoto.setAttribute('referrerpolicy', 'no-referrer');
             userFoto.style.display = 'block';
         }
-        if (userUidSpan) {
+        if(userUidSpan) {
             const idCurto = user.uid.substring(0, 8).toUpperCase();
             userUidSpan.innerText = "ID: #" + idCurto;
             userUidSpan.dataset.uid = user.uid;
         }
+
+        // CARREGA OS DADOS DO PERFIL AUTOMATICAMENTE (Se estiver na página Meu Perfil)
+        const inputRuaPerfil = document.getElementById('perfil-rua');
+        const inputBairroPerfil = document.getElementById('perfil-bairro');
+        const inputTelefonePerfil = document.getElementById('perfil-telefone');
+        
+        if(inputRuaPerfil) inputRuaPerfil.value = localStorage.getItem(`perfil_rua_${user.uid}`) || '';
+        if(inputBairroPerfil) inputBairroPerfil.value = localStorage.getItem(`perfil_bairro_${user.uid}`) || '';
+        if(inputTelefonePerfil) inputTelefonePerfil.value = localStorage.getItem(`perfil_telefone_${user.uid}`) || '';
 
         // Sincroniza usuário com o Backend Python/Node
         fetch('/api/sync_user', {
@@ -76,31 +85,31 @@ onAuthStateChanged(auth, (user) => {
         }).catch(err => console.error(err));
 
         // Controle de Acesso Admin
-        if (user.email === "pedroeliasm08@gmail.com") {
+        if(user.email === "pedroeliasm08@gmail.com") {
             ehAdmin = true;
-            if (btnAdmin) btnAdmin.classList.remove('oculto');
-            if (areaAdminProdutos) areaAdminProdutos.classList.remove('oculto');
+            if(btnAdmin) btnAdmin.classList.remove('oculto');
+            if(areaAdminProdutos) areaAdminProdutos.classList.remove('oculto');
         } else {
             ehAdmin = false;
-            if (btnAdmin) btnAdmin.classList.add('oculto');
-            if (areaAdminProdutos) areaAdminProdutos.classList.add('oculto');
+            if(btnAdmin) btnAdmin.classList.add('oculto');
+            if(areaAdminProdutos) areaAdminProdutos.classList.add('oculto');
         }
     } else {
         ehAdmin = false;
         usuarioAtualUid = null;
-        if (areaDeslogada) areaDeslogada.classList.remove('oculto');
-        if (areaLogada) areaLogada.classList.add('oculto');
-        if (btnAdmin) btnAdmin.classList.add('oculto');
-        if (areaAdminProdutos) areaAdminProdutos.classList.add('oculto');
+        if(areaDeslogada) areaDeslogada.classList.remove('oculto');
+        if(areaLogada) areaLogada.classList.add('oculto');
+        if(btnAdmin) btnAdmin.classList.add('oculto');
+        if(areaAdminProdutos) areaAdminProdutos.classList.add('oculto');
     }
 
     // Tenta carregar os produtos caso estejamos na tela de cardápio
-    if (document.getElementById('container-categorias')) {
+    if(document.getElementById('container-categorias')) {
         window.carregarProdutos();
     }
 });
 
-if (btnLogout) {
+if(btnLogout) {
     btnLogout.addEventListener('click', () => {
         import("https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js").then((module) => {
             module.signOut(auth).then(() => {
@@ -114,23 +123,30 @@ if (btnLogout) {
 // 3. INTERAÇÕES GERAIS DE UI (MENU E TEMAS)
 // ==========================================
 const btnToggle = document.getElementById('btn-toggle');
-if (btnToggle) {
+if(btnToggle) {
     btnToggle.addEventListener('click', () => {
         const menu = document.getElementById('menu-lateral');
-        if (menu) menu.classList.toggle('oculta');
+        if(menu) menu.classList.toggle('oculta');
     });
 }
 
-const btnTema = document.getElementById('btn-tema');
-if (btnTema) {
-    btnTema.addEventListener('click', () => {
-        document.body.classList.toggle('tema-escuro');
-        if (document.body.classList.contains('tema-escuro')) {
-            btnTema.innerHTML = '☀️ Claro';
+// Expõe a função do tema para o onClick do HTML
+window.toggleTema = function() {
+    document.body.classList.toggle('tema-escuro');
+    const botoesTema = document.querySelectorAll('.btn-tema'); // Pega todos os botões de tema (nas 3 páginas)
+    
+    botoesTema.forEach(btn => {
+        if(document.body.classList.contains('tema-escuro')) {
+            btn.innerHTML = '☀️ Claro';
         } else {
-            btnTema.innerHTML = '🌙 Escuro';
+            btn.innerHTML = '🌙 Escuro';
         }
     });
+};
+
+const btnTemaPrincipal = document.getElementById('btn-tema');
+if(btnTemaPrincipal && !btnTemaPrincipal.getAttribute('onclick')) {
+    btnTemaPrincipal.addEventListener('click', window.toggleTema);
 }
 
 // ==========================================
@@ -138,7 +154,7 @@ if (btnTema) {
 // ==========================================
 window.carregarProdutos = async function() {
     const container = document.getElementById('container-categorias');
-    if (!container) return; 
+    if(!container) return;
 
     try {
         const resposta = await fetch('/api/produtos');
@@ -147,7 +163,7 @@ window.carregarProdutos = async function() {
         container.innerHTML = '';
         window.produtosCarregados = {};
 
-        if (!produtosDoBanco || produtosDoBanco.length === 0) {
+        if(!produtosDoBanco || produtosDoBanco.length === 0) {
             container.innerHTML = '<p style="text-align: center; width: 100%; color: var(--cor-texto-mutado); font-weight: 500;">O cardápio está sendo preparado. Volte em breve!</p>';
             return;
         }
@@ -156,11 +172,11 @@ window.carregarProdutos = async function() {
         produtosDoBanco.forEach(prod => {
             window.produtosCarregados[prod.id] = prod;
             const cat = prod.categoria || 'Destaques';
-            if (!categorias[cat]) categorias[cat] = [];
+            if(!categorias[cat]) categorias[cat] = [];
             categorias[cat].push(prod);
         });
 
-        for (const [nomeCategoria, produtos] of Object.entries(categorias)) {
+        for(const [nomeCategoria, produtos] of Object.entries(categorias)) {
             let htmlPrateleira = `
                 <div class="secao-categoria">
                     <div class="cabecalho-categoria">
@@ -169,6 +185,7 @@ window.carregarProdutos = async function() {
                     </div>
                     <div class="prateleira">
             `;
+
             produtos.forEach(prod => {
                 const valorFormatado = parseFloat(prod.valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
                 const urlImagem = prod.imagem_url ? prod.imagem_url : "https://res.cloudinary.com/demo/image/upload/v1312461204/sample.jpg";
@@ -186,8 +203,7 @@ window.carregarProdutos = async function() {
                             <p class="produto-descricao" title="${prod.descricao}">${prod.descricao}</p>
                             <span class="link-ler-mais" onclick="window.abrirModalLeitura('${prod.id}')" style="color: var(--cor-primaria, #D4AF37); cursor: pointer; font-size:14.4px; font-weight: bold; margin-bottom: 10px; display: inline-block;">Ler detalhes</span>
                             
-                            <!-- BOTAO ALTERADO PARA ADICIONAR AO CARRINHO -->
-                            <button class="btn-comprar-preco" onclick="adicionarAoCarrinho('${prod.nome.replace(/'/g, "\\'")}', ${prod.valor})">
+                            <button class="btn-comprar-preco" onclick="window.adicionarAoCarrinho('${prod.nome.replace(/'/g, "\\'")}', ${prod.valor})">
                                 ${valorFormatado}
                             </button>
                             ${botaoExcluir}
@@ -212,11 +228,9 @@ let layoutAtual = 'grid';
 
 window.verMais = function(categoria) {
     categoriaAtualVerMais = categoria;
-    
     document.getElementById('container-categorias').classList.add('oculto');
     document.getElementById('tela-ver-mais').classList.remove('oculto');
     document.getElementById('titulo-ver-mais').innerText = categoria;
-    
     document.getElementById('select-ordenacao').value = 'padrao';
     window.renderizarCategoriaFiltrada();
 };
@@ -232,7 +246,7 @@ window.mudarLayout = function(tipo) {
     const btnGrid = document.getElementById('btn-grid');
     const btnLista = document.getElementById('btn-lista');
 
-    if (tipo === 'lista') {
+    if(tipo === 'lista') {
         grid.classList.add('modo-lista');
         btnLista.classList.add('ativo');
         btnGrid.classList.remove('ativo');
@@ -254,15 +268,10 @@ window.renderizarCategoriaFiltrada = function() {
     const ordenacao = document.getElementById('select-ordenacao').value;
     let produtosFiltrados = Object.values(window.produtosCarregados).filter(p => (p.categoria || 'Destaques') === categoriaAtualVerMais);
     
-    if (ordenacao === 'preco-asc') {
-        produtosFiltrados.sort((a, b) => a.valor - b.valor); 
-    } else if (ordenacao === 'preco-desc') {
-        produtosFiltrados.sort((a, b) => b.valor - a.valor); 
-    } else if (ordenacao === 'az') {
-        produtosFiltrados.sort((a, b) => a.nome.localeCompare(b.nome)); 
-    } else if (ordenacao === 'za') {
-        produtosFiltrados.sort((a, b) => b.nome.localeCompare(a.nome)); 
-    }
+    if(ordenacao === 'preco-asc') produtosFiltrados.sort((a, b) => a.valor - b.valor);
+    else if(ordenacao === 'preco-desc') produtosFiltrados.sort((a, b) => b.valor - a.valor);
+    else if(ordenacao === 'az') produtosFiltrados.sort((a, b) => a.nome.localeCompare(b.nome));
+    else if(ordenacao === 'za') produtosFiltrados.sort((a, b) => b.nome.localeCompare(a.nome));
 
     produtosFiltrados.forEach(prod => {
         const valorFormatado = parseFloat(prod.valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
@@ -275,17 +284,14 @@ window.renderizarCategoriaFiltrada = function() {
         container.innerHTML += `
             <div class="card-produto" style="max-width: none;">
                 <img src="${urlImagem}" alt="${prod.nome}" class="img-produto" onerror="this.src='https://res.cloudinary.com/demo/image/upload/v1312461204/sample.jpg'">
-                
                 <div class="area-info-produto">
                     <div style="flex: 1;">
                         <div class="tag-nome-produto" title="${prod.nome}">${prod.nome}</div>
                         <p class="produto-descricao" title="${prod.descricao}">${prod.descricao}</p>
                         <span class="link-ler-mais" onclick="window.abrirModalLeitura('${prod.id}')" style="color: var(--cor-primaria, #E11D48); cursor: pointer; font-size:14.4px; font-weight: bold; margin-bottom: 10px; display: inline-block;">Ler detalhes</span>
                     </div>
-                    
                     <div style="display: flex; align-items: center; margin-top: auto;">
-                        <!-- BOTAO ALTERADO PARA ADICIONAR AO CARRINHO -->
-                        <button class="btn-comprar-preco" onclick="adicionarAoCarrinho('${prod.nome.replace(/'/g, "\\'")}', ${prod.valor})">
+                        <button class="btn-comprar-preco" onclick="window.adicionarAoCarrinho('${prod.nome.replace(/'/g, "\\'")}', ${prod.valor})">
                             ${valorFormatado}
                         </button>
                         ${botaoExcluir}
@@ -301,91 +307,80 @@ window.renderizarCategoriaFiltrada = function() {
 // ==========================================
 let carrinhoDeCompras = [];
 
-// Precisa estar no "window" para os botões do HTML conseguirem chamar
 window.adicionarAoCarrinho = function(nomeProduto, precoProduto) {
-    carrinhoDeCompras.push({
-        nome: nomeProduto,
-        preco: parseFloat(precoProduto)
-    });
-    
-    atualizarBotaoCarrinho();
-    
-    // Pequeno aviso que some rápido no mobile
-    // alert(`🛒 ${nomeProduto} adicionado à sacola!`);
+    carrinhoDeCompras.push({ nome: nomeProduto, preco: parseFloat(precoProduto) });
+    window.atualizarBotaoCarrinho();
 };
 
-function atualizarBotaoCarrinho() {
+window.atualizarBotaoCarrinho = function() {
     const btnCarrinho = document.getElementById('btn-carrinho-flutuante');
     const spanQtd = document.getElementById('qtd-carrinho');
     const spanTotal = document.getElementById('total-carrinho');
     
-    if (!btnCarrinho) return;
+    if(!btnCarrinho) return;
 
-    if (carrinhoDeCompras.length > 0) {
+    if(carrinhoDeCompras.length > 0) {
         btnCarrinho.classList.remove('oculto');
         spanQtd.innerText = carrinhoDeCompras.length;
-        
         let valorTotal = carrinhoDeCompras.reduce((soma, item) => soma + item.preco, 0);
         spanTotal.innerText = valorTotal.toFixed(2).replace('.', ',');
     } else {
         btnCarrinho.classList.add('oculto');
     }
-}
+};
 
 // ==========================================
 // LÓGICA DE CHECKOUT E WHATSAPP
 // ==========================================
 window.abrirModalCheckout = function() {
     document.getElementById('modal-checkout-overlay').classList.remove('oculto');
-    
     const listaHtml = document.getElementById('checkout-lista-itens');
     
-    // Adiciona o botão de Esvaziar no topo da lista
     listaHtml.innerHTML = `
         <div style="text-align: right; margin-bottom: 15px;">
-            <span onclick="window.esvaziarCarrinho()" style="color: #ef4444; font-size: 0.85rem; cursor: pointer; text-decoration: underline; font-weight: bold;">🗑️ Esvaziar Sacola</span>
+            <span onclick="window.esvaziarCarrinho()" style="color: #ef4444; font-size:13.6px; cursor: pointer; text-decoration: underline; font-weight: bold;">🗑️ Esvaziar Sacola</span>
         </div>
-    `; 
+    `;
     
     let total = 0;
     carrinhoDeCompras.forEach((item, index) => {
-        // Adicionada uma linha pontilhada e um botão "X" de exclusão para cada item
         listaHtml.innerHTML += `
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; color: #475569; padding-bottom: 8px; border-bottom: 1px dashed #e2e8f0;">
             <span style="flex: 1;">1x ${item.nome}</span>
             <span style="font-weight: bold; margin-right: 15px;">R$ ${item.preco.toFixed(2).replace('.', ',')}</span>
-            <button onclick="window.removerItemCarrinho(${index})" style="background: transparent; border: none; color: #ef4444; font-size: 1.1rem; cursor: pointer; padding: 0;" title="Remover item">✕</button>
+            <button onclick="window.removerItemCarrinho(${index})" style="background: transparent; border: none; color: #ef4444; font-size:17.6px; cursor: pointer; padding: 0;" title="Remover item">✕</button>
         </div>`;
         total += item.preco;
     });
     
     document.getElementById('checkout-qtd').innerText = carrinhoDeCompras.length;
     document.getElementById('checkout-total-valor').innerText = total.toFixed(2).replace('.', ',');
+
+    // MAGIA: Puxa o endereço salvo do cliente automaticamente para o checkout!
+    if (usuarioAtualUid) {
+        const ruaSalva = localStorage.getItem(`perfil_rua_${usuarioAtualUid}`);
+        const bairroSalvo = localStorage.getItem(`perfil_bairro_${usuarioAtualUid}`);
+        
+        if(ruaSalva && document.getElementById('pedido-rua')) document.getElementById('pedido-rua').value = ruaSalva;
+        if(bairroSalvo && document.getElementById('pedido-bairro')) document.getElementById('pedido-bairro').value = bairroSalvo;
+    }
 };
 
-// ==========================================
-// NOVAS FUNÇÕES: REMOVER E ESVAZIAR
-// ==========================================
 window.removerItemCarrinho = function(index) {
-    // Remove 1 item exatamente na posição 'index' que foi clicada
-    carrinhoDeCompras.splice(index, 1); 
-    
-    atualizarBotaoCarrinho();
-    
-    // Se apagou o último item da lista, fecha a janela automaticamente
-    if (carrinhoDeCompras.length === 0) {
-        fecharModalCheckout();
+    carrinhoDeCompras.splice(index, 1);
+    window.atualizarBotaoCarrinho();
+    if(carrinhoDeCompras.length === 0) {
+        window.fecharModalCheckout();
     } else {
-        // Caso contrário, apenas atualiza a tela para mostrar a lista nova
-        abrirModalCheckout(); 
+        window.abrirModalCheckout();
     }
 };
 
 window.esvaziarCarrinho = function() {
-    if (confirm("Tem a certeza que deseja remover todos os itens da sacola?")) {
-        carrinhoDeCompras = []; // Zera a memória do carrinho
-        atualizarBotaoCarrinho();
-        fecharModalCheckout();
+    if(confirm("Tem a certeza que deseja remover todos os itens da sacola?")) {
+        carrinhoDeCompras = []; 
+        window.atualizarBotaoCarrinho();
+        window.fecharModalCheckout();
     }
 };
 
@@ -396,12 +391,8 @@ window.fecharModalCheckout = function() {
 window.verificarTroco = function() {
     const formaPagamento = document.getElementById('pedido-pagamento').value;
     const areaTroco = document.getElementById('area-troco');
-    
-    if (formaPagamento === 'Dinheiro') {
-        areaTroco.classList.remove('oculto');
-    } else {
-        areaTroco.classList.add('oculto');
-    }
+    if(formaPagamento === 'Dinheiro') areaTroco.classList.remove('oculto');
+    else areaTroco.classList.add('oculto');
 };
 
 window.enviarPedidoWhatsApp = function() {
@@ -411,11 +402,11 @@ window.enviarPedidoWhatsApp = function() {
     const troco = document.getElementById('pedido-troco').value;
     const obs = document.getElementById('pedido-obs').value;
     
-    if (!rua || !bairro) {
-        alert("Por favor, preencha o seu endereço para a entrega!");
+    if(!rua || !bairro) {
+        alert("Por favor, preencha o seu endereço (Rua e Bairro) para a entrega!");
         return;
     }
-    if (!pagamento) {
+    if(!pagamento) {
         alert("Por favor, escolha como deseja pagar.");
         return;
     }
@@ -424,38 +415,61 @@ window.enviarPedidoWhatsApp = function() {
     
     let texto = `*NOVO PEDIDO!* 🍔🛵\n\n`;
     texto += `*Resumo do Pedido:*\n`;
-    
     carrinhoDeCompras.forEach(item => {
         texto += `▪️ 1x ${item.nome} (R$ ${item.preco.toFixed(2).replace('.', ',')})\n`;
     });
     
     texto += `\n*Total a pagar:* R$ ${total.toFixed(2).replace('.', ',')}\n`;
     texto += `-----------------------\n`;
-    texto += `*Endereço de Entrega:*\n${rua} - ${bairro}\n\n`;
+    texto += `*Endereço de Entrega:*\n📍 Rua/Nº: ${rua}\n🏘️ Bairro: ${bairro}\n\n`;
     texto += `*Pagamento:* ${pagamento}\n`;
     
-    if (pagamento === 'Dinheiro' && troco) {
+    if(pagamento === 'Dinheiro' && troco) {
         texto += `*Troco para:* R$ ${troco}\n`;
     }
-    
-    if (obs) {
+    if(obs) {
         texto += `\n*Observações:* ${obs}\n`;
     }
-
-    // Número do restaurante configurado aqui
-    const numeroWhatsApp = "5532999082129"; 
-    const linkZap = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(texto)}`;
     
+    const numeroWhatsApp = "5532999082129";
+    const linkZap = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(texto)}`;
     window.open(linkZap, '_blank');
 };
 
+// ==========================================
+// 4.5 LÓGICA DE SALVAR PERFIL DO CLIENTE
+// ==========================================
+window.salvarPerfil = function() {
+    if(!usuarioAtualUid) {
+        alert("Você precisa estar logado para salvar as configurações.");
+        return;
+    }
+
+    const telefone = document.getElementById('perfil-telefone') ? document.getElementById('perfil-telefone').value.trim() : '';
+    const rua = document.getElementById('perfil-rua') ? document.getElementById('perfil-rua').value.trim() : '';
+    const bairro = document.getElementById('perfil-bairro') ? document.getElementById('perfil-bairro').value.trim() : '';
+
+    // Salva na memória do celular do cliente (para auto-preencher sempre)
+    localStorage.setItem(`perfil_telefone_${usuarioAtualUid}`, telefone);
+    localStorage.setItem(`perfil_rua_${usuarioAtualUid}`, rua);
+    localStorage.setItem(`perfil_bairro_${usuarioAtualUid}`, bairro);
+
+    // Envia para o banco de dados via API (Opcional/Para o futuro Back-end)
+    fetch('/api/sync_user_profile', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ uid: usuarioAtualUid, telefone, rua, bairro })
+    }).catch(err => console.log("Dados salvos localmente."));
+
+    alert("Perfil atualizado com sucesso! Seu endereço será preenchido automaticamente nos próximos pedidos.");
+};
 
 // ==========================================
 // FUNÇÕES DE ADMINISTRAÇÃO E MODAIS
 // ==========================================
 window.abrirModalLeitura = function(idProduto) {
     const produto = window.produtosCarregados[idProduto];
-    if (!produto) return;
+    if(!produto) return;
     document.getElementById('titulo-leitura').innerText = produto.nome;
     document.getElementById('texto-leitura').innerText = produto.descricao;
     document.getElementById('overlay-produto').style.display = 'block';
@@ -484,7 +498,7 @@ window.salvarProduto = async function() {
     const valor = document.getElementById('prod-valor').value;
     const imagem = document.getElementById('prod-imagem').value.trim();
 
-    if (!nome || !valor) {
+    if(!nome || !valor) {
         alert("O Nome e o Valor são obrigatórios!");
         return;
     }
@@ -508,7 +522,7 @@ window.salvarProduto = async function() {
             body: JSON.stringify(novoProduto)
         });
 
-        if (resposta.ok) {
+        if(resposta.ok) {
             window.fecharModalProduto();
             document.getElementById('prod-nome').value = '';
             document.getElementById('prod-descricao').value = '';
@@ -527,12 +541,12 @@ window.salvarProduto = async function() {
 };
 
 window.deletarProduto = async function(idProduto) {
-    if (!confirm("Tem certeza que deseja excluir este item do cardápio?")) return;
+    if(!confirm("Tem certeza que deseja excluir este item do cardápio?")) return;
     try {
         const res = await fetch(`/api/produtos/${idProduto}`, { method: 'DELETE' });
-        if (res.ok) window.carregarProdutos();
+        if(res.ok) window.carregarProdutos();
         else alert("Erro ao tentar remover o item.");
-    } catch (e) {
+    } catch(e) {
         alert("Erro de conexão com o banco de dados.");
     }
 };
@@ -541,20 +555,20 @@ window.deletarProduto = async function(idProduto) {
 // 5. LÓGICA DE LEADS (PAINEL ADMIN)
 // ==========================================
 function formatarTexto(texto) {
-    if (!texto || texto === 'undefined') return '-';
+    if(!texto || texto === 'undefined') return '-';
     return texto.replace(/_/g, ' ').toUpperCase();
 }
 
 window.carregarClientes = async function() {
     const tabela = document.getElementById('lista-corpo');
-    if (!tabela) return;
-
+    if(!tabela) return;
+    
     try {
         const resposta = await fetch('/api/clientes');
         const clientes = await resposta.json();
         
         tabela.innerHTML = '';
-        if (clientes.length === 0) {
+        if(clientes.length === 0) {
             tabela.innerHTML = '<tr><td colspan="5" style="text-align: center;">Nenhum lead encontrado.</td></tr>';
             return;
         }
@@ -563,35 +577,36 @@ window.carregarClientes = async function() {
             const linha = document.createElement('tr');
             const nomeStr = (cliente.nome && cliente.nome !== 'undefined') ? cliente.nome : 'Sem Nome';
             const telStr = (cliente.telefone && cliente.telefone !== 'undefined') ? cliente.telefone : '-';
-            const poloStr = cliente.polo || 'indefinido';
+            const bairroStr = cliente.bairro || 'Indefinido';
+            const ruaStr = cliente.rua || '-';
             const statusStr = cliente.status || 'indefinido';
             const nomeSafe = nomeStr.replace(/'/g, "\\'");
             
             linha.innerHTML = `
                 <td><strong>${nomeStr}</strong></td>
                 <td>${telStr}</td>
-                <td><span class="badge polo">${formatarTexto(poloStr)}</span></td>
+                <td><span class="badge polo" title="${ruaStr}">${formatarTexto(bairroStr)}</span></td>
                 <td><span class="badge status ${statusStr}">${formatarTexto(statusStr)}</span></td>
                 <td>
-                    <button class="btn-editar" onclick="window.prepararEdicao('${cliente.id}', '${nomeSafe}', '${telStr}', '${poloStr}', '${statusStr}')">Editar</button>
+                    <button class="btn-editar" onclick="window.prepararEdicao('${cliente.id}', '${nomeSafe}', '${telStr}', '${ruaStr}', '${bairroStr}', '${statusStr}')">Editar</button>
                     <button class="btn-excluir" onclick="window.deletarCliente('${cliente.id}')">Excluir</button>
                 </td>
             `;
             tabela.appendChild(linha);
         });
-    } catch (erro) {
+    } catch(erro) {
         console.error("Erro ao carregar clientes:", erro);
         tabela.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #ef4444;">Erro ao carregar os dados.</td></tr>';
     }
 };
 
 window.deletarCliente = async function(id) {
-    if (confirm("Tem certeza que deseja excluir este Lead permanentemente?")) {
+    if(confirm("Tem certeza que deseja excluir este Lead permanentemente?")) {
         try {
             const resposta = await fetch(`/api/clientes/${id}`, { method: 'DELETE' });
-            if (resposta.ok) window.carregarClientes();
+            if(resposta.ok) window.carregarClientes();
             else alert("Erro ao tentar excluir o cliente.");
-        } catch (erro) {
+        } catch(erro) {
             alert("Erro de conexão ao excluir.");
         }
     }
@@ -603,26 +618,28 @@ window.mostrarFormulario = function() {
     document.getElementById('input-nome').value = '';
     document.getElementById('input-telefone').value = '';
     
-    const selectPolo = document.getElementById('select-polo');
-    if (selectPolo) selectPolo.value = 'lagoa_dourada';
+    // Substituído o Select de Polo pelos inputs de Rua e Bairro
+    if(document.getElementById('input-rua')) document.getElementById('input-rua').value = '';
+    if(document.getElementById('input-bairro')) document.getElementById('input-bairro').value = '';
     
     const selectStatus = document.getElementById('select-status');
-    if (selectStatus) selectStatus.value = 'prospeccao';
+    if(selectStatus) selectStatus.value = 'prospeccao';
     
     document.getElementById('form-cadastro').style.display = 'block';
 };
 
-window.prepararEdicao = function(id, nome, telefone, polo, status) {
+window.prepararEdicao = function(id, nome, telefone, rua, bairro, status) {
     clienteEditandoId = id;
     document.querySelector('#form-cadastro h2').innerText = "Editar Lead";
     document.getElementById('input-nome').value = nome !== '-' ? nome : '';
     document.getElementById('input-telefone').value = telefone !== '-' ? telefone : '';
     
-    const poloSelect = document.getElementById('select-polo');
-    if (poloSelect) poloSelect.value = polo;
+    // Substituído Polo por Rua e Bairro
+    if(document.getElementById('input-rua')) document.getElementById('input-rua').value = rua !== '-' ? rua : '';
+    if(document.getElementById('input-bairro')) document.getElementById('input-bairro').value = bairro !== 'Indefinido' ? bairro : '';
     
     const statusSelect = document.getElementById('select-status');
-    if (statusSelect) statusSelect.value = status;
+    if(statusSelect) statusSelect.value = status;
     
     document.getElementById('form-cadastro').style.display = 'block';
 };
@@ -635,12 +652,22 @@ window.fecharFormulario = function() {
 window.salvarCadastro = async function() {
     const nomeInput = document.getElementById('input-nome').value.trim();
     const telefoneInput = document.getElementById('input-telefone').value.trim();
-    const poloInput = document.getElementById('select-polo').value;
+    
+    // Agora salvamos Rua e Bairro no CRM (Se os inputs existirem na página Admin)
+    const ruaInput = document.getElementById('input-rua') ? document.getElementById('input-rua').value.trim() : '';
+    const bairroInput = document.getElementById('input-bairro') ? document.getElementById('input-bairro').value.trim() : '';
     const statusInput = document.getElementById('select-status').value;
 
-    if (!nomeInput) return alert("Por favor, preencha o nome do Lead.");
+    if(!nomeInput) return alert("Por favor, preencha o nome do Lead.");
 
-    const dadosCliente = { nome: nomeInput, telefone: telefoneInput, polo: poloInput, status: statusInput };
+    const dadosCliente = { 
+        nome: nomeInput, 
+        telefone: telefoneInput, 
+        rua: ruaInput, 
+        bairro: bairroInput, 
+        status: statusInput
+    };
+    
     const url = clienteEditandoId ? `/api/clientes/${clienteEditandoId}` : '/api/clientes';
     const metodo = clienteEditandoId ? 'PUT' : 'POST';
 
@@ -650,15 +677,14 @@ window.salvarCadastro = async function() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(dadosCliente)
         });
-
-        if (resposta.ok) {
+        if(resposta.ok) {
             alert(clienteEditandoId ? "Lead atualizado com sucesso!" : "Lead cadastrado com sucesso!");
             window.fecharFormulario();
             window.carregarClientes();
         } else {
             alert("Erro no servidor ao tentar salvar.");
         }
-    } catch (erro) {
+    } catch(erro) {
         alert("Erro de conexão.");
     }
 };
@@ -666,18 +692,17 @@ window.salvarCadastro = async function() {
 // ==========================================
 // 6. INICIALIZAÇÃO
 // ==========================================
-if (document.getElementById('lista-corpo')) {
+if(document.getElementById('lista-corpo')) {
     window.carregarClientes();
 }
+
 // ==========================================
 // LÓGICA DO MODAL LGPD (TERMOS)
 // ==========================================
 window.validarTermos = function() {
     const checkbox = document.getElementById('check-termos');
     const botao = document.getElementById('btn-aceitar-termos');
-    
-    // Se marcou, libera o botão. Se desmarcou, bloqueia.
-    if (checkbox.checked) {
+    if(checkbox.checked) {
         botao.disabled = false;
     } else {
         botao.disabled = true;
@@ -685,11 +710,7 @@ window.validarTermos = function() {
 };
 
 window.aceitarTermos = function() {
-    if (!usuarioAtualUid) return; // Segurança
-    
-    // Salva na memória do navegador (LocalStorage) que este utilizador já aceitou
+    if(!usuarioAtualUid) return;
     localStorage.setItem(`termos_aceitos_${usuarioAtualUid}`, 'true');
-    
-    // Esconde o modal e libera o site
     document.getElementById('modal-termos-overlay').classList.add('oculto');
 };

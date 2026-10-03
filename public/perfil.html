@@ -40,13 +40,16 @@
             <button class="btn-fechar-menu-mobile" onclick="document.getElementById('menu-lateral').classList.add('oculta')">✕ Fechar Menu</button>
             
             <ul class="menu-lista">
-                <li class="menu-item"><a href="index.html" class="menu-link-ativo">Início</a></li>
-                <li class="menu-item"><a href="sobre-nos.html" class="menu-link">Sobre nós</a></li>
-                <li class="menu-item"><a href="perfil.html" class="menu-link">Meu Perfil</a></li>
+                <li class="menu-item"><a href="index.html" class="menu-link-ativo">Cardápio</a></li>
+                <li class="menu-item"><a href="sobre-nos.html" class="menu-link">Casarão</a></li>
+                <li class="menu-item"><a href="perfil.html" class="menu-link">Endereço</a></li>
             </ul>
         </aside>
         
         <main class="conteudo-principal">
+            <button id="btn-tema" class="btn-tema" onclick="toggleTema()" style="margin-bottom: 20px; padding: 5px 12px; border-radius: 20px; cursor: pointer; border: 1px solid #cbd5e0; background: white; color: #1e293b; font-weight: bold; display: flex; align-items: center; gap: 5px;">
+        🌙 Escuro
+    </button>
             <div class="perfil-container">
                 <h2>Configurações da Conta</h2>
                 <p class="perfil-subtitulo">Atualize suas informações de contato e localização para agilizar nossos atendimentos.</p>
@@ -61,15 +64,12 @@
                     <input type="text" id="input-telefone" placeholder="(00) 00000-0000">
                 </div>
 
-                <div class="form-grupo">
-                    <label>Região / Polo (Cidade ou Bairro):</label>
-                    <select id="select-polo">
-                        <option value="lagoa_dourada">Lagoa Dourada</option>
-                        <option value="sao_joao_del_rei">São João del-Rei</option>
-                        <option value="barbacena">Barbacena</option>
-                        <option value="outro">Outra Região</option>
-                    </select>
-                </div>
+                <!-- Endereço de Entrega Detalhado -->
+                 <div class="form-grupo">
+     <label style="border-left: 3px solid #10B981; padding-left: 8px;">Endereço de Entrega</label>
+    <input type="text" id="perfil-rua" class="input-checkout" placeholder="Rua e Número (ex: Rua Direita, 123)" style="margin-bottom: 10px;">
+    <input type="text" id="perfil-bairro" class="input-checkout" placeholder="Bairro">
+</div>
 
                 <button class="btn-salvar-perfil" onclick="salvarPerfil()">Salvar Alterações</button>
             </div>
