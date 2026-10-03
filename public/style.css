@@ -493,18 +493,19 @@ body.body-sem-margem { display: block; height: auto; }
     font-weight: bold;
 }
 
-/* --- Página Index (Vitrine Principal) --- */
 .vitrine-titulo {
-    color: #1a365d; 
-    font-size: 2.5rem; 
-    margin-top: 0; 
+    color: #1a365d !important;
+    font-size: 2.5rem;
+    margin-top: 0;
     margin-bottom: 5px;
+    text-shadow: none !important;
 }
 
 .vitrine-subtitulo {
-    color: #4a5568; 
-    margin-top: 0; 
+    color: #4a5568 !important;
+    margin-top: 0;
     margin-bottom: 30px;
+    text-shadow: none !important;
 }
 
 .vitrine-imagem-container {
@@ -797,11 +798,11 @@ body.body-sem-margem { display: block; height: auto; }
 
 /* ===== NOVO VISUAL VITRINE (SHOPEE STYLE) ===== */
 .vitrine-fundo {
-    background-color: #FAFAFA !important; /* Fundo branco/cinza claro */
-    background-image: url('fundo-claro.jpg') !important; /* Puxa a imagem da grelha */
-    background-repeat: repeat !important; /* Faz o padrão repetir infinitamente */
-    background-attachment: fixed !important; /* Fica pregado na tela ao rolar */
-    background-position: center top !important;
+    /* Fundo Marrom Madeira Escuro global */
+    background: #2A160F !important;
+    background: linear-gradient(135deg, #3E2314 0%, #1A0D09 100%) !important;
+    background-attachment: fixed !important;
+    background-image: none !important; /* Sem imagens aqui fora! */
 }
 
 .logo-bolinha {
@@ -813,11 +814,17 @@ body.body-sem-margem { display: block; height: auto; }
     background-color: white;
 }
 
+/* CAIXA CENTRAL NA FRENTE (MODO CLARO) */
 .vitrine-card {
-    background-color: rgba(255, 255, 255, 0.92);
+    background-color: #FFFFFF !important; /* Fundo base branco da caixa */
+    background-image: url('fundo-claro.jpg') !important; /* A grelha clara aqui dentro */
+    background-blend-mode: multiply !important; /* Garante que o fundo da IA se mistura bem com o branco */
+    background-repeat: repeat !important;
+    background-attachment: fixed !important; /* A arte fica parada enquanto os produtos rolam */
+    
     padding: 40px;
     border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2) !important;
     width: 100%;
     box-sizing: border-box;
 }
@@ -1290,15 +1297,11 @@ body {
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* 1. MUDANÇA DE FUNDOS */
+/* 1. MUDANÇA DE FUNDOS GLOBAIS */
 body.tema-escuro,
 body.tema-escuro.vitrine-fundo {
-    background-color: #000000 !important; /* Fundo preto puro */
-    background-image: url('fundo-escuro.jpg') !important; /* Puxa a Logo Dourada */
-    background-repeat: no-repeat !important; /* NÃO repete, aparece só 1 vez */
-    background-attachment: fixed !important; /* Fica pregado na tela ao rolar */
-    background-position: center center !important; /* Crava exatamente no meio da tela */
-    background-size: contain !important; /* Garante que a logo não fica cortada nas bordas do celular */
+    background-color: #050506 !important; /* Preto liso lá no fundo */
+    background-image: none !important; /* Sem imagens aqui fora! */
     color: #F5F5F5 !important;
 }
 
@@ -1308,9 +1311,16 @@ body.tema-escuro .sidebar {
     border-color: #332910 !important;
 }
 
+/* CAIXA CENTRAL NA FRENTE (MODO ESCURO) */
 body.tema-escuro .vitrine-card {
-    background-color: transparent !important; /* Tira o fundo branco central */
-    box-shadow: none !important;
+    background-color: #141416 !important; /* Fundo base preto/grafite da caixa */
+    background-image: url('fundo-escuro.jpg') !important; /* A logo dourada aqui dentro */
+    background-blend-mode: screen !important; /* Isola o dourado sobre o preto */
+    background-repeat: no-repeat !important;
+    background-position: center center !important; /* Centraliza a logo dourada */
+    background-attachment: fixed !important; /* A logo dourada fica parada no centro da tela */
+    background-size: contain !important; /* Impede a logo de cortar nas laterais do celular */
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5) !important;
 }
 
 body.tema-escuro .card-produto {
