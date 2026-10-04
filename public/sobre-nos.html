@@ -2,14 +2,14 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sobre Nós - CRM Digital</title>
+    <!-- Trava de zoom para mobile -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>O Casarão - Pub e Restaurante</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="tema-claro vitrine-fundo body-sem-margem">
-
-   <!-- Upbar (Navegação Superior) -->
-    <!-- LOGÓTIPO CLICÁVEL NO CABEÇALHO -->
+    
+    <!-- Upbar (Navegação Superior) -->
     <header class="upbar">
         <div class="flex-center">
             <button id="btn-toggle" class="btn-toggle">☰</button>
@@ -17,18 +17,15 @@
                 <img src="logo-crm.png" alt="Logo" class="logo-bolinha" id="nav-logo" onerror="this.style.display='none'">
             </a>
         </div>
-        <!-- ... resto do cabeçalho ... -->
         
-        <!-- Área DESLOGADA: Só aparece se ninguém fez login -->
+        <!-- Área DESLOGADA -->
         <div id="area-deslogada">
             <a href="login.html" class="btn-upbar">Login</a>
             <a href="cadastro.html" class="btn-upbar">Cadastro</a>
         </div>
-
-        <!-- Área LOGADA: Só aparece se tiver alguém logado -->
+        
+        <!-- Área LOGADA -->
         <div id="area-logada" class="area-logada-container oculto">
-            
-            <!-- Perfil: Foto + E-mail + ID -->
             <div class="perfil-card">
                 <img id="user-foto" src="" alt="Perfil" class="perfil-foto">
                 <div class="perfil-info">
@@ -39,7 +36,6 @@
             
             <a href="painel-admin.html" class="btn-upbar btn-destaque oculto" id="btn-admin">Painel Admin</a>
             
-            <!-- Botão de Sair Premium -->
             <button id="btn-logout" class="btn-upbar btn-sair-premium">
                 Sair
             </button>
@@ -48,189 +44,112 @@
 
     <!-- Layout Principal -->
     <div class="layout-vitrine">
-        <!-- Sidebar -->
-       <!-- MENU LATERAL UNIFICADO -->
-    <!-- MENU LATERAL UNIFICADO -->
+        
+        <!-- MENU LATERAL UNIFICADO -->
         <aside class="sidebar oculta" id="menu-lateral">
-            <!-- Botão que só aparece no telemóvel -->
             <button class="btn-fechar-menu-mobile" onclick="document.getElementById('menu-lateral').classList.add('oculta')">✕ Fechar Menu</button>
             
             <ul class="menu-lista">
-                <li class="menu-item"><a href="index.html" class="menu-link-ativo">Cardápio</a></li>
-                <li class="menu-item"><a href="sobre-nos.html" class="menu-link">Casarão</a></li>
+                <li class="menu-item"><a href="index.html" class="menu-link">Cardápio</a></li>
+                <li class="menu-item"><a href="sobre-nos.html" class="menu-link-ativo">Casarão</a></li>
                 <li class="menu-item"><a href="perfil.html" class="menu-link">Endereço</a></li>
             </ul>
         </aside>
-
+        
         <!-- Conteúdo Central -->
         <main class="conteudo-principal">
-            <button id="btn-tema" class="btn-tema" onclick="toggleTema()" style="margin-bottom: 20px; padding: 5px 12px; border-radius: 20px; cursor: pointer; border: 1px solid #cbd5e0; background: white; color: #1e293b; font-weight: bold; display: flex; align-items: center; gap: 5px;">
-        🌙 Escuro
-    </button>
+            <button id="btn-tema" class="btn-tema" onclick="window.toggleTema()" style="margin-bottom: 20px; padding: 5px 12px; border-radius: 20px; cursor: pointer; border: 1px solid #cbd5e0; background: white; color: #1e293b; font-weight: bold; display: flex; align-items: center; gap: 5px;">
+                🌙 Escuro
+            </button>
+            
             <div class="container-vitrine">
-                
                 <!-- Card flutuante translúcido -->
                 <div class="vitrine-card">
                     <h1 style="color: #1a365d; margin-bottom: 5px;">Bem-vindo ao Casarão</h1>
-<h3 style="color: #D4AF37; margin-top: 0; margin-bottom: 30px; font-style: italic;">Boas histórias pedem boas comidas.</h3>
-
-<div class="sobre-texto-container">
-    <p>Nascemos com um propósito claro: oferecer muito mais do que apenas uma refeição, mas uma experiência que fica na memória. O Casarão Pub e Restaurante é o ponto de encontro perfeito onde o ambiente rústico e acolhedor se une à verdadeira gastronomia de pub.</p>
-
-    <p>Somos focados em criar momentos únicos. Nossos hambúrgueres artesanais, porções generosas e bebidas geladas são preparados com ingredientes selecionados e muito cuidado. Nosso objetivo não é apenas saciar a sua fome, mas proporcionar um espaço onde amigos e famílias possam rir, relaxar e celebrar a vida.</p>
-
-    <p>Toda a estrutura que você vê aqui, desde o nosso espaço físico agradável até a facilidade do nosso cardápio digital, foi pensada para o seu conforto. Quando você escolhe o Casarão, está escolhendo qualidade, sabor autêntico e muita energia boa.</p>
-</div>
-
-<div class="sobre-missao-box" style="margin-top: 40px; padding: 20px; background-color: #f8fafc; border-radius: 8px; border-left: 4px solid #D4AF37;">
-    <h4 class="sobre-missao-titulo" style="color: #1a365d; margin-top: 0;">Nossa Missão</h4>
-    <p class="sobre-missao-texto" style="color: #4a5568; margin: 0;">Servir pratos deliciosos em um ambiente vibrante e acolhedor, valorizando o atendimento humanizado e a conexão real com cada cliente que cruza a nossa porta ou pede no nosso delivery.</p>
-</div>
+                    <h3 style="color: #D4AF37; margin-top: 0; margin-bottom: 30px; font-style: italic;">Boas histórias pedem boas comidas.</h3>
+                    
+                    <div class="sobre-texto-container">
+                        <p>Nascemos com um propósito claro: oferecer muito mais do que apenas uma refeição, mas uma experiência que fica na memória. O Casarão Pub e Restaurante é o ponto de encontro perfeito onde o ambiente rústico e acolhedor se une à verdadeira gastronomia de pub.</p>
+                        <p>Somos focados em criar momentos únicos. Nossos hambúrgueres artesanais, porções generosas e bebidas geladas são preparados com ingredientes selecionados e muito cuidado. Nosso objetivo não é apenas saciar a sua fome, mas proporcionar um espaço onde amigos e famílias possam rir, relaxar e celebrar a vida.</p>
+                        <p>Toda a estrutura que você vê aqui, desde o nosso espaço físico agradável até a facilidade do nosso cardápio digital, foi pensada para o seu conforto. Quando você escolhe o Casarão, está escolhendo qualidade, sabor autêntico e muita energia boa.</p>
+                    </div>
+                    
+                    <div class="sobre-missao-box" style="margin-top: 40px; padding: 20px; background-color: #f8fafc; border-radius: 8px; border-left: 4px solid #D4AF37;">
+                        <h4 class="sobre-missao-titulo" style="color: #1a365d; margin-top: 0;">Nossa Missão</h4>
+                        <p class="sobre-missao-texto" style="color: #4a5568; margin: 0;">Servir pratos deliciosos em um ambiente vibrante e acolhedor, valorizando o atendimento humanizado e a conexão real com cada cliente que cruza a nossa porta ou pede no nosso delivery.</p>
+                    </div>
                 </div>
-
             </div>
         </main>
     </div> <!-- Fim Layout Vitrine -->
 
-    <!-- ===== RODAPÉ DO SITE ===== -->
-    <footer class="rodape-site">
-        <div class="rodape-container">
-            <!-- Coluna 1: Logo e Sobre -->
-            <div class="rodape-coluna">
-                <img src="logo-crm.png" alt="Logo CRM Digital" class="rodape-logo" onerror="this.style.display='none'">
-                <p>Transformando ideias em palavras que conectam. Soluções completas de escrita criativa e redação estratégica.</p>
+    <!-- RODAPÉ GLOBAL COM CONFIGURAÇÕES -->
+    <footer style="background-color: #0f172a; padding: 40px 20px; color: white; margin-top: 40px;">
+        <div style="max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px;">
+            <!-- Branding -->
+            <div>
+                <img src="logo-crm.png" alt="Logo Casarão" style="width: 80px; border-radius: 50%; margin-bottom: 15px;" onerror="this.style.display='none'">
+                <p style="color: #cbd5e0; font-size: 0.9rem;">O Casarão Pub e Restaurante. Onde as boas histórias se encontram com a verdadeira gastronomia.</p>
             </div>
             
-            <!-- Coluna 2: Navegação Rápida -->
-            <div class="rodape-coluna">
-                <h4>Navegação</h4>
-                <ul>
-                    <li><a href="index.html">Início</a></li>
-                    <li><a href="servicos.html">Nossos Serviços</a></li>
-                    <li><a href="sobre-nos.html">Sobre o Projeto</a></li>
-                    <li><a href="perfil.html">Meu Perfil</a></li>
+            <!-- Navegação -->
+            <div>
+                <h3 style="color: #38bdf8; margin-bottom: 15px;">Navegação</h3>
+                <ul style="list-style: none; padding: 0; margin: 0; line-height: 2;">
+                    <li><a href="index.html" style="color: #cbd5e0; text-decoration: none;">Cardápio</a></li>
+                    <li><a href="sobre-nos.html" style="color: #cbd5e0; text-decoration: none;">Casarão</a></li>
+                    <li><a href="perfil.html" style="color: #cbd5e0; text-decoration: none;">Endereço</a></li>
                 </ul>
             </div>
             
-            <!-- Coluna 3: Contato -->
-            <div class="rodape-coluna">
-                <h4>Fale Conosco</h4>
-                <p>📞 (00) 00000-0000</p>
-                <p>✉️ pedroeliasm08@gmail.com</p>
-                <p>📍 Região de Atendimento: Digital</p>
+            <!-- Fale Conosco (Dinâmico) -->
+            <div>
+                <h3 style="color: #38bdf8; margin-bottom: 15px;">Fale Conosco</h3>
+                <ul style="list-style: none; padding: 0; margin: 0; color: #cbd5e0; line-height: 2;">
+                    <li>📞 <span id="info-telefone">(00) 00000-0000</span></li>
+                    <li>✉️ <span id="info-email">contato@casaraopub.com</span></li>
+                    <li>📍 Localização: <span id="info-local">Centro</span></li>
+                </ul>
             </div>
         </div>
         
-        <!-- Barra Inferior de Direitos -->
-        <div class="rodape-base">
-            <p>&copy; 2026 CRM Digital - Todos os direitos reservados.</p>
-            <a href="#">Política de Privacidade</a>
+        <div style="border-top: 1px solid #1e293b; margin-top: 30px; padding-top: 20px; text-align: center; color: #64748b; font-size: 0.85rem;">
+            &copy; 2026 Casarão Pub. Todos os direitos reservados.
+        </div>
+
+        <!-- BOTÃO FANTASMA DE CONFIGURAÇÃO (Fica no fundo do site) -->
+        <div style="text-align: center; padding-top: 15px;">
+            <button id="btn-config-fantasma" onclick="window.abrirModalConfigInfo()" class="oculto" style="background: transparent; color: rgba(100,116,139,0.3); border: 1px dashed rgba(100,116,139,0.3); padding: 5px 15px; cursor: pointer; border-radius: 4px; font-size: 0.8rem; transition: 0.3s;">
+                ⚙️ Configurações da Loja
+            </button>
         </div>
     </footer>
 
-    <!-- Script de Integração com Firebase e Autenticação -->
+    <!-- MODAL DE CONFIGURAÇÃO DE INFOS (ADMIN) -->
+    <div id="modal-config-info-overlay" class="oculto" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 99999; display: flex; justify-content: center; align-items: center;">
+        <div style="background: white; padding: 25px; border-radius: 12px; max-width: 400px; width: 90%;">
+            <h3 style="margin-top: 0; color: #1a365d; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px;">⚙️ Dados da Loja</h3>
+            
+            <label style="display: block; margin-top: 15px; font-size: 0.9rem; font-weight: bold;">Link do QR Code PIX (Imgur):</label>
+            <input type="text" id="config-pix" placeholder="https://i.imgur.com/..." style="width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #cbd5e0; border-radius: 6px;">
+
+            <label style="display: block; margin-top: 10px; font-size: 0.9rem; font-weight: bold;">Telefone de Contato:</label>
+            <input type="text" id="config-tel" style="width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #cbd5e0; border-radius: 6px;">
+
+            <label style="display: block; margin-top: 10px; font-size: 0.9rem; font-weight: bold;">E-mail:</label>
+            <input type="text" id="config-email" style="width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #cbd5e0; border-radius: 6px;">
+
+            <label style="display: block; margin-top: 10px; font-size: 0.9rem; font-weight: bold;">Localização:</label>
+            <input type="text" id="config-local" style="width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #cbd5e0; border-radius: 6px;">
+
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button onclick="window.salvarConfigInfo()" style="flex: 1; background: #10B981; color: white; border: none; padding: 10px; border-radius: 6px; cursor: pointer; font-weight: bold;">Salvar Global</button>
+                <button onclick="window.fecharModalConfigInfo()" style="flex: 1; background: #ef4444; color: white; border: none; padding: 10px; border-radius: 6px; cursor: pointer; font-weight: bold;">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script Global -->
     <script type="module" src="script.js"></script>
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
-
-        // Suas chaves de conexão do Firebase
-        const firebaseConfig = {
-            apiKey: "AIzaSyA6fZuQf0-GshZ_wtxJW3CRFtlvFPxfaGg",
-            authDomain: "crm-digital-6b415.firebaseapp.com",
-            projectId: "crm-digital-6b415",
-            storageBucket: "crm-digital-6b415.firebasestorage.app",
-            messagingSenderId: "686804789801",
-            appId: "1:686804789801:web:26ddd8979fc38ab4864a38"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-
-        // ==========================================
-        // NOVA LÓGICA DE PERFIL E AUTENTICAÇÃO
-        // ==========================================
-        const engrenagem = document.querySelector('.area-admin-gear'); 
-        const btnAdmin = document.getElementById('btn-admin');
-        const areaDeslogada = document.getElementById('area-deslogada');
-        const areaLogada = document.getElementById('area-logada');
-        const userEmailSpan = document.getElementById('user-email');
-        const userUidSpan = document.getElementById('user-uid'); // Span do ID
-        const userFoto = document.getElementById('user-foto');   // Imagem da Foto
-        const btnLogout = document.getElementById('btn-logout');
-
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                // Usuário logado: Mostra perfil, esconde botões de login/cadastro
-                if(areaDeslogada) areaDeslogada.classList.add('oculto');
-                if(areaLogada) areaLogada.classList.remove('oculto');
-                
-                // Injeta o e-mail
-                if(userEmailSpan) userEmailSpan.innerText = user.email;
-
-                // Injeta a foto do Google
-                if(userFoto) {
-                    userFoto.src = user.photoURL || "https://www.gravatar.com/avatar/?d=mp";
-                    userFoto.style.display = 'block';
-                }
-
-                // Injeta o ID único (UID) cortando para 8 letras
-                if(userUidSpan) {
-                    const idCurto = user.uid.substring(0, 8).toUpperCase();
-                    userUidSpan.innerText = "ID: #" + idCurto;
-                    userUidSpan.dataset.uid = user.uid; // Salva o ID inteiro invisível
-                }
-
-                // ==========================================
-                // SINCRONIZAÇÃO COM O PYTHON (AUTOMAÇÃO CRM)
-                // ==========================================
-                fetch('/api/sync_user', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        uid: user.uid,
-                        nome: user.displayName || 'Sem Nome',
-                        email: user.email,
-                        foto: user.photoURL || ''
-                    })
-                })
-                .then(res => res.json())
-                .then(data => console.log("Status CRM:", data.mensagem))
-                .catch(err => console.error("Erro ao sincronizar CRM:", err));
-                // ==========================================
-
-                // Se for você (Admin): Libera as ferramentas secretas
-                if (user.email === "pedroeliasm08@gmail.com") {
-                    if(engrenagem) engrenagem.classList.remove('oculto');
-                    if(btnAdmin) btnAdmin.classList.remove('oculto');
-                } else {
-                    if(engrenagem) engrenagem.classList.add('oculto');
-                    if(btnAdmin) btnAdmin.classList.add('oculto');
-                }
-            } else {
-                // Ninguém logado: Mostra botões de login/cadastro, esconde perfil
-                if(areaDeslogada) areaDeslogada.classList.remove('oculto');
-                if(areaLogada) areaLogada.classList.add('oculto');
-                if(engrenagem) engrenagem.classList.add('oculto');
-                if(btnAdmin) btnAdmin.classList.add('oculto');
-            }
-        });
-
-        // Ação do Botão Sair (Logout)
-        if(btnLogout) {
-            btnLogout.addEventListener('click', () => {
-                import("https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js").then((module) => {
-                    module.signOut(auth).then(() => {
-                        window.location.href = "index.html"; // Joga pra home ao sair
-                    });
-                });
-            });
-        }
-        // ==========================================
-
-        // Lógica de Abrir/Fechar a Sidebar
-        document.getElementById('btn-toggle').addEventListener('click', () => {
-            document.getElementById('menu-lateral').classList.toggle('oculta');
-        });
-    </script>
 </body>
 </html>

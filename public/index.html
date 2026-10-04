@@ -2,7 +2,8 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Trava de zoom para mobile (Garante que o app usa 100% da tela) -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Cardápio Digital - Delivery</title>
     <link rel="stylesheet" href="style.css?v=2">
     <style>
@@ -11,7 +12,6 @@
         background-color: #2A160F !important;
         background-image: none !important;
     }
-
     /* 2. Força a grelha na caixa central */
     .vitrine-card {
         background-color: #FFFFFF !important;
@@ -23,9 +23,9 @@
     /* 3. Força a cor dos textos para não sumirem */
     .vitrine-titulo { color: #1a365d !important; }
     .vitrine-subtitulo { color: #4a5568 !important; }
-</style>
+    </style>
 </head>
-<body class="tema-claro vitrine-fundo body-sem-margem"></body>
+<body class="tema-claro vitrine-fundo body-sem-margem">
     <!-- LOGÓTIPO CLICÁVEL NO CABEÇALHO -->
     <header class="upbar">
         <div class="flex-center">
@@ -39,7 +39,6 @@
             <a href="login.html" class="btn-upbar">Login</a>
             <a href="cadastro.html" class="btn-upbar">Cadastro</a>
         </div>
-
         <div id="area-logada" class="area-logada-container oculto">
             <div class="perfil-card">
                 <img id="user-foto" src="" alt="Perfil" class="perfil-foto">
@@ -59,14 +58,12 @@
 
     <div class="layout-vitrine">
         <!-- MENU LATERAL UNIFICADO -->
-       <!-- MENU LATERAL UNIFICADO -->
         <aside class="sidebar oculta" id="menu-lateral">
-            <!-- Botão que só aparece no telemóvel -->
             <button class="btn-fechar-menu-mobile" onclick="document.getElementById('menu-lateral').classList.add('oculta')">✕ Fechar Menu</button>
             
             <ul class="menu-lista">
                 <li class="menu-item"><a href="index.html" class="menu-link-ativo">Cardápio</a></li>
-                <li class="menu-item"><a href="sobre-nos.html" class="menu-link">Casarão</a></li>
+                <li class="menu-item"><a href="sobre.html" class="menu-link">Casarão</a></li>
                 <li class="menu-item"><a href="perfil.html" class="menu-link">Endereço</a></li>
             </ul>
         </aside>
@@ -92,6 +89,7 @@
                 <div id="container-categorias">
                     <p style="text-align: center; width: 100%; color: var(--cor-texto-mutado, #6B7280);">Carregando cardápio delicioso...</p>
                 </div>
+
                 <!-- TELA DE VER MAIS (ESCONDIDA POR PADRÃO) -->
                 <div id="tela-ver-mais" class="oculto">
                     <div class="cabecalho-ver-mais">
@@ -114,7 +112,6 @@
                         </div>
                     </div>
 
-                    <!-- O Grid que vai receber os produtos filtrados -->
                     <div id="grid-ver-mais" class="grid-servicos">
                         <!-- O JS injeta aqui -->
                     </div>
@@ -122,6 +119,48 @@
             </div>
         </main>
     </div>
+
+    <!-- RODAPÉ GLOBAL COM CONFIGURAÇÕES -->
+    <footer style="background-color: #0f172a; padding: 40px 20px; color: white; margin-top: 40px;">
+        <div style="max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px;">
+            <!-- Branding -->
+            <div>
+                <img src="logo-crm.png" alt="Logo Casarão" style="width: 80px; border-radius: 50%; margin-bottom: 15px;" onerror="this.style.display='none'">
+                <p style="color: #cbd5e0; font-size: 0.9rem;">O Casarão Pub e Restaurante. Onde as boas histórias se encontram com a verdadeira gastronomia.</p>
+            </div>
+            
+            <!-- Navegação -->
+            <div>
+                <h3 style="color: #38bdf8; margin-bottom: 15px;">Navegação</h3>
+                <ul style="list-style: none; padding: 0; margin: 0; line-height: 2;">
+                    <li><a href="index.html" style="color: #cbd5e0; text-decoration: none;">Cardápio</a></li>
+                    <li><a href="sobre.html" style="color: #cbd5e0; text-decoration: none;">Casarão</a></li>
+                    <li><a href="perfil.html" style="color: #cbd5e0; text-decoration: none;">Endereço</a></li>
+                </ul>
+            </div>
+            
+            <!-- Fale Conosco (Dinâmico) -->
+            <div>
+                <h3 style="color: #38bdf8; margin-bottom: 15px;">Fale Conosco</h3>
+                <ul style="list-style: none; padding: 0; margin: 0; color: #cbd5e0; line-height: 2;">
+                    <li>📞 <span id="info-telefone">(00) 00000-0000</span></li>
+                    <li>✉️ <span id="info-email">contato@casaraopub.com</span></li>
+                    <li>📍 Localização: <span id="info-local">Centro</span></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div style="border-top: 1px solid #1e293b; margin-top: 30px; padding-top: 20px; text-align: center; color: #64748b; font-size: 0.85rem;">
+            &copy; 2026 Casarão Pub. Todos os direitos reservados.
+        </div>
+
+        <!-- BOTÃO FANTASMA DE CONFIGURAÇÃO (Fica no fundo do site) -->
+        <div style="text-align: center; padding-top: 15px;">
+            <button id="btn-config-fantasma" onclick="window.abrirModalConfigInfo()" class="oculto" style="background: transparent; color: rgba(100,116,139,0.3); border: 1px dashed rgba(100,116,139,0.3); padding: 5px 15px; cursor: pointer; border-radius: 4px; font-size: 0.8rem; transition: 0.3s;">
+                ⚙️ Configurações da Loja
+            </button>
+        </div>
+    </footer>
 
     <!-- Overlay Global para os Modais -->
     <div id="overlay-produto" class="admin-overlay" onclick="fecharModalProduto(); fecharModalLeitura();"></div>
@@ -132,8 +171,7 @@
         
         <label>Nome do Item:</label>
         <input type="text" id="prod-nome" placeholder="Ex: Burger Clássico">
-
-        <!-- Campo de Categoria -->
+        
         <label>Categoria:</label>
         <select id="prod-categoria" class="modal-input" style="width: 100%; padding: 8px; margin-bottom: 15px; border-radius: 4px; border: 1px solid #ccc; font-family: inherit;">
             <option value="Hambúrgueres">Hambúrgueres</option>
@@ -141,16 +179,16 @@
             <option value="Bebidas">Bebidas</option>
             <option value="Combos">Combos</option>
         </select>
-
+        
         <label>Descrição:</label>
         <textarea id="prod-descricao" rows="3" class="modal-textarea" placeholder="Descreva os ingredientes..."></textarea>
-
+        
         <label>Valor (R$):</label>
         <input type="number" id="prod-valor" placeholder="Ex: 35.90" step="0.01">
-
+        
         <label>Link da Imagem:</label>
         <input type="text" id="prod-imagem" placeholder="https://...">
-
+        
         <div class="modal-botoes-container">
             <button onclick="salvarProduto()" class="btn-modal-salvar">Salvar Item</button>
             <button onclick="fecharModalProduto()" class="btn-modal-cancelar">Cancelar</button>
@@ -166,9 +204,10 @@
         <div class="modal-leitura-texto" id="texto-leitura"></div>
     </div>
 
-    <!-- CHAMA O JAVASCRIPT EXTERNO AQUI (COMO MÓDULO) -->
+    <!-- CHAMA O JAVASCRIPT EXTERNO AQUI -->
     <script type="module" src="script.js"></script>
-    <!-- BOTÃO CARRINHO FLUTUANTE (Fica escondido até ter itens) -->
+
+    <!-- BOTÃO CARRINHO FLUTUANTE -->
     <div id="btn-carrinho-flutuante" class="oculto" onclick="abrirModalCheckout()">
         <div class="carrinho-info">
             <span id="qtd-carrinho">0</span> itens
@@ -176,9 +215,8 @@
         <div class="carrinho-texto">🛒 Ver Sacola</div>
         <div class="carrinho-total">R$ <span id="total-carrinho">0,00</span></div>
     </div>
-    <!-- ==========================================
-         MODAL DE CHECKOUT (FINALIZAR PEDIDO)
-         ========================================== -->
+
+    <!-- MODAL DE CHECKOUT (FINALIZAR PEDIDO) -->
     <div id="modal-checkout-overlay" class="oculto">
         <div class="modal-checkout-container">
             <div class="checkout-header">
@@ -187,46 +225,39 @@
             </div>
             
             <div class="checkout-body">
-                <!-- Resumo do Pedido -->
                 <div class="checkout-secao">
                     <h4>Seu Pedido (<span id="checkout-qtd">0</span> itens)</h4>
-                    <div id="checkout-lista-itens">
-                        <!-- O JS vai injetar os itens aqui -->
-                    </div>
+                    <div id="checkout-lista-itens"></div>
                     <div class="checkout-total">Total: R$ <span id="checkout-total-valor">0,00</span></div>
                 </div>
-
-                <!-- Endereço -->
+                
                 <div class="checkout-secao">
                     <h4>Endereço de Entrega</h4>
                     <input type="text" id="pedido-rua" placeholder="Rua e Número (ex: Rua Direita, 123)" class="input-checkout">
                     <input type="text" id="pedido-bairro" placeholder="Bairro" class="input-checkout">
                 </div>
-
-                <!-- Pagamento -->
+                
                 <div class="checkout-secao">
                     <h4>Forma de Pagamento</h4>
                     <select id="pedido-pagamento" class="input-checkout" onchange="verificarTroco()">
                         <option value="">Selecione como vai pagar...</option>
-                        <option value="Pix">Pix (Chave: 32999082129)</option>
+                        <option value="PIX">Pix</option>
                         <option value="Cartão de Crédito">Cartão de Crédito (Maquininha)</option>
                         <option value="Cartão de Débito">Cartão de Débito (Maquininha)</option>
                         <option value="Dinheiro">Dinheiro</option>
                     </select>
                     
-                    <!-- Campo de troco (Escondido por padrão) -->
                     <div id="area-troco" class="oculto" style="margin-top: 10px;">
                         <input type="number" id="pedido-troco" placeholder="Troco para quanto? (Ex: 50)" class="input-checkout">
                     </div>
                 </div>
-
-                <!-- Observações -->
+                
                 <div class="checkout-secao">
                     <h4>Observações (Opcional)</h4>
                     <textarea id="pedido-obs" placeholder="Tirar cebola, ponto da carne, etc..." class="input-checkout obs-textarea"></textarea>
                 </div>
             </div>
-
+            
             <div class="checkout-footer">
                 <button onclick="enviarPedidoWhatsApp()" class="btn-enviar-whatsapp">
                     Enviar Pedido pelo WhatsApp 📲
@@ -234,33 +265,63 @@
             </div>
         </div>
     </div>
-    <!-- ==========================================
-         MODAL DE TERMOS E PRIVACIDADE (LGPD)
-         ========================================== -->
+
+    <!-- MODAL PIX (QR CODE) -->
+    <div id="modal-pix-overlay" class="oculto" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 99999; display: flex; justify-content: center; align-items: center;">
+        <div style="background: white; padding: 25px; border-radius: 12px; text-align: center; max-width: 350px; width: 90%;">
+            <h3 style="margin-top: 0; color: #10B981;">Pagamento via PIX</h3>
+            <p style="font-size: 0.9rem; color: #475569;">Escaneie o QR Code ou faça a transferência e envie o comprovante no WhatsApp.</p>
+            
+            <!-- A imagem do QR Code que será trocada pelo Admin -->
+            <img id="img-qr-pix" src="https://via.placeholder.com/200?text=COLE+O+QR+NO+ADMIN" alt="QR Code PIX" style="width: 200px; height: 200px; margin: 15px auto; border: 1px solid #e2e8f0; border-radius: 8px; display: block;">
+            
+            <p style="font-size: 0.8rem; color: #ef4444; font-weight: bold; margin-bottom: 15px;">*Obrigatório o envio do comprovante!</p>
+            <button onclick="window.fecharModalPix()" style="background: #0f172a; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; width: 100%; font-weight: bold;">Certo, vou pagar!</button>
+        </div>
+    </div>
+
+    <!-- MODAL DE CONFIGURAÇÃO DE INFOS (ADMIN) -->
+    <div id="modal-config-info-overlay" class="oculto" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 99999; display: flex; justify-content: center; align-items: center;">
+        <div style="background: white; padding: 25px; border-radius: 12px; max-width: 400px; width: 90%;">
+            <h3 style="margin-top: 0; color: #1a365d; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px;">⚙️ Dados da Loja</h3>
+            
+            <label style="display: block; margin-top: 15px; font-size: 0.9rem; font-weight: bold;">Link do QR Code PIX (Imgur):</label>
+            <input type="text" id="config-pix" placeholder="https://i.imgur.com/..." style="width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #cbd5e0; border-radius: 6px;">
+
+            <label style="display: block; margin-top: 10px; font-size: 0.9rem; font-weight: bold;">Telefone de Contato:</label>
+            <input type="text" id="config-tel" style="width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #cbd5e0; border-radius: 6px;">
+
+            <label style="display: block; margin-top: 10px; font-size: 0.9rem; font-weight: bold;">E-mail:</label>
+            <input type="text" id="config-email" style="width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #cbd5e0; border-radius: 6px;">
+
+            <label style="display: block; margin-top: 10px; font-size: 0.9rem; font-weight: bold;">Localização:</label>
+            <input type="text" id="config-local" style="width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #cbd5e0; border-radius: 6px;">
+
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button onclick="window.salvarConfigInfo()" style="flex: 1; background: #10B981; color: white; border: none; padding: 10px; border-radius: 6px; cursor: pointer; font-weight: bold;">Salvar Global</button>
+                <button onclick="window.fecharModalConfigInfo()" style="flex: 1; background: #ef4444; color: white; border: none; padding: 10px; border-radius: 6px; cursor: pointer; font-weight: bold;">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE TERMOS E PRIVACIDADE (LGPD) -->
     <div id="modal-termos-overlay" class="oculto">
         <div class="modal-termos-container">
             <h3 style="color: #1a365d; margin-top: 0; margin-bottom: 15px; font-size: 1.4rem;">Bem-vindo(a) ao Casarão! 🍔</h3>
-            
             <p style="color: #4a5568; font-size: 0.95rem; line-height: 1.5; margin-bottom: 20px;">
-                Para continuar e fazer os seus pedidos, precisamos que você leia e concorde com a nossa 
+                Para continuar e fazer os seus pedidos, precisamos que você leia e concorde com a nossa
                 <a href="privacidade.html" target="_blank" style="color: #2b6cb0; text-decoration: underline; font-weight: bold;">Política de Privacidade</a>.
             </p>
-            
             <div class="termos-resumo">
-                <strong>Resumo Transparente:</strong> Coletamos apenas o seu Nome, WhatsApp e Endereço de entrega exclusivamente para processar o seu pedido. Não solicitamos nem salvamos dados de cartão de crédito no site. Os seus dados estão seguros connosco e não são vendidos ou compartilhados com terceiros.
+                <strong>Resumo Transparente:</strong> Coletamos apenas o seu Nome, WhatsApp e Endereço de entrega exclusivamente para processar o seu pedido.
             </div>
-            
             <label style="display: flex; align-items: flex-start; gap: 12px; cursor: pointer; margin-bottom: 25px; padding: 10px; background: #f8fafc; border-radius: 8px;">
                 <input type="checkbox" id="check-termos" onchange="validarTermos()" style="width: 22px; height: 22px; margin-top: 2px; cursor: pointer; accent-color: #10B981;">
-                <span style="color: #1e293b; font-size: 0.95rem; font-weight: 600;">
-                    Li e concordo com a Política de Privacidade e o uso dos meus dados para entrega.
-                </span>
+                <span style="color: #1e293b; font-size: 0.95rem; font-weight: 600;">Li e concordo com a Política de Privacidade e o uso dos meus dados para entrega.</span>
             </label>
-
-            <button id="btn-aceitar-termos" class="btn-termos" disabled onclick="aceitarTermos()">
-                Aceitar e Continuar
-            </button>
+            <button id="btn-aceitar-termos" class="btn-termos" disabled onclick="aceitarTermos()">Aceitar e Continuar</button>
         </div>
     </div>
+
 </body>
 </html>
