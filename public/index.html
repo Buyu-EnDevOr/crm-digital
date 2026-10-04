@@ -178,6 +178,7 @@
             <option value="Pizzas">Pizzas</option>
             <option value="Bebidas">Bebidas</option>
             <option value="Combos">Combos</option>
+            <option value="Adicionais">Adicionais (Extras/Molhos)</option>
         </select>
         
         <label>Descrição:</label>
@@ -232,6 +233,13 @@
                 </div>
                 
                 <div class="checkout-secao">
+                    <!-- NOVA SEÇÃO: ADICIONAIS (CROSS-SELL) -->
+<div class="checkout-secao" id="secao-adicionais-checkout" style="display: none;">
+    <h4>Deseja adicionar algo mais? 🍟</h4>
+    <div id="lista-adicionais-checkout" style="display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none;">
+        <!-- O JS vai injetar os mini-cards aqui -->
+    </div>
+</div>
                     <h4>Endereço de Entrega</h4>
                     <input type="text" id="pedido-rua" placeholder="Rua e Número (ex: Rua Direita, 123)" class="input-checkout">
                     <input type="text" id="pedido-bairro" placeholder="Bairro" class="input-checkout">

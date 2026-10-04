@@ -359,6 +359,35 @@ window.abrirModalCheckout = function() {
     document.getElementById('checkout-qtd').innerText = carrinhoDeCompras.length;
     document.getElementById('checkout-total-valor').innerText = total.toFixed(2).replace('.', ',');
     
+    // --- MAGIA NOVA: CARROSSEL DE ADICIONAIS ---
+    const containerAdicionais = document.getElementById('lista-adicionais-checkout');
+    const secaoAdicionais = document.getElementById('secao-adicionais-checkout');
+    
+    if(containerAdicionais && secaoAdicionais) {
+        containerAdicionais.innerHTML = '';
+        // Filtra da base de dados apenas os que têm a categoria "Adicionais"
+        const adicionais = Object.values(window.produtosCarregados).filter(p => p.categoria === 'Adicionais');
+        
+        if (adicionais.length > 0) {
+            secaoAdicionais.style.display = 'block';
+            adicionais.forEach(add => {
+                const imagemAdd = add.imagem_url ? add.imagem_url : "https://via.placeholder.com/100?text=Extra";
+                // Ao clicar num adicional, ele é inserido no carrinho e a tela atualiza!
+                containerAdicionais.innerHTML += `
+                    <div class="card-adicional-pequeno" onclick="window.adicionarAoCarrinho('${add.nome.replace(/'/g, "\\'")}', ${add.valor}); window.abrirModalCheckout();">
+                        <img src="${imagemAdd}" alt="${add.nome}">
+                        <div class="add-nome" title="${add.nome}">${add.nome}</div>
+                        <div class="add-preco">+ R$ ${add.valor.toFixed(2).replace('.', ',')}</div>
+                    </div>
+                `;
+            });
+        } else {
+            secaoAdicionais.style.display = 'none'; // Esconde a seção se não houver adicionais criados
+        }
+    }
+    // ------------------------------------------
+
+    // Autopreenchimento de endereço
     if(usuarioAtualUid) {
         const ruaSalva = localStorage.getItem(`perfil_rua_${usuarioAtualUid}`);
         const bairroSalvo = localStorage.getItem(`perfil_bairro_${usuarioAtualUid}`);
