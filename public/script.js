@@ -193,7 +193,7 @@ window.carregarProdutos = async function() {
             
             produtos.forEach(prod => {
                 const valorFormatado = parseFloat(prod.valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-                const urlImagem = prod.imagem_url ? prod.imagem_url : "https://res.cloudinary.com/demo/image/upload/v1312461204/sample.jpg";
+                const urlImagem = prod.imagem_url ? prod.imagem_url : "logo-crm.png";
                 
               const botoesAdmin = ehAdmin 
                     ? `<div style="display: flex; gap: 5px; margin-top: 10px;">
