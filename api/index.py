@@ -287,6 +287,14 @@ def deletar_produto(id_produto):
         return jsonify({"mensagem": "Produto deletado!"}), 200
     except Exception as e:
         return jsonify({"erro": str(e)}), 500
+@app.route('/api/produtos/<id_produto>', methods=['PUT'])
 
+def atualizar_produto(id_produto):
+    try:
+        dados_atualizados = request.json
+        db.collection("produtos").document(id_produto).update(dados_atualizados)
+        return jsonify({"mensagem": "Produto atualizado com sucesso!"}), 200
+    except Exception as e:
+        return jsonify({"erro": str(e)}), 500
 if __name__ == '__main__':
     app.run(debug=True, port=8080)

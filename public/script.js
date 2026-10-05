@@ -195,10 +195,12 @@ window.carregarProdutos = async function() {
                 const valorFormatado = parseFloat(prod.valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
                 const urlImagem = prod.imagem_url ? prod.imagem_url : "https://res.cloudinary.com/demo/image/upload/v1312461204/sample.jpg";
                 
-                const botaoExcluir = ehAdmin 
-                    ? `<button onclick="window.deletarProduto('${prod.id}')" style="background: transparent; color: #ef4444; border: 1px solid #ef4444; border-radius: 6px; padding: 4px 8px; margin-top: 10px; cursor: pointer; font-weight: bold; font-size:12px; width: 100%; transition: 0.3s;">🗑️ Excluir</button>` 
+              const botoesAdmin = ehAdmin 
+                    ? `<div style="display: flex; gap: 5px; margin-top: 10px;">
+                           <button onclick="window.prepararEdicaoProduto('${prod.id}')" style="background: transparent; color: #eab308; border: 1px solid #eab308; border-radius: 6px; padding: 4px; cursor: pointer; font-weight: bold; font-size:12px; flex: 1; transition: 0.3s;">✏️ Editar</button>
+                           <button onclick="window.deletarProduto('${prod.id}')" style="background: transparent; color: #ef4444; border: 1px solid #ef4444; border-radius: 6px; padding: 4px; cursor: pointer; font-weight: bold; font-size:12px; flex: 1; transition: 0.3s;">🗑️ Excluir</button>
+                       </div>` 
                     : '';
-                
                 htmlPrateleira += `
                     <div class="card-produto">
                         <img src="${urlImagem}" alt="${prod.nome}" class="img-produto" onerror="this.src='https://res.cloudinary.com/demo/image/upload/v1312461204/sample.jpg'">
@@ -210,7 +212,7 @@ window.carregarProdutos = async function() {
                             <button class="btn-comprar-preco" onclick="window.adicionarAoCarrinho('${prod.nome.replace(/'/g, "\\'")}', ${prod.valor})">
                                 ${valorFormatado}
                             </button>
-                            ${botaoExcluir}
+                            ${botoesAdmin}
                         </div>
                     </div>
                 `;
@@ -278,10 +280,12 @@ window.renderizarCategoriaFiltrada = function() {
         const valorFormatado = parseFloat(prod.valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
         const urlImagem = prod.imagem_url ? prod.imagem_url : "https://res.cloudinary.com/demo/image/upload/v1312461204/sample.jpg";
         
-        const botaoExcluir = ehAdmin 
-            ? `<button onclick="window.deletarProduto('${prod.id}')" style="background: transparent; color: #ef4444; border: 1px solid #ef4444; border-radius: 6px; padding: 4px 8px; margin-left: 10px; cursor: pointer; font-weight: bold; font-size:12px; transition: 0.3s;">🗑️ Excluir</button>` 
-            : '';
-        
+        const botoesAdmin = ehAdmin 
+                    ? `<div style="display: flex; gap: 5px; margin-top: 10px;">
+                           <button onclick="window.prepararEdicaoProduto('${prod.id}')" style="background: transparent; color: #eab308; border: 1px solid #eab308; border-radius: 6px; padding: 4px; cursor: pointer; font-weight: bold; font-size:12px; flex: 1; transition: 0.3s;">✏️ Editar</button>
+                           <button onclick="window.deletarProduto('${prod.id}')" style="background: transparent; color: #ef4444; border: 1px solid #ef4444; border-radius: 6px; padding: 4px; cursor: pointer; font-weight: bold; font-size:12px; flex: 1; transition: 0.3s;">🗑️ Excluir</button>
+                       </div>` 
+                    : '';
         container.innerHTML += `
             <div class="card-produto" style="max-width: none;">
                 <img src="${urlImagem}" alt="${prod.nome}" class="img-produto" onerror="this.src='https://res.cloudinary.com/demo/image/upload/v1312461204/sample.jpg'">
@@ -295,7 +299,7 @@ window.renderizarCategoriaFiltrada = function() {
                         <button class="btn-comprar-preco" onclick="window.adicionarAoCarrinho('${prod.nome.replace(/'/g, "\\'")}', ${prod.valor})">
                             ${valorFormatado}
                         </button>
-                        ${botaoExcluir}
+                        ${botoesAdmin}
                     </div>
                 </div>
             </div>
@@ -522,29 +526,36 @@ window.salvarPerfil = function() {
     alert("Perfil atualizado com sucesso! Seu endereço será preenchido automaticamente nos próximos pedidos.");
 };
 
-// ==========================================
-// FUNÇÕES DE ADMINISTRAÇÃO E MODAIS PRODUTO
-// ==========================================
-window.abrirModalLeitura = function(idProduto) {
-    const produto = window.produtosCarregados[idProduto];
-    if(!produto) return;
-    document.getElementById('titulo-leitura').innerText = produto.nome;
-    document.getElementById('texto-leitura').innerText = produto.descricao;
-    document.getElementById('overlay-produto').style.display = 'block';
-    document.getElementById('modal-leitura').style.display = 'block';
-};
-window.fecharModalLeitura = function() {
-    document.getElementById('overlay-produto').style.display = 'none';
-    document.getElementById('modal-leitura').style.display = 'none';
-};
+let produtoEditandoId = null; // Variável para a memória
+
 window.abrirModalProduto = function() {
+    produtoEditandoId = null; // Reseta a memória
+    document.querySelector('#modal-produto .modal-titulo').innerText = "Adicionar Item ao Cardápio";
+    document.getElementById('prod-nome').value = '';
+    document.getElementById('prod-categoria').value = 'Hambúrgueres';
+    document.getElementById('prod-descricao').value = '';
+    document.getElementById('prod-valor').value = '';
+    document.getElementById('prod-imagem').value = '';
     document.getElementById('overlay-produto').style.display = 'block';
     document.getElementById('modal-produto').style.display = 'block';
 };
-window.fecharModalProduto = function() {
-    document.getElementById('overlay-produto').style.display = 'none';
-    document.getElementById('modal-produto').style.display = 'none';
+
+window.prepararEdicaoProduto = function(idProduto) {
+    produtoEditandoId = idProduto;
+    const prod = window.produtosCarregados[idProduto];
+    if(!prod) return;
+    
+    document.querySelector('#modal-produto .modal-titulo').innerText = "Editar Item do Cardápio";
+    document.getElementById('prod-nome').value = prod.nome;
+    document.getElementById('prod-categoria').value = prod.categoria || 'Hambúrgueres';
+    document.getElementById('prod-descricao').value = prod.descricao;
+    document.getElementById('prod-valor').value = prod.valor;
+    document.getElementById('prod-imagem').value = prod.imagem_url || '';
+    
+    document.getElementById('overlay-produto').style.display = 'block';
+    document.getElementById('modal-produto').style.display = 'block';
 };
+
 window.salvarProduto = async function() {
     const nome = document.getElementById('prod-nome').value.trim();
     const categoria = document.getElementById('prod-categoria').value;
@@ -557,25 +568,34 @@ window.salvarProduto = async function() {
         return;
     }
     
-    const novoProduto = { nome: nome, categoria: categoria, descricao: descricao, valor: parseFloat(valor), imagem_url: imagem };
+    const dadosProduto = { 
+        nome: nome, 
+        categoria: categoria, 
+        descricao: descricao, 
+        valor: parseFloat(valor), 
+        imagem_url: imagem 
+    };
+    
     const botaoSalvar = document.querySelector('#modal-produto .btn-modal-salvar');
     botaoSalvar.innerText = "Salvando...";
     botaoSalvar.disabled = true;
     
+    // Se tiver ID na memória, ele edita (PUT). Se não, cria (POST)
+    const url = produtoEditandoId ? `/api/produtos/${produtoEditandoId}` : '/api/produtos';
+    const metodo = produtoEditandoId ? 'PUT' : 'POST';
+    
     try {
-        const resposta = await fetch('/api/produtos', {
-            method: 'POST',
+        const resposta = await fetch(url, {
+            method: metodo,
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(novoProduto)
+            body: JSON.stringify(dadosProduto)
         });
         if(resposta.ok) {
             window.fecharModalProduto();
-            document.getElementById('prod-nome').value = '';
-            document.getElementById('prod-descricao').value = '';
-            document.getElementById('prod-valor').value = '';
-            document.getElementById('prod-imagem').value = '';
-            window.carregarProdutos();
-        } else alert("Erro ao criar o produto.");
+            window.carregarProdutos(); // Atualiza a tela instantaneamente
+        } else {
+            alert("Erro ao salvar o produto no servidor.");
+        }
     } catch(erro) {
         alert("Erro de conexão.");
     } finally {
@@ -583,17 +603,12 @@ window.salvarProduto = async function() {
         botaoSalvar.disabled = false;
     }
 };
-window.deletarProduto = async function(idProduto) {
-    if(!confirm("Tem certeza que deseja excluir este item do cardápio?")) return;
-    try {
-        const res = await fetch(`/api/produtos/${idProduto}`, { method: 'DELETE' });
-        if(res.ok) window.carregarProdutos();
-        else alert("Erro ao tentar remover o item.");
-    } catch(e) {
-        alert("Erro de conexão com o banco de dados.");
-    }
-};
 
+window.fecharModalProduto = function() {
+    document.getElementById('overlay-produto').style.display = 'none';
+    document.getElementById('modal-produto').style.display = 'none';
+    produtoEditandoId = null;
+};
 // ==========================================
 // 5. LÓGICA DE LEADS (PAINEL ADMIN)
 // ==========================================
