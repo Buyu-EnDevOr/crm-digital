@@ -619,21 +619,38 @@ function formatarTexto(texto) {
 window.carregarClientes = async function() {
     const tabela = document.getElementById('lista-corpo');
     if(!tabela) return;
+    
     try {
         const resposta = await fetch('/api/clientes');
         const clientes = await resposta.json();
+        
         tabela.innerHTML = '';
         if(clientes.length === 0) {
             tabela.innerHTML = '<tr><td colspan="5" style="text-align: center;">Nenhum lead encontrado.</td></tr>';
             return;
         }
+        
         clientes.forEach(cliente => {
             const linha = document.createElement('tr');
-            const nomeStr = (cliente.nome && cliente.nome !== 'undefined') ? cliente.nome : 'Sem Nome';
-            const telStr = (cliente.telefone && cliente.telefone !== 'undefined') ? cliente.telefone : '-';
+            
+            // --- MÁGICA ANTI-BUG (Filtro de espaços e nulos) ---
+            // Transforma tudo em texto, corta espaços nas pontas e verifica se ficou vazio
+            let nomeStr = cliente.nome ? String(cliente.nome).trim() : '';
+            if(!nomeStr || nomeStr.toLowerCase() === 'undefined' || nomeStr.toLowerCase() === 'null') {
+                nomeStr = 'Sem Nome';
+            }
+            
+            let telStr = cliente.telefone ? String(cliente.telefone).trim() : '';
+            if(!telStr || telStr.toLowerCase() === 'undefined' || telStr.toLowerCase() === 'null') {
+                telStr = '-';
+            }
+            // ----------------------------------------------------
+            
             const bairroStr = cliente.bairro || 'Indefinido';
             const ruaStr = cliente.rua || '-';
             const statusStr = cliente.status || 'indefinido';
+            
+            // Limpa aspas simples para não quebrar o clique do botão Editar
             const nomeSafe = nomeStr.replace(/'/g, "\\'");
             
             linha.innerHTML = `
@@ -650,7 +667,8 @@ window.carregarClientes = async function() {
             tabela.appendChild(linha);
         });
     } catch(erro) {
-        tabela.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #ef4444;">Erro ao carregar os dados.</td></tr>';
+        console.error("Erro ao carregar clientes:", erro);
+        tabela.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #ef4444;">Erro ao carregar os dados do servidor.</td></tr>';
     }
 };
 window.deletarCliente = async function(id) {
