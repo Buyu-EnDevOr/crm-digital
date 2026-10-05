@@ -13,7 +13,6 @@ CORS(app)
 
 # Tenta pegar a chave do "cofre" da Vercel
 firebase_creds_json = os.environ.get('FIREBASE_CREDENTIALS')
-
 if firebase_creds_json:
     cred_dict = json.loads(firebase_creds_json)
     if '\\n' in cred_dict.get('private_key', ''):
@@ -55,8 +54,8 @@ def sincronizar_usuario():
                 "email": dados.get('email', ''),
                 "foto_url": dados.get('foto', ''),
                 "telefone": "-",
-                "rua": "-",              # NOVO: Substitui o 'polo'
-                "bairro": "Indefinido",  # NOVO: Substitui o 'polo'
+                "rua": "-",
+                "bairro": "Indefinido",
                 "status": "prospeccao",
                 "ultimo_acesso": firestore.SERVER_TIMESTAMP
             }
@@ -108,7 +107,7 @@ def sincronizar_endereco_crm():
         return jsonify({"erro": str(e)}), 500
 
 # ==========================================
-# HISTÓRICO DE COMPRAS
+# HISTÓRICO DE COMPRAS E ABANDONO DE CARRINHO
 # ==========================================
 @app.route('/api/historico/compras', methods=['POST'])
 def salvar_historico_compra():
@@ -146,9 +145,6 @@ def listar_historico_cliente(uid_cliente):
     except Exception as e:
         return jsonify({"erro": str(e)}), 500
 
-# ==========================================
-# LOGS E CARRINHO ABANDONADO
-# ==========================================
 @app.route('/api/log/carrinho-abandonado', methods=['POST'])
 def registar_carrinho_abandonado():
     try:
@@ -167,7 +163,7 @@ def registar_carrinho_abandonado():
             "produtos": dados.get('produtos', []),
             "data": dados.get('data', datetime.datetime.now(datetime.timezone.utc).isoformat())
         }
-        db.collection("carrinho_abandonado").add(log)
+        db.collection("carrinhos_abandonados").add(log)
         return jsonify({"mensagem": "Abandono de carrinho registado"}), 201
     except Exception as e:
         return jsonify({"erro": str(e)}), 500
@@ -180,11 +176,11 @@ def limpar_logs_antigos():
         data_limite_iso = sete_dias_atras.isoformat()
         
         # Procura registos de abandono de carrinho mais antigos que 7 dias
-        logs_antigos = db.collection("carrinho_abandonado").where("data", "<", data_limite_iso).stream()
+        logs_antigos = db.collection("carrinhos_abandonados").where("data", "<", data_limite_iso).stream()
         
         contador = 0
         for log in logs_antigos:
-            db.collection("carrinho_abandonado").document(log.id).delete()
+            db.collection("carrinhos_abandonados").document(log.id).delete()
             contador += 1
             
         return jsonify({"mensagem": f"Limpeza concluída. {contador} logs antigos foram excluídos."}), 200
@@ -234,8 +230,7 @@ def atualizar_cliente(id_cliente):
         return jsonify({"erro": str(e)}), 500
 
 # ==========================================
-# ROTAS DA VITRINE (HOME) E PRODUTOS ... 
-# (Mantidas exatamente iguais para não quebrar nada)
+# ROTAS DA VITRINE (HOME) E PRODUTOS
 # ==========================================
 @app.route('/api/config', methods=['GET'])
 def obter_configuracoes():
@@ -247,7 +242,7 @@ def obter_configuracoes():
             padrao = {
                 "titulo": "CRM-DIGITAL",
                 "subtitulo": "modelo teste",
-                "imagem_url": "https://res.cloudinary.com/demo/image/upload/v1312461204/sample.jpg",
+                "imagem_url": "logo-crm.png",
                 "descricao": "Serviços digitais...",
                 "contato": "(00) 00000-0000"
             }
@@ -287,8 +282,8 @@ def deletar_produto(id_produto):
         return jsonify({"mensagem": "Produto deletado!"}), 200
     except Exception as e:
         return jsonify({"erro": str(e)}), 500
-@app.route('/api/produtos/<id_produto>', methods=['PUT'])
 
+@app.route('/api/produtos/<id_produto>', methods=['PUT'])
 def atualizar_produto(id_produto):
     try:
         dados_atualizados = request.json
@@ -296,5 +291,6 @@ def atualizar_produto(id_produto):
         return jsonify({"mensagem": "Produto atualizado com sucesso!"}), 200
     except Exception as e:
         return jsonify({"erro": str(e)}), 500
+
 if __name__ == '__main__':
     app.run(debug=True, port=8080)
